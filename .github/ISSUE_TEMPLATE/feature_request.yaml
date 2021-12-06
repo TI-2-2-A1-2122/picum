@@ -1,0 +1,25 @@
+name: "New Feature"
+description: Create a feature
+title: "[Feature]: "
+labels: "enhancement"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        You will file a new feature!
+  - type: textarea
+    id: feature-detail
+    attributes:
+      label: Details of Feature
+      description: Please describe the feature in detail.
+      placeholder: What are the details?
+    validations:
+      required: true
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Style Guide
+      description: By submitting this issue, you agree to follow the [Style Guide](https://google.github.io/styleguide/javaguide.html)
+      options:
+        - label: I agree to follow the Style Guide   
+          required: true
