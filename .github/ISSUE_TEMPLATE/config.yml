@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Robin (Code Beheer)
+    url: https://teams.microsoft.com/l/chat/0/0?users=r.luijten2@student.avans.nl
+    about: Voor directe besluiten omtrent code of code style neem contact met mij op.
+  - name: Yassin (Quality Review)
+    url: https://teams.microsoft.com/l/chat/0/0?users=y.diriye@student.avans.nl
+    about: Voor vragen over code style toepassing neem contact met mij op.
+  - name: Ewout (Quality Review)
+    url: https://teams.microsoft.com/l/chat/0/0?users=we.baars@student.avans.nl
+    about: Voor vragen over code style toepassing neem contact met mij op.
