@@ -26,11 +26,12 @@ public class Sight {
 
     }
 
-    public Sight(String sightName, int photoURL, String sightDescription, String websiteURL) {
+    public Sight(String sightName, int photoURL, String sightDescription, String websiteURL, int waypointID) {
         this.sightName = sightName;
         this.photoURL = photoURL;
         this.sightDescription = sightDescription;
         this.websiteURL = websiteURL;
+        this.waypointID = waypointID;
     }
 
     public String getSightName() {
