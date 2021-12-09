@@ -1,5 +1,6 @@
 package nl.ags.picum.dataStorage.roomData;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -7,6 +8,7 @@ import androidx.room.PrimaryKey;
 @Entity
 public class Route {
     @PrimaryKey
+    @NonNull
     private String routeName;
 
     @ColumnInfo(name = "Description")

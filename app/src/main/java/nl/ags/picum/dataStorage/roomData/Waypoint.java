@@ -28,4 +28,36 @@ public class Waypoint {
         this.longitude = longitude;
         this.latitude = latitude;
     }
+
+    public int getWaypointID() {
+        return waypointID;
+    }
+
+    public void setWaypointID(int waypointID) {
+        this.waypointID = waypointID;
+    }
+
+    public boolean isVisited() {
+        return visited;
+    }
+
+    public void setVisited(boolean visited) {
+        this.visited = visited;
+    }
+
+    public float getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(float longitude) {
+        this.longitude = longitude;
+    }
+
+    public float getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(float latitude) {
+        this.latitude = latitude;
+    }
 }
