@@ -1,6 +1,7 @@
 package nl.ags.picum.UI;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
@@ -11,6 +12,8 @@ import java.util.List;
 
 import nl.ags.picum.R;
 import nl.ags.picum.dataStorage.roomData.Route;
+import nl.ags.picum.Route;
+import nl.ags.picum.UI.Util.RouteAdapter;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,11 +24,20 @@ public class MainActivity extends AppCompatActivity {
 
         //TODO change code for implementation
         List<Route> routes = new ArrayList<>();
-        RecyclerView recyclerView = new RecyclerView(this);
+        routes.add(new Route());
+        routes.add(new Route());
+        routes.add(new Route());
+        RecyclerView recyclerView = findViewById(R.id.main_routes_recyclerview);
+        recyclerView.setAdapter(new RouteAdapter(routes));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
 
     }
 
     public void onClickLanguageFAB(View view){
+
+    }
+
+    public void showDetailsFragment(){
 
     }
 }
