@@ -16,6 +16,6 @@ public interface WaypointDAO {
 
     @Query("UPDATE Waypoint SET visited = :state WHERE waypointID = :waypointID")
     void setProgress(boolean state, int waypointID);
-    
+
     List<Waypoint> getWaypointsPerRoute(Route route);
 }
