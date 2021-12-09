@@ -28,18 +28,17 @@ public class MapViewModel extends ViewModel {
         this.currentlocation.postValue(currentlocation);
     }
 
+    private MutableLiveData<Route> currentRoute;
 
-    private MutableLiveData<List<Route>> currentRoute;
 
-
-    public LiveData<List<Route>> getcurrentRoute() {
+    public LiveData<Route> getcurrentRoute() {
         if (currentRoute == null) {
             currentRoute = new MutableLiveData<>();
         }
         return currentRoute;
     }
 
-    public void setCurrentRoute(List<Route> currentRoute) {
+    public void setCurrentRoute(Route currentRoute) {
         this.currentRoute.postValue(currentRoute);
     }
 
