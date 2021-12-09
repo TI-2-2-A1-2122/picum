@@ -12,7 +12,7 @@ public class Sight {
     private String sightName;
 
     @ColumnInfo(name = "PhotoURL")
-    private String photoURL;
+    private int photoURL;
 
     @ColumnInfo(name = "SightDescription")
     private String sightDescription;
@@ -24,7 +24,7 @@ public class Sight {
 
     }
 
-    public Sight(String sightName, String photoURL, String sightDescription, String websiteURL) {
+    public Sight(String sightName, int photoURL, String sightDescription, String websiteURL) {
         this.sightName = sightName;
         this.photoURL = photoURL;
         this.sightDescription = sightDescription;
@@ -39,11 +39,11 @@ public class Sight {
         this.sightName = sightName;
     }
 
-    public String getPhotoURL() {
+    public int getPhotoURL() {
         return photoURL;
     }
 
-    public void setPhotoURL(String photoURL) {
+    public void setPhotoURL(int photoURL) {
         this.photoURL = photoURL;
     }
 

@@ -1,12 +1,16 @@
 package nl.ags.picum.dataStorage.roomData;
 
 import androidx.room.Dao;
+import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import java.util.List;
 
 @Dao
 public interface WaypointDAO {
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    void addWaypoint(Waypoint waypoint);
 
     @Query("SELECT * FROM Waypoint WHERE waypointID = :waypointID")
     Waypoint getWaypoint(int waypointID);
