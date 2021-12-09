@@ -4,6 +4,7 @@ import android.content.Context;
 
 //Todo remove when implemented
 interface Route {}
+interface Point {}
 
 /**
  * MapManager handles the communication from the submodules to the ViewModel.
