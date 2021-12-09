@@ -45,9 +45,4 @@ public class MainActivity extends AppCompatActivity {
         new RouteDetailsFragment(selectedRoute).show(fragmentManager, "Dialog-popup");
     }
 
-    //TODO change to nonstatic
-    public void hideDetailFragment(){
-
-    }
-
 }

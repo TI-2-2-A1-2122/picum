@@ -1,122 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/route_details_fragment_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:layout_margin="20dp"
     tools:context=".UI.fragments.RouteDetailsFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/route_details_fragment_layout"
-        android:layout_width="300dp"
-        android:layout_height="600dp"
-        android:layout_gravity="center">
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:id="@+id/route_details_fragment_details_imageLayout"
-            >
-            <ImageView
-                android:id="@+id/route_details_fragment_image"
-                android:layout_width="match_parent"
-                android:layout_height="130dp"
-                android:elevation="5dp"
-                android:src="@color/primary"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+    <ImageView
+        android:id="@+id/route_details_fragment_image"
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:elevation="5dp"
+        android:background="@color/primary"
+        android:scaleType="centerCrop"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="RouteName"
-                android:textColor="@color/white"
-                android:textSize="30sp"
-                android:layout_gravity="bottom"
-                android:id="@+id/route_details_fragment_details_name"
-                />
-        </FrameLayout>
+    <TextView
+        android:id="@+id/route_details_fragment_details_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="RouteName"
+        android:textSize="30sp"
+        android:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@id/route_details_fragment_image"
+        app:layout_constraintLeft_toLeftOf="@id/route_details_fragment_details_description"
+        />
 
-        <TextView
-            android:id="@+id/route_details_fragment_details_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="15dp"
-            android:text="@string/description_of_route"
-            android:textSize="30sp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/route_details_fragment_details_imageLayout" />
+    <TextView
+        android:id="@+id/route_details_fragment_details_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        android:text="@string/description_of_route"
+        android:textSize="26sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/route_details_fragment_details_name" />
 
-        <TextView
-            android:id="@+id/route_details_fragment_details_descriptionText"
-            android:layout_width="240dp"
-            android:layout_height="160dp"
-            android:text="Mockuptext for description bla bla bla bla bla bla bla bla bla bla bla"
-            android:textSize="20sp"
-            app:layout_constraintLeft_toLeftOf="@id/route_details_fragment_details_description"
-            app:layout_constraintTop_toBottomOf="@id/route_details_fragment_details_description" />
+    <TextView
+        android:id="@+id/route_details_fragment_details_descriptionText"
+        android:layout_width="240dp"
+        android:layout_height="140dp"
+        android:text="Mockuptext for description bla bla bla bla bla bla bla bla bla bla bla"
+        android:textSize="20sp"
+        app:layout_constraintLeft_toLeftOf="@id/route_details_fragment_details_description"
+        app:layout_constraintTop_toBottomOf="@id/route_details_fragment_details_description" />
 
-        <TextView
-            android:id="@+id/route_details_fragment_details_amountOfSights"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="@string/duration_of_route"
-            android:textSize="20sp"
-            app:layout_constraintLeft_toLeftOf="@id/route_details_fragment_details_description"
-            app:layout_constraintTop_toBottomOf="@id/route_details_fragment_details_descriptionText" />
+    <TextView
+        android:id="@+id/route_details_fragment_details_amountOfSights"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/amountOfSights_of_route"
+        android:textSize="20sp"
+        app:layout_constraintLeft_toLeftOf="@id/route_details_fragment_details_description"
+        app:layout_constraintTop_toBottomOf="@id/route_details_fragment_details_descriptionText" />
 
-        <TextView
-            android:id="@+id/route_details_fragment_details_amountOfSightsNumber"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"
-            app:layout_constraintLeft_toLeftOf="@id/route_details_fragment_details_amountOfSights"
-            app:layout_constraintTop_toBottomOf="@id/route_details_fragment_details_amountOfSights" />
+    <TextView
+        android:id="@+id/route_details_fragment_details_amountOfSightsNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        app:layout_constraintLeft_toLeftOf="@id/route_details_fragment_details_amountOfSights"
+        app:layout_constraintTop_toBottomOf="@id/route_details_fragment_details_amountOfSights" />
 
-        <TextView
-            android:id="@+id/route_details_fragment_details_progress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="@string/progress_of_route"
-            android:textSize="20sp"
-            app:layout_constraintLeft_toLeftOf="@id/route_details_fragment_details_amountOfSightsNumber"
-            app:layout_constraintTop_toBottomOf="@id/route_details_fragment_details_amountOfSightsNumber" />
+    <TextView
+        android:id="@+id/route_details_fragment_details_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/progress_of_route"
+        android:textSize="20sp"
+        app:layout_constraintLeft_toLeftOf="@id/route_details_fragment_details_amountOfSightsNumber"
+        app:layout_constraintTop_toBottomOf="@id/route_details_fragment_details_amountOfSightsNumber" />
 
-        <ProgressBar
-            android:id="@+id/route_details_fragment_details_progressBar"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            android:layout_width="0dp"
-            android:layout_height="30dp"
-            android:layout_margin="10dp"
-            android:progressDrawable="@drawable/custom_progressbar"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/route_details_fragment_details_progress" />
+    <ProgressBar
+        android:id="@+id/route_details_fragment_details_progressBar"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:layout_margin="10dp"
+        android:progressDrawable="@drawable/custom_progressbar"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/route_details_fragment_details_progress" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="24dp"
-            android:onClick="onBackButtonPressed"
-            android:text="@string/back"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent" />
+    <Button
+        android:id="@+id/route_details_fragment_details_backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="24dp"
+        android:text="@string/back"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="24dp"
-            android:onClick="openRoute"
-            android:text="@string/Show"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-</FrameLayout>
+    <Button
+        android:id="@+id/route_details_fragment_details_showButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="24dp"
+        android:onClick="openRoute"
+        android:text="@string/Show"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
