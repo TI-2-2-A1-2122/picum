@@ -20,6 +20,8 @@ public class Sight {
     @ColumnInfo(name = "WebsiteURL")
     private String websiteURL;
 
+    private int waypointID;
+
     public Sight() {
 
     }
@@ -61,5 +63,13 @@ public class Sight {
 
     public void setWebsiteURL(String websiteURL) {
         this.websiteURL = websiteURL;
+    }
+
+    public int getWaypointID() {
+        return waypointID;
+    }
+
+    public void setWaypointID(int waypointID) {
+        this.waypointID = waypointID;
     }
 }

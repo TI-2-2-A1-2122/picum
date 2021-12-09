@@ -17,8 +17,4 @@ public interface SightDAO {
 
     @Query("SELECT * FROM Sight")
     List<Sight> getAllSights();
-
-    //TODO
-    @Query("SELECT * FROM Sight WHERE sightName = :routeName")
-    List<Sight> getSightsPerRoute(String routeName);
 }
