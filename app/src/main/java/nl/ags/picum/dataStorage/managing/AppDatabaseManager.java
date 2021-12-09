@@ -10,7 +10,7 @@ public class AppDatabaseManager implements DataStorage {
     private static AppDatabase database;
 
     public AppDatabaseManager() {
-        
+
     }
 
     public static AppDatabase getInstance() {
