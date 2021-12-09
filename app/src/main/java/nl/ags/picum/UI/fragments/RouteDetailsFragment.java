@@ -1,4 +1,4 @@
-package nl.ags.picum.fragments;
+package nl.ags.picum.UI.fragments;
 
 import android.os.Bundle;
 
