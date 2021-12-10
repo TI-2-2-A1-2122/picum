@@ -27,8 +27,8 @@ public class MainActivity extends AppCompatActivity {
 
         //TODO change code for implementation
         List<Route> routes = new ArrayList<>();
-        routes.add(new Route("History", "Dit is een kilomter om te lopen", "", false));
-        routes.add(new Route("Geen history", "Dit is geen historische kilometer", "", false));
+        routes.add(new Route("History", "Dit is een kilomter om te lopen", 0, false));
+        routes.add(new Route("Geen history", "Dit is geen historische kilometer", 0, false));
         RecyclerView recyclerView = findViewById(R.id.main_routes_recyclerview);
         recyclerView.setAdapter(new RouteAdapter(routes, this));
         recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
