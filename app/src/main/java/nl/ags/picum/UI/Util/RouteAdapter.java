@@ -39,9 +39,10 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
         Route selectedRoute = routes.get(position);
         holder.title.setText(selectedRoute.getRouteName());
         holder.description.setText(selectedRoute.getDescription());
-        if(!selectedRoute.getPhotoURL().equals("")){
-            //TODO set image recourse
-        }
+        //TODO Dit kan niet meer want INT
+//        if(!selectedRoute.getPhotoURL().equals("")){
+//            //TODO set image recourse
+//        }
         //TODO set progressBar
 
         holder.layout.setOnClickListener(new View.OnClickListener(){
