@@ -12,7 +12,7 @@ public class Sight {
     private String sightName;
 
     @ColumnInfo(name = "PhotoURL")
-    private String photoURL;
+    private int photoURL;
 
     @ColumnInfo(name = "SightDescription")
     private String sightDescription;
@@ -20,15 +20,18 @@ public class Sight {
     @ColumnInfo(name = "WebsiteURL")
     private String websiteURL;
 
+    private int waypointID;
+
     public Sight() {
 
     }
 
-    public Sight(String sightName, String photoURL, String sightDescription, String websiteURL) {
+    public Sight(String sightName, int photoURL, String sightDescription, String websiteURL, int waypointID) {
         this.sightName = sightName;
         this.photoURL = photoURL;
         this.sightDescription = sightDescription;
         this.websiteURL = websiteURL;
+        this.waypointID = waypointID;
     }
 
     public String getSightName() {
@@ -39,11 +42,11 @@ public class Sight {
         this.sightName = sightName;
     }
 
-    public String getPhotoURL() {
+    public int getPhotoURL() {
         return photoURL;
     }
 
-    public void setPhotoURL(String photoURL) {
+    public void setPhotoURL(int photoURL) {
         this.photoURL = photoURL;
     }
 
@@ -61,5 +64,13 @@ public class Sight {
 
     public void setWebsiteURL(String websiteURL) {
         this.websiteURL = websiteURL;
+    }
+
+    public int getWaypointID() {
+        return waypointID;
+    }
+
+    public void setWaypointID(int waypointID) {
+        this.waypointID = waypointID;
     }
 }

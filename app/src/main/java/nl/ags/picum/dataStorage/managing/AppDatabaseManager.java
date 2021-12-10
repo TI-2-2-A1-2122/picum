@@ -9,8 +9,10 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import java.util.List;
 
+import nl.ags.picum.dataStorage.linkingTables.RouteWaypointCrossRef;
 import nl.ags.picum.dataStorage.roomData.AppDatabase;
 import nl.ags.picum.dataStorage.roomData.Route;
+import nl.ags.picum.dataStorage.roomData.Sight;
 import nl.ags.picum.dataStorage.roomData.Waypoint;
 
 public class AppDatabaseManager implements DataStorage {
@@ -68,5 +70,21 @@ public class AppDatabaseManager implements DataStorage {
     @Override
     public void clearHistory(Route route) {
 
+    }
+
+    public void setRoute(Route route) {
+        this.database.routeDAO().insertRoute(route);
+    }
+
+    public void setWaypoint(Waypoint waypoint) {
+        this.database.waypointDAO().addWaypoint(waypoint);
+    }
+
+    public void setSight(Sight sight) {
+        this.database.sightDAO().insertSight(sight);
+    }
+
+    public void setRouteWaypoint(RouteWaypointCrossRef crossRef) {
+        this.database.routeDAO().insertRouteWaypointCrossRef(crossRef);
     }
 }

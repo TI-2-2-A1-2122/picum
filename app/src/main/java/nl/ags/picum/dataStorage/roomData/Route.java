@@ -15,7 +15,7 @@ public class Route {
     private String description;
 
     @ColumnInfo(name = "PhotoURL")
-    private String photoURL;
+    private int photoURL;
 
     @ColumnInfo(name = "InProgress")
     private boolean inProgress;
@@ -24,7 +24,7 @@ public class Route {
 
     }
 
-    public Route(String routeName, String description, String photoURL, boolean inProgress) {
+    public Route(String routeName, String description, int photoURL, boolean inProgress) {
         this.routeName = routeName;
         this.description = description;
         this.photoURL = photoURL;
@@ -47,11 +47,11 @@ public class Route {
         this.description = description;
     }
 
-    public String getPhotoURL() {
+    public int getPhotoURL() {
         return photoURL;
     }
 
-    public void setPhotoURL(String photoURL) {
+    public void setPhotoURL(int photoURL) {
         this.photoURL = photoURL;
     }
 

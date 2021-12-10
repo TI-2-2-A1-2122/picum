@@ -11,7 +11,7 @@ import nl.ags.picum.dataStorage.roomData.Waypoint;
 
 public class RouteWithWaypoints {
     @Embedded
-    private Route route;
+    public Route route;
 
     @Relation(
             parentColumn = "routeName",
@@ -19,5 +19,5 @@ public class RouteWithWaypoints {
             associateBy = @Junction(RouteWaypointCrossRef.class)
     )
 
-    private List<Waypoint> waypoints;
+    public List<Waypoint> waypoints;
 }
