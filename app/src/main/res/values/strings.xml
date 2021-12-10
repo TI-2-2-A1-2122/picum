@@ -1,3 +1,10 @@
 <resources>
-    <string name="app_name">picum</string>
+    <string name="app_name">Picum</string>
+    <string name="description_of_route">Description</string>
+    <string name="amountOfSights_of_route">Sights:</string>
+    <string name="distance_of_route">Distance:</string>
+    <string name="progress_of_route">Progress:</string>
+    <string name="back">Back</string>
+    <string name="Show">Show</string>
+
 </resources>
