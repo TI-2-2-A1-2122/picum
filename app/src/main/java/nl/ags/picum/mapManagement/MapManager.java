@@ -2,9 +2,7 @@ package nl.ags.picum.mapManagement;
 
 import android.content.Context;
 
-//Todo remove when implemented
-interface Route {}
-interface Point {}
+import nl.ags.picum.dataStorage.roomData.Route;
 
 /**
  * MapManager handles the communication from the submodules to the ViewModel.
