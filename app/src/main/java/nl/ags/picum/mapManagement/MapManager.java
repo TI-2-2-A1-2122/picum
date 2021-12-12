@@ -1,8 +1,10 @@
 package nl.ags.picum.mapManagement;
 
+import android.Manifest;
 import android.content.Context;
 
 import nl.ags.picum.dataStorage.roomData.Route;
+import nl.ags.picum.permission.PermissionManager;
 
 /**
  * MapManager handles the communication from the submodules to the ViewModel.
@@ -18,7 +20,6 @@ public class MapManager {
 
         return mapManager;
     }
-
     // Object //
 
     /**
