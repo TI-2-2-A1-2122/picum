@@ -53,7 +53,8 @@ public class RouteCalculator {
                 .build();
 
         // Logging that a request will be send to the API
-        Log.d(LOG_TAG, "Multi point request will be sent to ORS API: " + request.url().toString());
+        Log.d(LOG_TAG, "Multi point request will be sent to ORS API: " + request.url().toString() +
+                "\nwith body: " + requestBody.toString());
 
         // Adding the request to the queue, this call now is asynchronous
         client.newCall(request).enqueue(new Callback() {
@@ -65,7 +66,7 @@ public class RouteCalculator {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 // Calling the handler method to convert the response
-                Log.d(LOG_TAG, response.toString());
+                Log.d(LOG_TAG, response.body().string());
             }
         });
 
@@ -83,8 +84,8 @@ public class RouteCalculator {
             for(Waypoint waypoint : waypointList) {
                 JSONArray waypointArray = new JSONArray();
 
-                waypointArray.put(waypoint.getLongitude());
                 waypointArray.put(waypoint.getLatitude());
+                waypointArray.put(waypoint.getLongitude());
 
                 waypointsArray.put(waypointArray);
             }
