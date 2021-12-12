@@ -31,11 +31,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        PermissionManager permissionManager = new PermissionManager(getApplicationContext(), this);
+        PermissionManager permissionManager = new PermissionManager();
         permissionManager.requestPermissions(new String[] {
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION
-        });
+        }, this, getApplicationContext());
 
         Waypoint w1 = new Waypoint(1,false, 51.740484f, 4.544803f);
         Waypoint w2 = new Waypoint(2,false, 51.771082f, 4.614198f);
@@ -59,5 +59,7 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         new RouteDetailsFragment(selectedRoute).show(fragmentManager, "Dialog-popup");
     }
+
+
 
 }

@@ -13,13 +13,11 @@ import java.util.ArrayList;
 public class PermissionManager extends AppCompatActivity {
 
     private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
-    private Context ctx;
+
     private Activity calledFromActivity;
 
-    public PermissionManager(Context context, Activity calledFromActivity){
-        ctx = context;
-        this.calledFromActivity = calledFromActivity;
-    }
+
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -36,7 +34,8 @@ public class PermissionManager extends AppCompatActivity {
         }
     }
 
-    public void requestPermissions(String[] permissions) {
+    public void requestPermissions(String[] permissions, Activity activty, Context ctx) {
+    calledFromActivity = activty;
         ArrayList<String> permissionsToRequest = new ArrayList<>();
         for (String permission : permissions) {
             if (ContextCompat.checkSelfPermission(ctx, permission)
