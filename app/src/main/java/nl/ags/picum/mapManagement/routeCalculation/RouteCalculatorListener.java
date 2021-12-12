@@ -1,8 +1,8 @@
 package nl.ags.picum.mapManagement.routeCalculation;
 
-import android.graphics.Point;
-
 import java.util.List;
+
+import nl.ags.picum.dataStorage.dataUtil.Point;
 
 /**
  * Interface used to callback the response of calculating a route by the
