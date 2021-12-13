@@ -49,7 +49,8 @@ public class Location {
     }
 
     @SuppressLint("MissingPermission")
-    private Point getLastLocation() {
+    //you must listen to LocationObserver.onLocationUpdate() for the returnvalue of this method
+    private void getLastLocation() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
         fusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<android.location.Location>() {
             @Override
@@ -62,7 +63,6 @@ public class Location {
                 }
             }
         });
-        return new Point(0f, 0f);
     }
 
     private LocationRequest getLocationRequest() {
