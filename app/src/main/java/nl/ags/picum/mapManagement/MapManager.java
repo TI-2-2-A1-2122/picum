@@ -79,8 +79,7 @@ public class MapManager {
             checkActiveRoute(routes);
 
             // Setting the loaded routes in the ViewModel
-            // TODO: 13-12-2021 Set the routes in the ViewModel
-
+            this.mapViewModel.setRoutes(routes);
         }).start();
     }
 
