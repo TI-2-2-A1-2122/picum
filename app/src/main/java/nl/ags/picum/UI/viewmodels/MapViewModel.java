@@ -57,8 +57,10 @@ public class MapViewModel extends ViewModel {
     }
 
     private void loadRoutes() {
-
     }
+
+    //private MutableLiveData<List<GeoPoint>>
+
 
 
 
