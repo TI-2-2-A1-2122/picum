@@ -10,7 +10,10 @@ import android.widget.Button;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.gestures.RotationGestureOverlay;
 
 import java.util.List;
 
@@ -31,6 +34,7 @@ public class MapActivity extends AppCompatActivity {
         this.mapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
         this.mMap = findViewById(R.id.MainMap);
         mMapController = mMap.getController();
+        initializeMap();
     }
 
     public void onStartRouteButtonClick(View view){
@@ -40,7 +44,40 @@ public class MapActivity extends AppCompatActivity {
 
     public void initializeMap(){
         mMap.setTileSource(TileSourceFactory.MAPNIK);
-        LiveData<List<Point>> points = mapViewModel.getCalculatedRoute();
+        mMapController.setZoom(20.0);
+        //TODO Get Location
+        GeoPoint startPoint = new GeoPoint(51.585474, 4.792315);
+        //TODO
+        mMapController.setCenter(startPoint); //(Middelpunt route?)
+        RotationGestureOverlay mRotationGestureOverlay = new RotationGestureOverlay(mMap);
+        mRotationGestureOverlay.setEnabled(true);
+        mMap.setMultiTouchControls(true);
+        mMap.getOverlays().add(mRotationGestureOverlay);
+        mMap.setMinZoomLevel(13.0);
+        mMap.setMaxZoomLevel(21.0);
+        mMap.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.NEVER);
+        mMap.setScrollableAreaLimitLatitude(51.637524, 51.525810, 5);
+        mMap.setScrollableAreaLimitLongitude(4.680891, 4.844670, 5);
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //this will refresh the osmdroid configuration on resuming.
+        //if you make changes to the configuration, use
+        //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        //Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
+        mMap.onResume(); //needed for compass, my location overlays, v6.0.0 and up
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        //this will refresh the osmdroid configuration on resuming.
+        //if you make changes to the configuration, use
+        //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        //Configuration.getInstance().save(this, prefs);
+        mMap.onPause();  //needed for compass, my location overlays, v6.0.0 and up
     }
 }
