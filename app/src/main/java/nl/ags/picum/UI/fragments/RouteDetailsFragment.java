@@ -16,7 +16,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import java.util.List;
 
 import nl.ags.picum.R;
 import nl.ags.picum.UI.MainActivity;
@@ -24,6 +27,8 @@ import nl.ags.picum.UI.MapActivity;
 import nl.ags.picum.UI.viewmodels.MapViewModel;
 import nl.ags.picum.dataStorage.managing.AppDatabaseManager;
 import nl.ags.picum.dataStorage.roomData.Route;
+import nl.ags.picum.dataStorage.roomData.Sight;
+import nl.ags.picum.dataStorage.roomData.Waypoint;
 
 public class RouteDetailsFragment extends DialogFragment {
 
@@ -70,12 +75,39 @@ public class RouteDetailsFragment extends DialogFragment {
         ((Button)view.findViewById(R.id.route_details_fragment_details_showButton)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                new  Thread(() -> {
+                    AppDatabaseManager.getInstance(getContext()).setCurrentRoute(selectedRoute);
+                }).start();
+
                 openSelectedRoute();
             }
         });
 
         //TODO image
+
         //TODO amount of sights
+        TextView text = view.findViewById(R.id.route_details_fragment_details_amountOfSightsNumber);
+        ProgressBar p = view.findViewById(R.id.progressBar2);
+
+        new Thread(() -> {
+            List<Sight> Sights = AppDatabaseManager.getInstance(getContext()).getSightsPerRoute(selectedRoute);
+
+            text.setText(Sights.size() + "");
+
+            double amountOfVisitedSights = 0;
+            List<Waypoint> waypoints = AppDatabaseManager.getInstance(getContext()).getWaypointsPerRoute(selectedRoute);
+
+            for (Waypoint w : waypoints) {
+                if (w.isVisited())
+                    amountOfVisitedSights++;
+            }
+
+            double devide = amountOfVisitedSights / waypoints.size();
+            int progress = (int)(devide * 100);
+            p.setProgress(progress);
+        }).start();
+
     }
 
     private void openSelectedRoute(){

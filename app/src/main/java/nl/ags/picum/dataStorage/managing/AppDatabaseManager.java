@@ -7,9 +7,12 @@ import androidx.room.Room;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import nl.ags.picum.dataStorage.linkingTables.RouteWaypointCrossRef;
+import nl.ags.picum.dataStorage.linkingTables.RouteWithWaypoints;
+import nl.ags.picum.dataStorage.linkingTables.WaypointWithSight;
 import nl.ags.picum.dataStorage.roomData.AppDatabase;
 import nl.ags.picum.dataStorage.roomData.Route;
 import nl.ags.picum.dataStorage.roomData.Sight;
@@ -84,7 +87,42 @@ public class AppDatabaseManager implements DataStorage {
         this.database.sightDAO().insertSight(sight);
     }
 
+    public void setWaypointProgress(int waypoint) {
+        this.database.waypointDAO().setProgress(true, waypoint);
+    }
+
     public void setRouteWaypoint(RouteWaypointCrossRef crossRef) {
         this.database.routeDAO().insertRouteWaypointCrossRef(crossRef);
+    }
+
+    public List<Waypoint> getWaypointsPerRoute(Route r) {
+        List<RouteWithWaypoints> routeWithWaypoints = this.database.waypointDAO().getWaypointsPerRoute(r.getRouteName());
+        List<Waypoint> waypoints = new ArrayList<>();
+
+        for (RouteWithWaypoints i : routeWithWaypoints) {
+            waypoints.addAll(i.waypoints);
+        }
+
+        return waypoints;
+    }
+
+    public List<Sight> getSightsPerRoute(Route route) {
+        List<Sight> sights = new ArrayList<>();
+        List<RouteWithWaypoints> waypointsPerRoute = database.waypointDAO().getWaypointsPerRoute(route.getRouteName());
+
+        for (RouteWithWaypoints r : waypointsPerRoute) {
+            List<Waypoint> waypoints = r.waypoints;
+
+            for (Waypoint w : waypoints) {
+                List<WaypointWithSight> waypointsight = database.sightDAO().getSightWithWaypoint(w.getWaypointID());
+
+                for (WaypointWithSight s : waypointsight) {
+                    if (s.sight != null)
+                        sights.add(s.sight);
+                }
+            }
+        }
+
+        return sights;
     }
 }
