@@ -1,68 +1,64 @@
 package nl.ags.picum.UI;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelStoreOwner;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
-import android.content.Intent;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import nl.ags.picum.R;
 import nl.ags.picum.UI.fragments.RouteDetailsFragment;
-import nl.ags.picum.UI.viewmodels.MapViewModel;
-import nl.ags.picum.dataStorage.dataUtil.Point;
 import nl.ags.picum.dataStorage.roomData.Route;
 import nl.ags.picum.UI.Util.RouteAdapter;
 import nl.ags.picum.location.gps.Location;
 import nl.ags.picum.location.gps.LocationObserver;
 import nl.ags.picum.dataStorage.roomData.Waypoint;
-import nl.ags.picum.mapManagement.MapManager;
 import nl.ags.picum.mapManagement.routeCalculation.RouteCalculator;
 import nl.ags.picum.mapManagement.routeCalculation.RouteCalculatorListener;
 import nl.ags.picum.permission.PermissionManager;
 
 public class MainActivity extends AppCompatActivity {
 
-    MapViewModel mapViewModel;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        PermissionManager permissionManager = new PermissionManager();
+        permissionManager.requestPermissions(new String[]{
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+        }, this, getApplicationContext());
 
-        this.mapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
+        RecyclerView recyclerView = findViewById(R.id.main_routes_recyclerview);
+        recyclerView.setAdapter(new RouteAdapter(routes, this));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+        recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
 
-        // TODO REMOVE
-//        PermissionManager permissionManager = new PermissionManager();
-//        permissionManager.requestPermissions(new String[] {
-//                Manifest.permission.ACCESS_FINE_LOCATION,
-//                Manifest.permission.ACCESS_COARSE_LOCATION
-//        }, this, getApplicationContext());
-//
-//        MapManager manager = MapManager.getInstance();
-//        manager.setMapViewModel(this.mapViewModel);
-//
-//        manager.startGPSUpdates(this);
+        new Thread(() -> {
+            AppDatabaseManager manager = AppDatabaseManager.getInstance(getApplicationContext());
+            this.routes.clear();
 
-        mapViewModel.setCurrentlocation(new Point(100,100));
+            List<Route> tempList = manager.getRoutes();
 
-        Intent intent = new Intent(this, MapActivity.class);
-        startActivity(intent);
+            this.routes.addAll(tempList);
+
+            recyclerView.getAdapter().notifyDataSetChanged();
+        }).start();
+
     }
 
     //TODO change to nonstatic
-    public void showDetailsFragment(Route selectedRoute){
+    public void showDetailsFragment(Route selectedRoute) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         new RouteDetailsFragment(selectedRoute).show(fragmentManager, "Dialog-popup");
     }
