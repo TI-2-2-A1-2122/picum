@@ -1,43 +1,34 @@
 package nl.ags.picum.UI;
 
+import android.Manifest;
+import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.Manifest;
-import android.graphics.Point;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import nl.ags.picum.R;
+import nl.ags.picum.UI.Util.RouteAdapter;
 import nl.ags.picum.UI.fragments.RouteDetailsFragment;
 import nl.ags.picum.dataStorage.managing.AppDatabaseManager;
 import nl.ags.picum.dataStorage.roomData.Route;
-import nl.ags.picum.UI.Util.RouteAdapter;
-import nl.ags.picum.location.gps.Location;
-import nl.ags.picum.location.gps.LocationObserver;
-import nl.ags.picum.dataStorage.roomData.Waypoint;
-import nl.ags.picum.mapManagement.routeCalculation.RouteCalculator;
-import nl.ags.picum.mapManagement.routeCalculation.RouteCalculatorListener;
 import nl.ags.picum.permission.PermissionManager;
 
 public class MainActivity extends AppCompatActivity {
 
-    private List<Route> routes = new ArrayList<>();
+    private final List<Route> routes = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        PermissionManager permissionManager = new PermissionManager();
-        permissionManager.requestPermissions(new String[]{
+        PermissionManager.requestPermissions(new String[]{
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION
         }, this, getApplicationContext());
@@ -47,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
 
+
         new Thread(() -> {
             AppDatabaseManager manager = AppDatabaseManager.getInstance(getApplicationContext());
             this.routes.clear();
@@ -55,7 +47,9 @@ public class MainActivity extends AppCompatActivity {
 
             this.routes.addAll(tempList);
 
-            recyclerView.getAdapter().notifyDataSetChanged();
+            runOnUiThread(() -> Objects.requireNonNull(recyclerView.getAdapter()).notifyItemRangeChanged(0,tempList.size()));
+
+
         }).start();
 
     }
@@ -65,7 +59,4 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         new RouteDetailsFragment(selectedRoute).show(fragmentManager, "Dialog-popup");
     }
-
-
-
 }

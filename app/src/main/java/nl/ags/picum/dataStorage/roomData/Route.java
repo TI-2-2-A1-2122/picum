@@ -5,8 +5,10 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.io.Serializable;
+
 @Entity
-public class Route {
+public class Route implements Serializable {
     @PrimaryKey
     @NonNull
     private String routeName;
@@ -66,6 +68,7 @@ public class Route {
         this.inProgress = inProgress;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Route{" +

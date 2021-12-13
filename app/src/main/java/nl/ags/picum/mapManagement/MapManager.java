@@ -5,11 +5,8 @@ import android.util.Log;
 
 import com.google.android.gms.location.Geofence;
 
-import org.osmdroid.views.MapView;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import nl.ags.picum.UI.viewmodels.MapViewModel;
 import nl.ags.picum.UI.viewmodels.SightViewModel;
@@ -22,7 +19,6 @@ import nl.ags.picum.dataStorage.roomData.Waypoint;
 import nl.ags.picum.location.gps.Location;
 import nl.ags.picum.location.gps.LocationObserver;
 import nl.ags.picum.mapManagement.routeCalculation.RouteCalculator;
-import nl.ags.picum.permission.PermissionManager;
 
 /**
  * MapManager handles the communication from the submodules to the ViewModel.

@@ -1,11 +1,8 @@
 package nl.ags.picum.UI.viewmodels;
 
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-
-import org.osmdroid.util.GeoPoint;
 
 import java.util.List;
 
@@ -28,18 +25,15 @@ public class MapViewModel extends ViewModel {
         getCurrentlocation().postValue(currentlocation);
     }
 
-    private MutableLiveData<Route> currentRoute;
+    private MutableLiveData<Route> currentRoute = new MutableLiveData<>();
 
 
-    public MutableLiveData<Route> getcurrentRoute() {
-        if (currentRoute == null) {
-            currentRoute = new MutableLiveData<>();
-        }
-        return currentRoute;
+    public Route getcurrentRoute() {
+        return currentRoute.getValue();
     }
 
-    public void setCurrentRoute(Route currentRoute) {
-        getcurrentRoute().postValue(currentRoute);
+    public void setCurrentRoute(Route route) {
+        this.currentRoute.setValue(route);
     }
 
     private MutableLiveData<List<Route>> routes;
