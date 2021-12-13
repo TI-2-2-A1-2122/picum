@@ -28,11 +28,11 @@ import nl.ags.picum.mapManagement.routeCalculation.RouteCalculator;
  * The GUI can access this class to request data
  */
 public class MapManager implements LocationObserver {
-    private static final double DISTANCE_METERS = 5;
     public static String LOGTAG = MapManager.class.getName();
+    private static final double DISTANCE_METERS = 5;
 
     // Object //
-    private Context context;
+    private final Context context;
 
     private MapViewModel mapViewModel;
     private SightViewModel sightViewModel;
@@ -43,7 +43,7 @@ public class MapManager implements LocationObserver {
      * Main constructor for the MapManager.
      * Private constructor since MapManager uses the singleton pattern
      */
-    private MapManager(Context context) {
+    public MapManager(Context context) {
         this.context = context;
     }
 
@@ -163,11 +163,11 @@ public class MapManager implements LocationObserver {
      */
     @Override
     public void onLocationUpdate(Point point) {
-        // TODO: 13-12-2021 Handle splitting waypoints that are received
 
         // First updating the location of the user
         this.mapViewModel.setCurrentlocation(point);
 
+        // Sorting the list of waypoints to correct visited
         // Starting a new thread to run async
         new Thread(() -> {
             // Getting a database
@@ -179,9 +179,8 @@ public class MapManager implements LocationObserver {
             // Loop over the list of waypoints
             sortPointByVisited(point, waypointList);
 
+            dataStorage.setHistory(this.mapViewModel.getcurrentRoute(), waypointList);
         }).start();
-
-        // Then calling the method to sort the list for checks
 
     }
 

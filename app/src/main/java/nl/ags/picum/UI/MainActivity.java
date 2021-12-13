@@ -9,6 +9,8 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,10 +24,12 @@ import nl.ags.picum.R;
 import nl.ags.picum.UI.Util.RouteAdapter;
 import nl.ags.picum.UI.fragments.RouteDetailsFragment;
 import nl.ags.picum.UI.fragments.SettingsFragment;
+import nl.ags.picum.UI.viewmodels.MapViewModel;
 import nl.ags.picum.dataStorage.dataUtil.Point;
 import nl.ags.picum.dataStorage.managing.AppDatabaseManager;
 import nl.ags.picum.dataStorage.roomData.Route;
 import nl.ags.picum.dataStorage.roomData.Waypoint;
+import nl.ags.picum.mapManagement.MapManager;
 import nl.ags.picum.mapManagement.routeCalculation.RouteCalculator;
 import nl.ags.picum.mapManagement.routeCalculation.RouteCalculatorListener;
 import nl.ags.picum.permission.PermissionManager;
@@ -54,6 +58,13 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
 
+        MapViewModel mapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
+        mapViewModel.getCalculatedRoute().observe(this, new Observer<List<Point>>() {
+            @Override
+            public void onChanged(List<Point> points) {
+                Log.d("JESSSSSSSSSSSSSSE", "Got points: " + points.toString());
+            }
+        });
         new Thread(() -> {
             AppDatabaseManager manager = AppDatabaseManager.getInstance(getApplicationContext());
             this.routes.clear();
@@ -62,27 +73,22 @@ public class MainActivity extends AppCompatActivity {
 
             this.routes.addAll(tempList);
 
+            Log.d("JESSSSSSSSSSSSSSE", routes.get(0).toString());
+
+            MapManager mapManager = new MapManager(this);
+            mapManager.setMapViewModel(mapViewModel);
+
+            mapManager.calculateRoutePoints(routes.get(0));
+
+
+
             runOnUiThread(() -> Objects.requireNonNull(recyclerView.getAdapter()).notifyItemRangeChanged(0,tempList.size()));
 
 
         }).start();
 
 
-        Waypoint w1 = new Waypoint(1,false, 51.740484f, 4.544803f);
-        Waypoint w2 = new Waypoint(2,false, 51.771082f, 4.614198f);
 
-        List<Waypoint> waypointList = new ArrayList<>();
-        waypointList.add(w1);
-        waypointList.add(w2);
-
-        RouteCalculator calculator = new RouteCalculator(new RouteCalculatorListener() {
-            @Override
-            public void onRoutePointsCalculated(List<Point> points) {
-                Log.d("TESTSSSSSSSSSSSS", points.toString());
-            }
-        });
-
-        calculator.calculate(waypointList);
     }
 
     //TODO change to nonstatic

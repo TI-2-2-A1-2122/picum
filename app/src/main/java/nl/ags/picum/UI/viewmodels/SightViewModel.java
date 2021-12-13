@@ -10,13 +10,10 @@ import nl.ags.picum.dataStorage.roomData.Sight;
 
 public class SightViewModel extends ViewModel {
 
-    private MutableLiveData<Sight> currentSight;
+    private final MutableLiveData<Sight> currentSight = new MutableLiveData<>();
 
     public LiveData<Sight> getCurrentSight()
     {
-        if (currentSight == null) {
-            currentSight = new MutableLiveData<Sight>();
-        }
         return currentSight;
     }
 
@@ -25,12 +22,9 @@ public class SightViewModel extends ViewModel {
         this.currentSight.postValue(sight);
     }
 
-    private MutableLiveData<List<Sight>> sightsLiveData;
+    private final MutableLiveData<List<Sight>> sightsLiveData = new MutableLiveData<>();
 
     public LiveData<List<Sight>> getSights() {
-        if (sightsLiveData == null) {
-            sightsLiveData = new MutableLiveData<List<Sight>>();
-        }
         return sightsLiveData;
     }
 

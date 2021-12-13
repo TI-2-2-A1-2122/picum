@@ -11,7 +11,7 @@ import nl.ags.picum.dataStorage.roomData.Route;
 
 public class MapViewModel extends ViewModel {
 
-    private MutableLiveData<Point> currentlocation;
+    private final MutableLiveData<Point> currentlocation = new MutableLiveData<>();
 
 
     /**
@@ -21,9 +21,6 @@ public class MapViewModel extends ViewModel {
      * @return MutableLiveData<Point>
      */
     public MutableLiveData<Point> getCurrentlocation() {
-        if (currentlocation == null) {
-            currentlocation = new MutableLiveData<>();
-        }
         return currentlocation;
     }
 
@@ -31,7 +28,7 @@ public class MapViewModel extends ViewModel {
         getCurrentlocation().postValue(currentlocation);
     }
 
-    private MutableLiveData<Route> currentRoute = new MutableLiveData<>();
+    private final MutableLiveData<Route> currentRoute = new MutableLiveData<>();
 
     /**
      * @return returns the current route
@@ -48,7 +45,7 @@ public class MapViewModel extends ViewModel {
         this.currentRoute.setValue(route);
     }
 
-    private MutableLiveData<List<Route>> routes;
+    private final MutableLiveData<List<Route>> routes = new MutableLiveData<>();
 
     /**
      * this MutableLiveData of routes
@@ -57,10 +54,6 @@ public class MapViewModel extends ViewModel {
      * @return MutableLiveData<List<Route>>
      */
     public MutableLiveData<List<Route>> getRoutes() {
-        if (routes == null) {
-            routes = new MutableLiveData<>();
-            loadRoutes();
-        }
         return routes;
     }
 
@@ -72,13 +65,10 @@ public class MapViewModel extends ViewModel {
     private void loadRoutes() {
     }
 
-    private MutableLiveData<List<Point>> calculatedRoute;
+    private final MutableLiveData<List<Point>> calculatedRoute = new MutableLiveData<>();
 
     public MutableLiveData<List<Point>> getCalculatedRoute()
     {
-        if (calculatedRoute == null) {
-            calculatedRoute = new MutableLiveData<>();
-        }
         return calculatedRoute;
     }
 

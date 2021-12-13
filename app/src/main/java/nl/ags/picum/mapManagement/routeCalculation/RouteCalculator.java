@@ -102,8 +102,8 @@ public class RouteCalculator {
             for(Waypoint waypoint : waypointList) {
                 JSONArray waypointArray = new JSONArray();
 
-                waypointArray.put(waypoint.getLatitude());
                 waypointArray.put(waypoint.getLongitude());
+                waypointArray.put(waypoint.getLatitude());
 
                 waypointsArray.put(waypointArray);
             }
@@ -111,6 +111,7 @@ public class RouteCalculator {
             // Put the JSONArray into the object
             object.put("coordinates", waypointsArray);
 
+            Log.d(LOG_TAG, object.toString());
             // Returning the created Request body
             return RequestBody.create(object.toString(), JSON);
 
