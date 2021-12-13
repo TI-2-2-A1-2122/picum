@@ -3,6 +3,8 @@ package nl.ags.picum.mapManagement;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.android.gms.location.Geofence;
+
 import org.osmdroid.views.MapView;
 
 import java.util.ArrayList;
@@ -27,7 +29,7 @@ import nl.ags.picum.permission.PermissionManager;
  * The class uses the singleton pattern
  * The GUI can access this class to request data
  */
-public class MapManager implements LocationObserver{
+public class MapManager implements LocationObserver {
     public static String LOGTAG = MapManager.class.getName();
 
     private static MapManager manager;
@@ -167,9 +169,11 @@ public class MapManager implements LocationObserver{
     }
 
     @Override
-    public void onNearLocationEntered() {
+    public void onNearLocationEntered(Geofence geofence) {
         // Get the sight that was marked as next in the list
 
         // Put the next Sight to the ViewModel
+
     }
+
 }
