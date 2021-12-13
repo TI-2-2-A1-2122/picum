@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Picum</string>
+    <string name="description_of_route">Omschrijving</string>
+    <string name="amountOfSights_of_route">Bezienswaardigheden:</string>
+    <string name="distance_of_route">Afstand:</string>
+    <string name="progress_of_route">Voortgang:</string>
+    <string name="back">Terug</string>
+    <string name="Show">Toon</string>
+    <string name="does_it_work">Het werkt</string>
+    <string name="choose_your_language">Kies je taal:</string>
+    <string name="Start">Start</string>
+</resources>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".UI.fragments.SettingsFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <TextView
+        android:id="@+id/LangChoice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/choose_your_language"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/englishButtonIMG"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/englishButtonIMG"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="toEnglish"
+        android:src="@drawable/english"
+        app:layout_constraintBottom_toTopOf="@+id/dutchButtonIMG"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/LangChoice" />
+
+    <ImageButton
+        android:id="@+id/dutchButtonIMG"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="toDutch"
+        android:src="@drawable/nederlands"
+        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/englishButtonIMG" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/back"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:onClick="backButton"
+        app:layout_constraintTop_toBottomOf="@+id/dutchButtonIMG" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
