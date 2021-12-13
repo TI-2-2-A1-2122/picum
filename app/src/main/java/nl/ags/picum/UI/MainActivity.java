@@ -20,16 +20,13 @@ import nl.ags.picum.dataStorage.roomData.Route;
 import nl.ags.picum.UI.Util.RouteAdapter;
 
 public class MainActivity extends AppCompatActivity {
+    private List<Route> routes = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //TODO change code for implementation
-        List<Route> routes = new ArrayList<>();
-        routes.add(new Route("History", "Dit is een kilomter om te lopen", 0, false));
-        routes.add(new Route("Geen history", "Dit is geen historische kilometer", 0, false));
         RecyclerView recyclerView = findViewById(R.id.main_routes_recyclerview);
         recyclerView.setAdapter(new RouteAdapter(routes, this));
         recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
@@ -37,9 +34,21 @@ public class MainActivity extends AppCompatActivity {
 
         new Thread(() -> {
             AppDatabaseManager manager = AppDatabaseManager.getInstance(getApplicationContext());
-            manager.getCurrentRoute();
+            this.routes.clear();
+
+            List<Route> tempList = manager.getRoutes();
+            this.routes.addAll(tempList);
+
+            recyclerView.getAdapter().notifyDataSetChanged();
         }).start();
 
+        /*
+        //TODO change code for implementation
+        List<Route> routes = new ArrayList<>();
+        routes.add(new Route("History", "Dit is een kilomter om te lopen", 0, false));
+        routes.add(new Route("Geen history", "Dit is geen historische kilometer", 0, false));
+
+         */
     }
 
     public void onClickLanguageFAB(View view){
