@@ -2,7 +2,16 @@ package nl.ags.picum.mapManagement;
 
 import android.content.Context;
 
+import java.util.List;
+
+import nl.ags.picum.R;
+import nl.ags.picum.dataStorage.dataUtil.Point;
+import nl.ags.picum.dataStorage.managing.AppDatabaseManager;
+import nl.ags.picum.dataStorage.managing.DataStorage;
 import nl.ags.picum.dataStorage.roomData.Route;
+import nl.ags.picum.dataStorage.roomData.Waypoint;
+import nl.ags.picum.mapManagement.routeCalculation.RouteCalculator;
+import nl.ags.picum.mapManagement.routeCalculation.RouteCalculatorListener;
 
 /**
  * MapManager handles the communication from the submodules to the ViewModel.
@@ -13,6 +22,7 @@ public class MapManager {
 
     // Singleton //
     private static MapManager mapManager;
+
     public static MapManager getInstance() {
         if (mapManager == null) mapManager = new MapManager();
 
@@ -26,7 +36,6 @@ public class MapManager {
      * Private constructor since MapManager uses the singleton pattern
      */
     private MapManager() {
-
     }
 
     /**
@@ -34,10 +43,24 @@ public class MapManager {
      * open route API to get all the route points
      * for that route.
      * The calculated points are not returned but are put in the ViewModel
-     * @param route  The route to calculate the points to walk of
+     *
+     * @param route The route to calculate the points to walk of
      */
-    public void calculateRoutePoints(Route route) {
+    public void calculateRoutePoints(Route route, Context context) {
+        // Getting all the waypoints bases on the route
+        DataStorage dataStorage = AppDatabaseManager.getInstance(context);
+        // TODO: 13-12-2021 not implemented yet in AppDatabaseManager
+        List<Waypoint> waypoints = dataStorage.getHistory(route);
 
+        // Creating a RouteCalculator to calculate a route, implementing the callback function
+        // to update the view model
+        RouteCalculator calculator = new RouteCalculator(points -> {
+            // Sending the route list to the ViewModel
+            // TODO: 13-12-2021 Add the list to the ViewModel
+        });
+
+        // Call the calculate function
+        calculator.calculate(waypoints);
     }
 
     /**
@@ -51,7 +74,8 @@ public class MapManager {
     /**
      * Given a route the method with load all the routes from that route.
      * The sights are put in the ViewModel
-     * @param route  The route to load the sights of
+     *
+     * @param route The route to load the sights of
      */
     public void loadSightsPerRoute(Route route) {
 
