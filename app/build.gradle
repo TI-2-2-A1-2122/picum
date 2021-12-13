@@ -39,8 +39,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     implementation 'org.osmdroid:osmdroid-android:6.1.10'
 
-    //OSMDroid
-    implementation 'org.osmdroid:osmdroid-android:6.1.11'
 
     //Room db
     implementation "androidx.room:room-runtime:2.3.0"
