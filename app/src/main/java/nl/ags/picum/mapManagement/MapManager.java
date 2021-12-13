@@ -1,6 +1,7 @@
 package nl.ags.picum.mapManagement;
 
 import android.app.Activity;
+import android.Manifest;
 import android.content.Context;
 
 import androidx.lifecycle.Observer;
@@ -19,6 +20,7 @@ import nl.ags.picum.dataStorage.roomData.Route;
 import nl.ags.picum.dataStorage.roomData.Sight;
 import nl.ags.picum.dataStorage.roomData.Waypoint;
 import nl.ags.picum.mapManagement.routeCalculation.RouteCalculator;
+import nl.ags.picum.permission.PermissionManager;
 
 /**
  * MapManager handles the communication from the submodules to the ViewModel.
@@ -27,6 +29,13 @@ import nl.ags.picum.mapManagement.routeCalculation.RouteCalculator;
  */
 public class MapManager {
 
+    // Singleton //
+    private static MapManager mapManager;
+    public static MapManager getInstance() {
+        if (mapManager == null) mapManager = new MapManager();
+
+        return mapManager;
+    }
     // Object //
     private final MapViewModel mapViewModel;
 
