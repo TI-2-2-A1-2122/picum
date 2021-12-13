@@ -1,26 +1,18 @@
 package nl.ags.picum.mapManagement;
 
-import android.app.Activity;
-import android.Manifest;
 import android.content.Context;
-
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelStoreOwner;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import nl.ags.picum.UI.viewmodels.MapViewModel;
+import nl.ags.picum.UI.viewmodels.SightViewModel;
 import nl.ags.picum.dataStorage.managing.AppDatabaseManager;
 import nl.ags.picum.dataStorage.managing.DataStorage;
 import nl.ags.picum.dataStorage.roomData.Route;
 import nl.ags.picum.dataStorage.roomData.Sight;
 import nl.ags.picum.dataStorage.roomData.Waypoint;
 import nl.ags.picum.mapManagement.routeCalculation.RouteCalculator;
-import nl.ags.picum.permission.PermissionManager;
 
 /**
  * MapManager handles the communication from the submodules to the ViewModel.
@@ -31,13 +23,15 @@ public class MapManager {
     
     // Object //
     private final MapViewModel mapViewModel;
+    private final SightViewModel sightViewModel;
 
     /**
      * Main constructor for the MapManager.
      * Private constructor since MapManager uses the singleton pattern
      */
-    private MapManager(MapViewModel mapViewModel) {
+    private MapManager(MapViewModel mapViewModel, SightViewModel sightViewModel) {
         this.mapViewModel = mapViewModel;
+        this.sightViewModel = sightViewModel;
     }
 
     /**
@@ -56,10 +50,7 @@ public class MapManager {
 
         // Creating a RouteCalculator to calculate a route, implementing the callback function
         // to update the view model
-        RouteCalculator calculator = new RouteCalculator(points -> {
-            // Sending the route list to the ViewModel
-            // TODO: 13-12-2021 Add the list to the ViewModel
-        });
+        RouteCalculator calculator = new RouteCalculator(this.mapViewModel::setCalculatedRoute);
 
         // Call the calculate function
         calculator.calculate(waypoints);
@@ -101,7 +92,7 @@ public class MapManager {
             List<Sight> sights = new ArrayList<>();
 
             // Setting the sights in the viewModel
-            // TODO: 13-12-2021 Set list in ViewModel
+            this.sightViewModel.setSights(sights);
         }).start();
     }
 
