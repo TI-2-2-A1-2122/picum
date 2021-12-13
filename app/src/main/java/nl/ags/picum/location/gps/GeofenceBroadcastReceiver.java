@@ -10,7 +10,7 @@ import com.google.android.gms.location.GeofencingEvent;
 
 public class GeofenceBroadcastReceiver extends BroadcastReceiver {
 
-    private LocationObserver observer;
+    private final LocationObserver observer;
 
     public GeofenceBroadcastReceiver(LocationObserver observer) {
         this.observer = observer;
@@ -18,13 +18,15 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        //TODO filter incoming message on geofence point
         GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
         if(geofencingEvent.hasError()) {
             Log.d("geofence", "Geofence error:" + geofencingEvent.getErrorCode());
         }
         for (Geofence geofence : geofencingEvent.getTriggeringGeofences()) {
+            Log.d("Geofence", "Geofence entered: " + geofence.getRequestId());
             observer.onNearLocationEntered(geofence);
+
         }
+
     }
 }

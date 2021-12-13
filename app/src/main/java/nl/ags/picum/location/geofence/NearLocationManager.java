@@ -17,6 +17,9 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import nl.ags.picum.dataStorage.dataUtil.Point;
 import nl.ags.picum.location.gps.GeofenceBroadcastReceiver;
 
@@ -37,9 +40,17 @@ public class NearLocationManager implements NextNearLocation {
 
     @Override
     public void setNextNearLocation(Point nextLocation, Double radiusInMeters) {
+        //remove current geofence
+        if(activeGeofence != null) {
+            List<String> activeFenceList = new ArrayList<>();
+            activeFenceList.add(activeGeofence.getRequestId());
+            geofencingClient.removeGeofences(activeFenceList);
+        }
+        //set new geofence
         setActiveGeofence(nextLocation);
         addGeofence();
     }
+
 
     private void setActiveGeofence(Point nextLocation) {
         this.activeGeofence = new Geofence.Builder()
@@ -97,7 +108,7 @@ public class NearLocationManager implements NextNearLocation {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        addingSucceeded[0] = true;
+                        addingSucceeded[0] = false;
                         Log.d("Geo", "Adding geofence failed, " + e.getLocalizedMessage());
                     }
                 });

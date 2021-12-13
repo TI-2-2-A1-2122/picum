@@ -30,6 +30,8 @@ public class Location {
     private FusedLocationProviderClient fusedLocationClient;
     private LocationObserver observer;
 
+    public NearLocationManager nearLocationManager;
+
     public Location(Context context) {
         this.context = context;
         this.fusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
@@ -39,16 +41,11 @@ public class Location {
     }
 
     public void start(LocationObserver observer) {
-        NearLocationManager nearLocationManager = new NearLocationManager(context);
+        this.nearLocationManager = new NearLocationManager(context);
         this.geofenceBroadcastReceiver = new GeofenceBroadcastReceiver(observer);
         this.observer = observer;
         startLocationUpdates();
         //TODO start sending locationupdates to observer
-    }
-
-    private Point getCurrentLocation() {
-        //TODO get current location code
-        return new Point(0f, 0f);
     }
 
     @SuppressLint("MissingPermission")
@@ -66,15 +63,6 @@ public class Location {
             }
         });
         return new Point(0f, 0f);
-    }
-
-    private NextNearLocation getNextNearLocation() {
-        return new NextNearLocation() {
-            @Override
-            public void setNextNearLocation(Point point, Double radiusInMeters) {
-
-            }
-        };
     }
 
     private LocationRequest getLocationRequest() {
