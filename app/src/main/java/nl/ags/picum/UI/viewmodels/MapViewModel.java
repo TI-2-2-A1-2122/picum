@@ -1,7 +1,6 @@
 package nl.ags.picum.UI.viewmodels;
 
 
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -40,6 +39,25 @@ public class MapViewModel extends ViewModel {
 
     public void setCurrentRoute(Route currentRoute) {
         this.currentRoute.postValue(currentRoute);
+    }
+
+    private MutableLiveData<List<Route>> routes;
+
+    public LiveData<List<Route>> getRoutes() {
+        if (routes == null) {
+            routes = new MutableLiveData<List<Route>>();
+            loadRoutes();
+        }
+        return routes;
+    }
+
+    public void setRoutes(List<Route> routes)
+    {
+        this.routes.postValue(routes);
+    }
+
+    private void loadRoutes() {
+
     }
 
 
