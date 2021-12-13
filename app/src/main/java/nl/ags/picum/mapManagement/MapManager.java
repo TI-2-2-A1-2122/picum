@@ -1,6 +1,7 @@
 package nl.ags.picum.mapManagement;
 
 import android.content.Context;
+import android.util.Log;
 
 import org.osmdroid.views.MapView;
 
@@ -27,6 +28,7 @@ import nl.ags.picum.permission.PermissionManager;
  * The GUI can access this class to request data
  */
 public class MapManager implements LocationObserver{
+    public static String LOGTAG = MapManager.class.getName();
 
     private static MapManager manager;
     public static MapManager getInstance() {
@@ -75,25 +77,26 @@ public class MapManager implements LocationObserver{
         calculator.calculate(waypoints);
     }
 
-    /**
-     * This method triggers the load to get all the routes from the database.
-     * The loaded routes are put in the ViewModel as soon as they are retrieved
-     */
-    public void loadAllRoutes(Context context) {
-        // Starting a new thread to run async
-        new Thread(() -> {
-
-            // Getting all the routes from the Database
-            DataStorage dataStorage = AppDatabaseManager.getInstance(context);
-            List<Route> routes = dataStorage.getRoutes();
-
-            // First checking if there is an active route
-            checkActiveRoute(routes);
-
-            // Setting the loaded routes in the ViewModel
-            this.mapViewModel.setRoutes(routes);
-        }).start();
-    }
+//    /**
+//     * This method triggers the load to get all the routes from the database.
+//     * The loaded routes are put in the ViewModel as soon as they are retrieved
+//     */
+//    public void loadAllRoutes(Context context) {
+//        // Starting a new thread to run async
+//        new Thread(() -> {
+//
+//            // Getting all the routes from the Database
+//            DataStorage dataStorage = AppDatabaseManager.getInstance(context);
+//            List<Route> routes = dataStorage.getRoutes();
+//
+//            // First checking if there is an active route
+//            checkActiveRoute(routes);
+//
+//            // Setting the loaded routes in the ViewModel
+//            if(this.mainViewModel != null)
+//                this.mainViewModel.setRoutes(routes);
+//        }).start();
+//    }
 
     /**
      * Given a route the method with load all the routes from that route.
@@ -141,12 +144,16 @@ public class MapManager implements LocationObserver{
     public void startGPSUpdates(Context context) {
         Location locationService = new Location(context);
 
+        // Starting the location service
         locationService.start(this);
     }
 
     @Override
     public void onLocationError() {
+        // On Error, log the error
+        Log.e(LOGTAG, "Error in retrieving location from user");
 
+        // TODO: 13-12-2021 As extra notify user of location lost
     }
 
     @Override
@@ -161,6 +168,8 @@ public class MapManager implements LocationObserver{
 
     @Override
     public void onNearLocationEntered() {
+        // Get the sight that was marked as next in the list
 
+        // Put the next Sight to the ViewModel
     }
 }
