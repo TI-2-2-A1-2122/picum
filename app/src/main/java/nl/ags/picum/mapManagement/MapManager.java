@@ -7,23 +7,29 @@ import java.util.List;
 
 import nl.ags.picum.UI.viewmodels.MapViewModel;
 import nl.ags.picum.UI.viewmodels.SightViewModel;
+import nl.ags.picum.dataStorage.dataUtil.Point;
 import nl.ags.picum.dataStorage.managing.AppDatabaseManager;
 import nl.ags.picum.dataStorage.managing.DataStorage;
 import nl.ags.picum.dataStorage.roomData.Route;
 import nl.ags.picum.dataStorage.roomData.Sight;
 import nl.ags.picum.dataStorage.roomData.Waypoint;
+import nl.ags.picum.location.gps.Location;
+import nl.ags.picum.location.gps.LocationObserver;
 import nl.ags.picum.mapManagement.routeCalculation.RouteCalculator;
+import nl.ags.picum.permission.PermissionManager;
 
 /**
  * MapManager handles the communication from the submodules to the ViewModel.
  * The class uses the singleton pattern
  * The GUI can access this class to request data
  */
-public class MapManager {
+public class MapManager implements LocationObserver{
     
     // Object //
     private final MapViewModel mapViewModel;
     private final SightViewModel sightViewModel;
+
+    private Location locationService;
 
     /**
      * Main constructor for the MapManager.
@@ -119,8 +125,29 @@ public class MapManager {
      * This method triggers the start method for the Location subsystem
      * It wil start the live updates of users location put in the ViewModel
      */
-    public void startGPSUpdates() {
+    public void startGPSUpdates(PermissionManager manager, Context context) {
+        this.locationService = new Location(context);
+
+        this.locationService.start(this);
+    }
+
+    @Override
+    public void onLocationError() {
 
     }
 
+    @Override
+    public void onLocationUpdate(Point point) {
+        // When a new location is entered:
+        // - Handle the change in walked part, based on checked waypoints
+        // - Sent the new location to the ViewModel
+
+
+        this.mapViewModel.setCurrentlocation(point);
+    }
+
+    @Override
+    public void onNearLocationEntered() {
+
+    }
 }

@@ -37,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
                 Manifest.permission.ACCESS_COARSE_LOCATION
         }, this, getApplicationContext());
 
+
+
         //TODO change code for implementation
         List<Route> routes = new ArrayList<>();
         routes.add(new Route("History", "Dit is een kilomter om te lopen", 0, false));
@@ -62,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
         calculator.calculate(waypointList);
+
+
     }
 
     //TODO change to nonstatic
