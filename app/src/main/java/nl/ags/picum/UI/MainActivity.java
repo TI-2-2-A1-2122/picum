@@ -18,14 +18,18 @@ import java.util.List;
 
 import nl.ags.picum.R;
 import nl.ags.picum.UI.fragments.RouteDetailsFragment;
+import nl.ags.picum.dataStorage.managing.AppDatabaseManager;
 import nl.ags.picum.dataStorage.roomData.Route;
 import nl.ags.picum.UI.Util.RouteAdapter;
+import nl.ags.picum.location.gps.Location;
+import nl.ags.picum.location.gps.LocationObserver;
 import nl.ags.picum.dataStorage.roomData.Waypoint;
 import nl.ags.picum.mapManagement.routeCalculation.RouteCalculator;
 import nl.ags.picum.mapManagement.routeCalculation.RouteCalculatorListener;
 import nl.ags.picum.permission.PermissionManager;
 
 public class MainActivity extends AppCompatActivity {
+    private List<Route> routes = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +40,35 @@ public class MainActivity extends AppCompatActivity {
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION
         }, this, getApplicationContext());
+
+        RecyclerView recyclerView = findViewById(R.id.main_routes_recyclerview);
+        recyclerView.setAdapter(new RouteAdapter(routes, this));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+        recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
+
+        new Thread(() -> {
+            AppDatabaseManager manager = AppDatabaseManager.getInstance(getApplicationContext());
+            this.routes.clear();
+
+            List<Route> tempList = manager.getRoutes();
+            this.routes.addAll(tempList);
+
+            recyclerView.getAdapter().notifyDataSetChanged();
+        }).start();
+
+        /*
+        //TODO change code for implementation
+        List<Route> routes = new ArrayList<>();
+        routes.add(new Route("History", "Dit is een kilomter om te lopen", 0, false));
+        routes.add(new Route("Geen history", "Dit is geen historische kilometer", 0, false));
+
+         */
+//
+//        RecyclerView recyclerView = findViewById(R.id.main_routes_recyclerview);
+//        recyclerView.setAdapter(new RouteAdapter(routes, this));
+//        recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+//        recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
+        
 
         Waypoint w1 = new Waypoint(1,false, 51.740484f, 4.544803f);
         Waypoint w2 = new Waypoint(2,false, 51.771082f, 4.614198f);

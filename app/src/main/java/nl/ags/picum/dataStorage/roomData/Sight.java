@@ -11,12 +11,15 @@ public class Sight {
     @NonNull
     private String sightName;
 
+    @NonNull
     @ColumnInfo(name = "PhotoURL")
     private int photoURL;
 
+    @NonNull
     @ColumnInfo(name = "SightDescription")
     private String sightDescription;
 
+    @NonNull
     @ColumnInfo(name = "WebsiteURL")
     private String websiteURL;
 
