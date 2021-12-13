@@ -29,7 +29,6 @@ import nl.ags.picum.permission.PermissionManager;
  */
 public class MapManager {
 
-
     // Object //
     private final MapViewModel mapViewModel;
 
