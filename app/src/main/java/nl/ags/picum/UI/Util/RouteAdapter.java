@@ -48,7 +48,7 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
         holder.layout.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                mainActivity.showDetailsFragment(selectedRoute);
+               // mainActivity.showDetailsFragment(selectedRoute);
             }
         });
     }

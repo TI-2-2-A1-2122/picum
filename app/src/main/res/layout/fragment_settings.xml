@@ -12,17 +12,17 @@
         android:id="@+id/englishButtonIMG"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/English"
+        android:src="@drawable/english"
         android:onClick="toEnglish"/>
 
     <ImageButton
         android:id="@+id/dutchButtonIMG"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/Nederlands"
+        android:onClick="toDutch"
+        android:src="@drawable/nederlands"
         android:translationX="100dp"
-        android:translationY="200dp"
-        android:onClick="toDutch"/>
+        android:translationY="200dp" />
 
 
 </FrameLayout>

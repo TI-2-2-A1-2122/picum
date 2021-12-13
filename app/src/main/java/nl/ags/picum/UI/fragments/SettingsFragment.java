@@ -38,34 +38,8 @@ public class SettingsFragment extends DialogFragment {
 
 
 
-//
-//
-//        Locale locale = new Locale("en");
-//        Locale.setDefault(locale);
-//        Configuration configuration = new Configuration();
-//        configuration.locale = locale;
-//        getBaseContext().getResources().updateConfiguration(configuration, getBaseContext().getResources().getDisplayMetrics());
-//        System.out.println("hey schemzy");
-//        setContentView(R.layout.activity_main);
+
     }
 
-    public void toEnglish(View view) {
-        Locale locale = new Locale("en");
-        Locale.setDefault(locale);
-        Configuration configuration = new Configuration();
-        configuration.locale = locale;
-        getActivity().getBaseContext().getResources().updateConfiguration(configuration, getActivity().getBaseContext().getResources().getDisplayMetrics());
-        System.out.println("hey schemzy");
-        getActivity().setContentView(R.layout.activity_main);
-    }
 
-    public void toDutch(View view) {
-        Locale locale = new Locale("nl");
-        Locale.setDefault(locale);
-        Configuration configuration = new Configuration();
-        configuration.locale = locale;
-        getActivity().getBaseContext().getResources().updateConfiguration(configuration, getActivity().getBaseContext().getResources().getDisplayMetrics());
-        System.out.println("hey schemzy");
-        getActivity().setContentView(R.layout.activity_main);
-    }
 }
