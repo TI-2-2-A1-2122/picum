@@ -1,12 +1,15 @@
 package nl.ags.picum.UI.fragments;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +20,9 @@ import android.widget.TextView;
 
 import nl.ags.picum.R;
 import nl.ags.picum.UI.MainActivity;
+import nl.ags.picum.UI.MapActivity;
+import nl.ags.picum.UI.viewmodels.MapViewModel;
+import nl.ags.picum.dataStorage.managing.AppDatabaseManager;
 import nl.ags.picum.dataStorage.roomData.Route;
 
 public class RouteDetailsFragment extends DialogFragment {
@@ -73,7 +79,11 @@ public class RouteDetailsFragment extends DialogFragment {
     }
 
     private void openSelectedRoute(){
-
+        MapViewModel mapViewModel = new ViewModelProvider(requireActivity()).get(MapViewModel.class);
+        //mapViewModel.setCurrentRoute(selectedRoute);
+        Intent intent = new Intent(getContext(), MapActivity.class);
+        startActivity(intent);
+        dismiss();
     }
 
 
