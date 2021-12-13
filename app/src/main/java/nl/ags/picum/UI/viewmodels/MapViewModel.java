@@ -5,6 +5,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import org.osmdroid.util.GeoPoint;
+
 import java.util.List;
 
 import nl.ags.picum.dataStorage.dataUtil.Point;
@@ -59,7 +61,20 @@ public class MapViewModel extends ViewModel {
     private void loadRoutes() {
     }
 
-    //private MutableLiveData<List<GeoPoint>>
+    private MutableLiveData<List<GeoPoint>> calculatedRoute;
+
+    public LiveData<List<GeoPoint>> getCalculatedRoute()
+    {
+        if (calculatedRoute == null) {
+            calculatedRoute = new MutableLiveData<List<GeoPoint>>();
+        }
+        return calculatedRoute;
+    }
+
+    public void setCalculatedRoute(List<GeoPoint> geoPoints)
+    {
+        this.calculatedRoute.postValue(geoPoints);
+    }
 
 
 
