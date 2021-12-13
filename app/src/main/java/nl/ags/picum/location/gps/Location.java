@@ -22,6 +22,7 @@ import com.google.android.gms.tasks.Task;
 import nl.ags.picum.dataStorage.dataUtil.Point;
 import nl.ags.picum.location.geofence.NearLocationManager;
 import nl.ags.picum.location.geofence.NextNearLocation;
+import nl.ags.picum.permission.PermissionManager;
 
 public class Location {
 
@@ -33,9 +34,6 @@ public class Location {
     public Location(Context context) {
         this.context = context;
         this.fusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
-        //PermissionManager permissionManager = new PermissionManager
-        //permissionManager.getLocationPermissions()
-
     }
 
     public void start(LocationObserver observer) {
