@@ -18,6 +18,7 @@ import java.util.List;
 
 import nl.ags.picum.R;
 import nl.ags.picum.UI.fragments.RouteDetailsFragment;
+import nl.ags.picum.dataStorage.managing.AppDatabaseManager;
 import nl.ags.picum.dataStorage.roomData.Route;
 import nl.ags.picum.UI.Util.RouteAdapter;
 import nl.ags.picum.location.gps.Location;
@@ -28,6 +29,8 @@ import nl.ags.picum.mapManagement.routeCalculation.RouteCalculatorListener;
 import nl.ags.picum.permission.PermissionManager;
 
 public class MainActivity extends AppCompatActivity {
+
+    private List<Route> routes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
