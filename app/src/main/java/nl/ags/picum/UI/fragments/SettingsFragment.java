@@ -19,14 +19,10 @@ import java.util.Locale;
 import nl.ags.picum.R;
 
 public class SettingsFragment extends DialogFragment {
-    private Button englishButton;
-    private Button dutchButtom;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        englishButton = getActivity().findViewById(R.id.englishButtonIMG);
-        dutchButtom = getActivity().findViewById(R.id.dutchButtonIMG);
 
 
         super.onCreate(savedInstanceState);
