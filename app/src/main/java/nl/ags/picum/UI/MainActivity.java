@@ -15,6 +15,7 @@ import java.util.List;
 
 import nl.ags.picum.R;
 import nl.ags.picum.UI.fragments.RouteDetailsFragment;
+import nl.ags.picum.dataStorage.managing.AppDatabaseManager;
 import nl.ags.picum.dataStorage.roomData.Route;
 import nl.ags.picum.UI.Util.RouteAdapter;
 
@@ -33,6 +34,12 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(new RouteAdapter(routes, this));
         recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
+
+        new Thread(() -> {
+            AppDatabaseManager manager = AppDatabaseManager.getInstance(getApplicationContext());
+            manager.getCurrentRoute();
+        }).start();
+
     }
 
     public void onClickLanguageFAB(View view){

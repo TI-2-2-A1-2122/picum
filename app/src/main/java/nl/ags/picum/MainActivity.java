@@ -19,9 +19,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         manager = AppDatabaseManager.getInstance(getApplicationContext());
+        manager.getCurrentRoute();
+
+        /*
         new Thread(() -> {
             fillTable();
         }).start();
+         */
     }
 
     private void fillTable() {
