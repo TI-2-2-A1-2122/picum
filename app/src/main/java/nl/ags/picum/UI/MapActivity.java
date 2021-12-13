@@ -35,7 +35,7 @@ public class MapActivity extends AppCompatActivity {
         initializeMap();
 
         Route selectedRoute = (Route)getIntent().getSerializableExtra("SelectedRoute");
-        MapViewModel mapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
+        mapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
 
         mapViewModel.setCurrentRoute(selectedRoute);
 
