@@ -100,7 +100,7 @@ public class NearLocationManager implements NextNearLocation {
         geofencingClient.addGeofences(getGeofencingRequest(), getGeofencePendingIntent())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onSuccess(Void aVoid) {
+                    public void onSuccess(@NonNull Void aVoid) {
                         addingSucceeded[0] = true;
                         Log.d("Geo", "Geofence added sucessfully!");
                     }

@@ -26,6 +26,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_margin="16dp"
         android:backgroundTint="@color/secondary"
-        />
+        android:onClick="onClickLanguageFAB"
+/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
