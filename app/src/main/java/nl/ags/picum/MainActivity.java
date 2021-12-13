@@ -3,12 +3,16 @@ package nl.ags.picum;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 
+import nl.ags.picum.dataStorage.dataUtil.Point;
 import nl.ags.picum.dataStorage.linkingTables.RouteWaypointCrossRef;
 import nl.ags.picum.dataStorage.managing.AppDatabaseManager;
 import nl.ags.picum.dataStorage.roomData.Route;
 import nl.ags.picum.dataStorage.roomData.Sight;
 import nl.ags.picum.dataStorage.roomData.Waypoint;
+import nl.ags.picum.location.gps.Location;
+import nl.ags.picum.location.gps.LocationObserver;
 
 public class MainActivity extends AppCompatActivity {
     private AppDatabaseManager manager;
@@ -22,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
         new Thread(() -> {
             fillTable();
         }).start();
+
     }
 
     private void fillTable() {

@@ -41,4 +41,13 @@ public class Point {
     public void setId(String id) {
         this.id = id;
     }
+
+    @Override
+    public String toString() {
+        return "Point{" +
+                "longitude=" + longitude +
+                ", latitude=" + latitude +
+                ", id='" + id + '\'' +
+                '}';
+    }
 }

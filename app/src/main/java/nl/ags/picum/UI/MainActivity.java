@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -15,8 +16,11 @@ import java.util.List;
 
 import nl.ags.picum.R;
 import nl.ags.picum.UI.fragments.RouteDetailsFragment;
+import nl.ags.picum.dataStorage.dataUtil.Point;
 import nl.ags.picum.dataStorage.roomData.Route;
 import nl.ags.picum.UI.Util.RouteAdapter;
+import nl.ags.picum.location.gps.Location;
+import nl.ags.picum.location.gps.LocationObserver;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(new RouteAdapter(routes, this));
         recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
+        
     }
 
     public void onClickLanguageFAB(View view){
