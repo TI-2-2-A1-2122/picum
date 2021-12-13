@@ -5,6 +5,8 @@ public class Point {
     private float latitude;
     private String id;
 
+    public Point() {
+    }
 
     public Point(float longitude, float latitude) {
         this.longitude = longitude;
