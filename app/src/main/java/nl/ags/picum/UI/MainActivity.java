@@ -30,7 +30,7 @@ import nl.ags.picum.permission.PermissionManager;
 
 public class MainActivity extends AppCompatActivity {
 
-    private List<Route> routes;
+    private List<Route> routes = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
