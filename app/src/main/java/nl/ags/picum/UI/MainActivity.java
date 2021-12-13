@@ -46,11 +46,19 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
     }
 
+    /**
+     * open setting fragmen
+     * @param view
+     */
     public void onClickLanguageFAB(View view){
 
         new SettingsFragment().show(this.fragmentManager, "settings fragment");
     }
 
+    /**
+     * set app local language to english
+     * @param view
+     */
     public void toEnglish(View view) {
         Locale locale = new Locale("en");
         Locale.setDefault(locale);
@@ -64,6 +72,10 @@ public class MainActivity extends AppCompatActivity {
         overridePendingTransition(0, 0);
     }
 
+    /**
+     * set application local language to dutch
+     * @param view
+     */
     public void toDutch(View view) {
         Locale locale = new Locale("nl");
         Locale.setDefault(locale);
@@ -83,6 +95,10 @@ public class MainActivity extends AppCompatActivity {
         new RouteDetailsFragment(selectedRoute).show(fragmentManager, "Dialog-popup");
     }
 
+    /**
+     * close setting fragment
+     * @param view
+     */
     public void backButton(View view) {
        fragmentManager.beginTransaction().remove(fragmentManager.getFragments().get(0)).commit();
     }
