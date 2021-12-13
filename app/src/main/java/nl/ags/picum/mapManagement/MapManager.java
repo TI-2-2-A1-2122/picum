@@ -199,7 +199,7 @@ public class MapManager implements LocationObserver {
 
         for(Waypoint waypoint : waypointList) {
             if (waypoint.isVisited()) continue;
-            
+
 
         }
 

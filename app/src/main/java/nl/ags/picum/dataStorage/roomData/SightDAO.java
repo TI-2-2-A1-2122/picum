@@ -7,6 +7,8 @@ import androidx.room.Query;
 
 import java.util.List;
 
+import nl.ags.picum.dataStorage.linkingTables.WaypointWithSight;
+
 @Dao
 public interface SightDAO {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
@@ -17,4 +19,7 @@ public interface SightDAO {
 
     @Query("SELECT * FROM Sight")
     List<Sight> getAllSights();
+
+    @Query("SELECT * FROM Waypoint WHERE waypointID =:waypointID")
+    List<WaypointWithSight> getSightWithWaypoint(int waypointID);
 }
