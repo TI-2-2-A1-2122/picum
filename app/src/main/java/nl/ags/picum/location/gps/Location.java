@@ -16,8 +16,6 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 
 import nl.ags.picum.dataStorage.dataUtil.Point;
 import nl.ags.picum.location.geofence.NearLocationManager;
@@ -48,15 +46,12 @@ public class Location {
     //you must listen to LocationObserver.onLocationUpdate() for the returnvalue of this method
     private void getLastLocation() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
-        fusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<android.location.Location>() {
-            @Override
-            public void onComplete(@NonNull Task<android.location.Location> task) {
-                if (task.isSuccessful() && task.getResult() != null) {
-                    var lastLocation = task.getResult();
-                    observer.onLocationUpdate(new Point((float) lastLocation.getLatitude(), (float) lastLocation.getLongitude()));
-                } else {
-                    Log.w("debug", "getLastLocation:exception" + task.getException());
-                }
+        fusedLocationClient.getLastLocation().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                var lastLocation = task.getResult();
+                observer.onLocationUpdate(new Point((float) lastLocation.getLatitude(), (float) lastLocation.getLongitude()));
+            } else {
+                Log.w("debug", "getLastLocation:exception" + task.getException());
             }
         });
     }
@@ -71,10 +66,7 @@ public class Location {
 
     private LocationCallback getLocationCallback() {
         return new LocationCallback() {
-            public void onLocationResult(LocationResult locationResult) {
-                if (locationResult == null) {
-                    return;
-                }
+            public void onLocationResult(@NonNull LocationResult locationResult) {
                 for (android.location.Location location : locationResult.getLocations()) {
                     //Update location to interface
                     observer.onLocationUpdate(new Point((float) location.getLatitude(), (float) location.getLongitude()));

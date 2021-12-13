@@ -40,7 +40,7 @@ public class MapViewModel extends ViewModel {
 
     public MutableLiveData<List<Route>> getRoutes() {
         if (routes == null) {
-            routes = new MutableLiveData<List<Route>>();
+            routes = new MutableLiveData<>();
             loadRoutes();
         }
         return routes;
@@ -59,7 +59,7 @@ public class MapViewModel extends ViewModel {
     public MutableLiveData<List<Point>> getCalculatedRoute()
     {
         if (calculatedRoute == null) {
-            calculatedRoute = new MutableLiveData<List<Point>>();
+            calculatedRoute = new MutableLiveData<>();
         }
         return calculatedRoute;
     }
