@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
@@ -23,6 +24,8 @@ import nl.ags.picum.dataStorage.roomData.Route;
 import nl.ags.picum.UI.Util.RouteAdapter;
 
 public class MainActivity extends AppCompatActivity {
+
+    FragmentManager fragmentManager = getSupportFragmentManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void onClickLanguageFAB(View view){
 
+        new SettingsFragment().show(this.fragmentManager, "settings fragment");
     }
 
     public void toEnglish(View view) {
@@ -53,7 +57,11 @@ public class MainActivity extends AppCompatActivity {
         Configuration configuration = new Configuration();
         configuration.locale = locale;
         getBaseContext().getResources().updateConfiguration(configuration, getBaseContext().getResources().getDisplayMetrics());
-        setContentView(R.layout.activity_main);
+        Intent intent = getIntent();
+        finish();
+        overridePendingTransition(0, 0);
+        startActivity(intent);
+        overridePendingTransition(0, 0);
     }
 
     public void toDutch(View view) {
@@ -62,7 +70,11 @@ public class MainActivity extends AppCompatActivity {
         Configuration configuration = new Configuration();
         configuration.locale = locale;
         getBaseContext().getResources().updateConfiguration(configuration, getBaseContext().getResources().getDisplayMetrics());
-        setContentView(R.layout.activity_main);
+        Intent intent = getIntent();
+        finish();
+        overridePendingTransition(0, 0);
+        startActivity(intent);
+        overridePendingTransition(0, 0);
     }
 
     //TODO change to nonstatic
@@ -71,4 +83,7 @@ public class MainActivity extends AppCompatActivity {
         new RouteDetailsFragment(selectedRoute).show(fragmentManager, "Dialog-popup");
     }
 
+    public void backButton(View view) {
+       fragmentManager.beginTransaction().remove(fragmentManager.getFragments().get(0)).commit();
+    }
 }
