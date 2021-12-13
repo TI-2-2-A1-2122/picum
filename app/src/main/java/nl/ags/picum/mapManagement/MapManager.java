@@ -28,14 +28,7 @@ import nl.ags.picum.permission.PermissionManager;
  * The GUI can access this class to request data
  */
 public class MapManager {
-
-    // Singleton //
-    private static MapManager mapManager;
-    public static MapManager getInstance() {
-        if (mapManager == null) mapManager = new MapManager();
-
-        return mapManager;
-    }
+    
     // Object //
     private final MapViewModel mapViewModel;
 
