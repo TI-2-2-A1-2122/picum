@@ -9,15 +9,20 @@
 
 
     <ImageButton
+        android:id="@+id/englishButtonIMG"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/English" />
+        android:src="@drawable/English"
+        android:onClick="toEnglish"/>
 
     <ImageButton
-
+        android:id="@+id/dutchButtonIMG"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/Nederlands" />
+        android:src="@drawable/Nederlands"
+        android:translationX="100dp"
+        android:translationY="200dp"
+        android:onClick="toDutch"/>
 
 
 </FrameLayout>
