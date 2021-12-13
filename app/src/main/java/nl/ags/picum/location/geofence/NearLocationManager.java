@@ -49,7 +49,7 @@ public class NearLocationManager implements NextNearLocation {
                         nextLocation.getLongitude(),
                         30f
                 )
-                //might want to add things like expirationtime and transitiontypes
+                //TODO add things like expirationtime and transitiontypes
                 .build();
     }
 
