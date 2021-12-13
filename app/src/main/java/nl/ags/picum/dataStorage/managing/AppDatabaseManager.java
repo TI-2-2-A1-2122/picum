@@ -10,6 +10,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
+import nl.ags.picum.dataStorage.dataUtil.Point;
 import nl.ags.picum.dataStorage.linkingTables.RouteWaypointCrossRef;
 import nl.ags.picum.dataStorage.linkingTables.RouteWithWaypoints;
 import nl.ags.picum.dataStorage.linkingTables.WaypointWithSight;
@@ -57,7 +58,14 @@ public class AppDatabaseManager implements DataStorage {
 
     @Override
     public List<Waypoint> getHistory(Route route) {
-        return null;
+        List<Waypoint> waypoints = new ArrayList<>();
+        List<RouteWithWaypoints> routeAndWaypoints = this.database.waypointDAO().getWaypointsPerRoute(route.getRouteName());
+
+        for (RouteWithWaypoints r : routeAndWaypoints) {
+            waypoints.addAll(r.waypoints);
+        }
+
+        return waypoints;
     }
 
     @Override
@@ -124,5 +132,17 @@ public class AppDatabaseManager implements DataStorage {
         }
 
         return sights;
+    }
+
+    public Point getPointFromWaypoint(Waypoint waypoint) {
+        List<WaypointWithSight> waypointAndSight = this.database.sightDAO().getSightWithWaypoint(waypoint.getWaypointID());
+        Point p = new Point();
+
+        for (WaypointWithSight w : waypointAndSight) {
+            p.setLongitude(w.waypoint.getLongitude());
+            p.setLatitude(w.waypoint.getLatitude());
+        }
+
+        return p;
     }
 }

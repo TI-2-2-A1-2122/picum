@@ -103,8 +103,8 @@ public class RouteDetailsFragment extends DialogFragment {
                     amountOfVisitedSights++;
             }
 
-            double devide = amountOfVisitedSights / waypoints.size();
-            int progress = (int)(devide * 100);
+            double divide = amountOfVisitedSights / waypoints.size();
+            int progress = (int)(divide * 100);
             p.setProgress(progress);
         }).start();
 
