@@ -63,11 +63,11 @@ public class MainActivity extends AppCompatActivity {
         routes.add(new Route("Geen history", "Dit is geen historische kilometer", 0, false));
 
          */
-    }
-        RecyclerView recyclerView = findViewById(R.id.main_routes_recyclerview);
-        recyclerView.setAdapter(new RouteAdapter(routes, this));
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
-        recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
+//
+//        RecyclerView recyclerView = findViewById(R.id.main_routes_recyclerview);
+//        recyclerView.setAdapter(new RouteAdapter(routes, this));
+//        recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+//        recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
         
 
         Waypoint w1 = new Waypoint(1,false, 51.740484f, 4.544803f);
