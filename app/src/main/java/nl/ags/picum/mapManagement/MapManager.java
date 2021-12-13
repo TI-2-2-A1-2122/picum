@@ -28,6 +28,7 @@ import nl.ags.picum.mapManagement.routeCalculation.RouteCalculator;
  * The GUI can access this class to request data
  */
 public class MapManager implements LocationObserver {
+    private static final double DISTANCE_METERS = 5;
     public static String LOGTAG = MapManager.class.getName();
 
     // Object //
@@ -65,7 +66,7 @@ public class MapManager implements LocationObserver {
     public void calculateRoutePoints(Route route) {
         // Getting all the waypoints bases on the route
         DataStorage dataStorage = AppDatabaseManager.getInstance(context);
-        // TODO: 13-12-2021 not implemented yet in AppDatabaseManager
+
         List<Waypoint> waypoints = dataStorage.getHistory(route);
 
         // Creating a RouteCalculator to calculate a route, implementing the callback function
@@ -196,11 +197,25 @@ public class MapManager implements LocationObserver {
      * @param waypointList  The points to be sorted
      */
     private void sortPointByVisited(Point currentLocation, List<Waypoint> waypointList) {
+        int markedWaypoint = 0;
 
-        for(Waypoint waypoint : waypointList) {
+        // Going over all the waypoints
+        for (int i = 0; i < waypointList.size(); i++) {
+            Waypoint waypoint = waypointList.get(i);
             if (waypoint.isVisited()) continue;
+            if (waypoint.toGeoPoint().distanceToAsDouble(currentLocation.toGeoPoint()) > DISTANCE_METERS)
+                continue;
 
+            // Setting the markedWaypoint to this waypoints index
+            markedWaypoint = i;
+            break;
+        }
 
+        // Going back all the waypoints from the one selected
+        while (markedWaypoint >= 0) {
+            waypointList.get(markedWaypoint).setVisited(true);
+
+            markedWaypoint--;
         }
 
     }

@@ -4,6 +4,8 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import org.osmdroid.util.GeoPoint;
+
 @Entity
 public class Waypoint {
     @PrimaryKey
@@ -59,5 +61,9 @@ public class Waypoint {
 
     public void setLatitude(float latitude) {
         this.latitude = latitude;
+    }
+
+    public GeoPoint toGeoPoint() {
+        return new GeoPoint(latitude, longitude);
     }
 }
