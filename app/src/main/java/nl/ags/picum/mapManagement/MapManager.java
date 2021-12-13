@@ -2,6 +2,8 @@ package nl.ags.picum.mapManagement;
 
 import android.content.Context;
 
+import org.osmdroid.views.MapView;
+
 import java.util.ArrayList;
 import java.util.List;
 
