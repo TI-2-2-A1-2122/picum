@@ -14,11 +14,10 @@ import nl.ags.picum.dataStorage.roomData.Route;
 
 public class MapViewModel extends ViewModel {
 
-
     private MutableLiveData<Point> currentlocation;
 
 
-    public LiveData<Point> getCurrentlocation() {
+    public MutableLiveData<Point> getCurrentlocation() {
         if (currentlocation == null) {
             currentlocation = new MutableLiveData<>();
         }
@@ -26,13 +25,13 @@ public class MapViewModel extends ViewModel {
     }
 
     public void setCurrentlocation(Point currentlocation) {
-        this.currentlocation.postValue(currentlocation);
+        getCurrentlocation().postValue(currentlocation);
     }
 
     private MutableLiveData<Route> currentRoute;
 
 
-    public LiveData<Route> getcurrentRoute() {
+    public MutableLiveData<Route> getcurrentRoute() {
         if (currentRoute == null) {
             currentRoute = new MutableLiveData<>();
         }
@@ -40,12 +39,12 @@ public class MapViewModel extends ViewModel {
     }
 
     public void setCurrentRoute(Route currentRoute) {
-        this.currentRoute.postValue(currentRoute);
+        getcurrentRoute().postValue(currentRoute);
     }
 
     private MutableLiveData<List<Route>> routes;
 
-    public LiveData<List<Route>> getRoutes() {
+    public MutableLiveData<List<Route>> getRoutes() {
         if (routes == null) {
             routes = new MutableLiveData<List<Route>>();
             loadRoutes();
@@ -55,7 +54,7 @@ public class MapViewModel extends ViewModel {
 
     public void setRoutes(List<Route> routes)
     {
-        this.routes.postValue(routes);
+        getRoutes().postValue(routes);
     }
 
     private void loadRoutes() {
@@ -63,7 +62,7 @@ public class MapViewModel extends ViewModel {
 
     private MutableLiveData<List<Point>> calculatedRoute;
 
-    public LiveData<List<Point>> getCalculatedRoute()
+    public MutableLiveData<List<Point>> getCalculatedRoute()
     {
         if (calculatedRoute == null) {
             calculatedRoute = new MutableLiveData<List<Point>>();
@@ -73,7 +72,7 @@ public class MapViewModel extends ViewModel {
 
     public void setCalculatedRoute(List<Point> points)
     {
-        this.calculatedRoute.postValue(points);
+        getCalculatedRoute().postValue(points);
     }
 
 

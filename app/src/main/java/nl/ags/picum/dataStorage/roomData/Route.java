@@ -62,4 +62,14 @@ public class Route {
     public void setInProgress(boolean inProgress) {
         this.inProgress = inProgress;
     }
+
+    @Override
+    public String toString() {
+        return "Route{" +
+                "routeName='" + routeName + '\'' +
+                ", description='" + description + '\'' +
+                ", photoURL=" + photoURL +
+                ", inProgress=" + inProgress +
+                '}';
+    }
 }

@@ -6,6 +6,7 @@ import org.osmdroid.views.MapView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import nl.ags.picum.UI.viewmodels.MapViewModel;
 import nl.ags.picum.UI.viewmodels.SightViewModel;
@@ -26,19 +27,29 @@ import nl.ags.picum.permission.PermissionManager;
  * The GUI can access this class to request data
  */
 public class MapManager implements LocationObserver{
-    
-    // Object //
-    private final MapViewModel mapViewModel;
-    private final SightViewModel sightViewModel;
 
-    private Location locationService;
+    private static MapManager manager;
+    public static MapManager getInstance() {
+        if(manager == null) manager = new MapManager();
+        return manager;
+    }
+
+    // Object //
+    private MapViewModel mapViewModel;
+    private SightViewModel sightViewModel;
 
     /**
      * Main constructor for the MapManager.
      * Private constructor since MapManager uses the singleton pattern
      */
-    private MapManager(MapViewModel mapViewModel, SightViewModel sightViewModel) {
+    private MapManager() {
+    }
+
+    public void setMapViewModel(MapViewModel mapViewModel) {
         this.mapViewModel = mapViewModel;
+    }
+
+    public void setSightViewModel(SightViewModel sightViewModel) {
         this.sightViewModel = sightViewModel;
     }
 
@@ -127,10 +138,10 @@ public class MapManager implements LocationObserver{
      * This method triggers the start method for the Location subsystem
      * It wil start the live updates of users location put in the ViewModel
      */
-    public void startGPSUpdates(PermissionManager manager, Context context) {
-        this.locationService = new Location(context);
+    public void startGPSUpdates(Context context) {
+        Location locationService = new Location(context);
 
-        this.locationService.start(this);
+        locationService.start(this);
     }
 
     @Override
