@@ -92,8 +92,6 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/route_details_fragment_details_progress" />
 
-
-
     <Button
         android:id="@+id/route_details_fragment_details_backButton"
         android:layout_width="wrap_content"
