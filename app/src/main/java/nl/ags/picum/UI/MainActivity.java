@@ -18,7 +18,6 @@ import java.util.List;
 
 import nl.ags.picum.R;
 import nl.ags.picum.UI.fragments.RouteDetailsFragment;
-import nl.ags.picum.dataStorage.dataUtil.Point;
 import nl.ags.picum.dataStorage.roomData.Route;
 import nl.ags.picum.UI.Util.RouteAdapter;
 import nl.ags.picum.location.gps.Location;
@@ -49,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
         
-    }
+
         Waypoint w1 = new Waypoint(1,false, 51.740484f, 4.544803f);
         Waypoint w2 = new Waypoint(2,false, 51.771082f, 4.614198f);
 
