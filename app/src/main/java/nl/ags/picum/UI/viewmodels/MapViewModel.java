@@ -61,19 +61,19 @@ public class MapViewModel extends ViewModel {
     private void loadRoutes() {
     }
 
-    private MutableLiveData<List<GeoPoint>> calculatedRoute;
+    private MutableLiveData<List<Point>> calculatedRoute;
 
-    public LiveData<List<GeoPoint>> getCalculatedRoute()
+    public LiveData<List<Point>> getCalculatedRoute()
     {
         if (calculatedRoute == null) {
-            calculatedRoute = new MutableLiveData<List<GeoPoint>>();
+            calculatedRoute = new MutableLiveData<List<Point>>();
         }
         return calculatedRoute;
     }
 
-    public void setCalculatedRoute(List<GeoPoint> geoPoints)
+    public void setCalculatedRoute(List<Point> points)
     {
-        this.calculatedRoute.postValue(geoPoints);
+        this.calculatedRoute.postValue(points);
     }
 
 
