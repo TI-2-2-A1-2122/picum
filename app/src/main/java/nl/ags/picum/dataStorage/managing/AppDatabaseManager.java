@@ -26,7 +26,7 @@ public class AppDatabaseManager implements DataStorage {
     };
 
     public AppDatabaseManager(Context context) {
-        database = Room.databaseBuilder(context, AppDatabase.class, "Picum_DB").addMigrations(MIGRATION_1_2).build();
+        database = Room.databaseBuilder(context, AppDatabase.class, "Picum_DB").addMigrations(MIGRATION_1_2).createFromAsset("database/picumdb.db").build();
     }
 
     public static AppDatabaseManager getInstance(Context context) {
