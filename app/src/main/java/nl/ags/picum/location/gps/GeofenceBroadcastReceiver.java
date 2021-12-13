@@ -15,6 +15,7 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         //TODO filter incoming message on geofence point
+
         //observer.onNearLocationEntered();
     }
 }
