@@ -1,24 +1,19 @@
 package nl.ags.picum.UI;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
+
+import org.osmdroid.util.GeoPoint;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import nl.ags.picum.R;
 import nl.ags.picum.UI.fragments.RouteDetailsFragment;
-import nl.ags.picum.dataStorage.dataUtil.Point;
 import nl.ags.picum.dataStorage.roomData.Route;
-import nl.ags.picum.UI.Util.RouteAdapter;
 import nl.ags.picum.dataStorage.roomData.Waypoint;
 import nl.ags.picum.mapManagement.routeCalculation.RouteCalculator;
 import nl.ags.picum.mapManagement.routeCalculation.RouteCalculatorListener;
@@ -39,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
         RouteCalculator calculator = new RouteCalculator(new RouteCalculatorListener() {
             @Override
-            public void onRoutePointsCalculated(List<Point> points) {
+            public void onRoutePointsCalculated(List<GeoPoint> points) {
                 Log.d("TESTSSSSSSSSSSSS", points.toString());
             }
         });

@@ -4,14 +4,11 @@ import android.content.Context;
 
 import java.util.List;
 
-import nl.ags.picum.R;
-import nl.ags.picum.dataStorage.dataUtil.Point;
 import nl.ags.picum.dataStorage.managing.AppDatabaseManager;
 import nl.ags.picum.dataStorage.managing.DataStorage;
 import nl.ags.picum.dataStorage.roomData.Route;
 import nl.ags.picum.dataStorage.roomData.Waypoint;
 import nl.ags.picum.mapManagement.routeCalculation.RouteCalculator;
-import nl.ags.picum.mapManagement.routeCalculation.RouteCalculatorListener;
 
 /**
  * MapManager handles the communication from the submodules to the ViewModel.

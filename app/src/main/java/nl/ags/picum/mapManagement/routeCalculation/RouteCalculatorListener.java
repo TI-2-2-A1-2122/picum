@@ -1,8 +1,8 @@
 package nl.ags.picum.mapManagement.routeCalculation;
 
-import java.util.List;
+import org.osmdroid.util.GeoPoint;
 
-import nl.ags.picum.dataStorage.dataUtil.Point;
+import java.util.List;
 
 /**
  * Interface used to callback the response of calculating a route by the
@@ -15,6 +15,6 @@ public interface RouteCalculatorListener {
      * open route service.
      * @param points  The points calculated in the route
      */
-    void onRoutePointsCalculated(List<Point> points);
+    void onRoutePointsCalculated(List<GeoPoint> points);
 
 }

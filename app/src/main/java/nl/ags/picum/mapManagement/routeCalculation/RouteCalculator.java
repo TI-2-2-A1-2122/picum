@@ -6,6 +6,7 @@ import android.util.Log;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.*;
+import org.osmdroid.util.GeoPoint;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -147,7 +148,7 @@ public class RouteCalculator {
                     .getJSONArray("coordinates");
 
             // Creating the list of GeoPoints from the JSON array given
-            List<Point> routePoints = JSONtoGeoPointList(coordinatesObject);
+            List<GeoPoint> routePoints = JSONtoGeoPointList(coordinatesObject);
 
             // Returning the value's to the listener
             listener.onRoutePointsCalculated(routePoints);
@@ -164,8 +165,8 @@ public class RouteCalculator {
      * @param coordinates  The JSONArray that contains the coordinates
      * @return  A list of GeoPoints holding the given coordinates from the JSONArray
      */
-    private List<Point> JSONtoGeoPointList(JSONArray coordinates) {
-        List<Point> points = new ArrayList<>();
+    private List<GeoPoint> JSONtoGeoPointList(JSONArray coordinates) {
+        List<GeoPoint> points = new ArrayList<>();
 
         for (int i = 0; i < coordinates.length(); i++) {
             JSONArray coordinateArray = coordinates.optJSONArray(i);
@@ -181,7 +182,7 @@ public class RouteCalculator {
             if (longitude == 91 || latitude == 91) continue;
 
             // Creating a GeoPoint based on the latitude and longitude and adding it to the list
-            points.add(new Point(latitude, longitude));
+            points.add(new GeoPoint(latitude, longitude));
         }
 
         // Returning the new list
