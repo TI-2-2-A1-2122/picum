@@ -4,17 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
 import android.Manifest;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
-
-import org.osmdroid.util.GeoPoint;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import nl.ags.picum.R;
 import nl.ags.picum.UI.fragments.RouteDetailsFragment;
+import nl.ags.picum.dataStorage.dataUtil.Point;
 import nl.ags.picum.dataStorage.roomData.Route;
 import nl.ags.picum.dataStorage.roomData.Waypoint;
 import nl.ags.picum.mapManagement.routeCalculation.RouteCalculator;
@@ -42,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
         RouteCalculator calculator = new RouteCalculator(new RouteCalculatorListener() {
             @Override
-            public void onRoutePointsCalculated(List<GeoPoint> points) {
+            public void onRoutePointsCalculated(List<Point> points) {
                 Log.d("TESTSSSSSSSSSSSS", points.toString());
             }
         });
