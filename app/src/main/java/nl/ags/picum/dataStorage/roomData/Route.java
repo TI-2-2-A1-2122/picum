@@ -11,12 +11,15 @@ public class Route {
     @NonNull
     private String routeName;
 
+    @NonNull
     @ColumnInfo(name = "Description")
     private String description;
 
+    @NonNull
     @ColumnInfo(name = "PhotoURL")
     private int photoURL;
 
+    @NonNull
     @ColumnInfo(name = "InProgress")
     private boolean inProgress;
 
