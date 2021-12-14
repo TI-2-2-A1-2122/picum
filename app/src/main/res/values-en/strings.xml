@@ -10,4 +10,8 @@
     <string name="does_it_work">Of nee toch niet</string>
     <string name="choose_your_language">Choose your language:</string>
     <string name="Start">Start</string>
+    <string name="Settings">Settings</string>
+    <string name="toast_no_dismiss">To use the app we need the GPS permission</string>
+    <string name="GPS_PERMISSION_DENIED">Permission to access GPS denied</string>
+    <string name="GPS_PERMISSION_EXPLAINER">To use the app and follow a tour we are required to use the GPS in your phone. Without the GPS permission the app can not function, you can press the settings button to allow us permission.</string>
 </resources>
