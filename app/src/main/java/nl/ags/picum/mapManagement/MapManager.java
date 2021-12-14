@@ -172,7 +172,10 @@ public class MapManager implements LocationObserver {
     @Override
     public void onLocationUpdate(Point point) {
 
-        // First updating the location of the user
+        // First checking if the MapViewModel is set
+        if (this.mapViewModel == null) return;
+
+        // Then updating the location of the user
         this.mapViewModel.setCurrentlocation(point);
 
         // Sorting the list of waypoints to correct visited
