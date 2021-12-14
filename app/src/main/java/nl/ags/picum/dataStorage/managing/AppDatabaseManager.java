@@ -74,6 +74,11 @@ public class AppDatabaseManager implements DataStorage {
         throw new NotImplementedError("error");
     }
 
+    @Override
+    public void setWaypointProgress(int waypoint, boolean state) {
+        this.database.waypointDAO().setProgress(state, waypoint);
+    }
+
     public void setRoute(Route route) {
         this.database.routeDAO().insertRoute(route);
     }
@@ -84,10 +89,6 @@ public class AppDatabaseManager implements DataStorage {
 
     public void setSight(Sight sight) {
         this.database.sightDAO().insertSight(sight);
-    }
-
-    public void setWaypointProgress(int waypoint, boolean state) {
-        this.database.waypointDAO().setProgress(state, waypoint);
     }
 
     public void setRouteWaypoint(RouteWaypointCrossRef crossRef) {

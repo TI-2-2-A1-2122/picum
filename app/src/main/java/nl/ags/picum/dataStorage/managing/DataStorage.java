@@ -14,6 +14,8 @@ public interface DataStorage {
     List<Waypoint> getHistory(Route route);
     void clearHistory(Route route);
 
+    void setWaypointProgress(int waypoint, boolean state);
+
     List<Waypoint> getWaypointsPerRoute(Route r);
 
     List<Sight> getSightsPerRoute(Route route);
