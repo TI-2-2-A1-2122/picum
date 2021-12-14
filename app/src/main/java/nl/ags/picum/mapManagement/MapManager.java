@@ -179,7 +179,8 @@ public class MapManager implements LocationObserver {
             // Loop over the list of waypoints
             sortPointByVisited(point, waypointList);
 
-            dataStorage.setHistory(this.mapViewModel.getcurrentRoute(), waypointList);
+            // TODO: 14-12-2021 fix 
+            //dataStorage.setHistory(this.mapViewModel.getcurrentRoute(), waypointList);
         }).start();
 
     }
