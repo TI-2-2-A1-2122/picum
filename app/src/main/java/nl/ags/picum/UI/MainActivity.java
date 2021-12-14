@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onLocationUpdate(Point point) {
-
+                Log.d("TESTTAG", "Punt: " + point.toString());
             }
 
             @Override
