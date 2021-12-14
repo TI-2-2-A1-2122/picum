@@ -16,6 +16,7 @@ import com.google.android.gms.location.Geofence;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observer;
 
 import nl.ags.picum.R;
 import nl.ags.picum.UI.fragments.RouteDetailsFragment;
@@ -69,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        location.nearLocationManager.setNextNearLocation(new Point(4.7926f, 51.5856f), 20.0);
+        location.nearLocationManager.setNextNearLocation(new Point(4.7926f, 51.5856f), 30.0);
     }
 
     //TODO change to nonstatic

@@ -3,6 +3,7 @@ package nl.ags.picum.location.geofence;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -33,6 +34,8 @@ public class NearLocationManager implements NextNearLocation {
     private final Context context;
     private Geofence activeGeofence;
     private PendingIntent geofencePendingIntent;
+
+    private BroadcastReceiver broadcastReceiver;
 
     public NearLocationManager(Context context) {
         geofencingClient = LocationServices.getGeofencingClient(context);

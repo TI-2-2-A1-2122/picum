@@ -4,6 +4,8 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Looper;
 import android.util.Log;
@@ -37,7 +39,6 @@ public class Location {
         this.fusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
         //PermissionManager permissionManager = new PermissionManager
         //permissionManager.getLocationPermissions()
-
     }
 
     public void start(LocationObserver observer) {
