@@ -11,7 +11,11 @@ import java.util.ArrayList;
 
 public class PermissionManager {
 
-    public static void requestPermissions(String[] permissions, Activity activity, Context ctx) {
+    private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
+
+
+
+    public static void requestPermissions(String[] permissions, Activity activty, Context ctx) {
         ArrayList<String> permissionsToRequest = new ArrayList<>();
         for (String permission : permissions) {
             if (ContextCompat.checkSelfPermission(ctx, permission)
@@ -23,7 +27,7 @@ public class PermissionManager {
         if (permissionsToRequest.size() > 0) {
             int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
             ActivityCompat.requestPermissions(
-                    activity,
+                    activty,
                     permissionsToRequest.toArray(new String[0]),
                     REQUEST_PERMISSIONS_REQUEST_CODE);
         }
