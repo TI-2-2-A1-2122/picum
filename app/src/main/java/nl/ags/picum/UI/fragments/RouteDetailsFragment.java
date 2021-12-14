@@ -1,5 +1,6 @@
 package nl.ags.picum.UI.fragments;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -83,8 +84,6 @@ public class RouteDetailsFragment extends DialogFragment {
         new Thread(() -> {
             List<Sight> Sights = AppDatabaseManager.getInstance(getContext()).getSightsPerRoute(selectedRoute);
 
-            text.setText(Sights.size() + "");
-
             double amountOfVisitedSights = 0;
             List<Waypoint> waypoints = AppDatabaseManager.getInstance(getContext()).getWaypointsPerRoute(selectedRoute);
 
@@ -95,7 +94,15 @@ public class RouteDetailsFragment extends DialogFragment {
 
             double divide = amountOfVisitedSights / waypoints.size();
             int progress = (int)(divide * 100);
-            p.setProgress(progress);
+
+            Activity activity = getActivity();
+            if(activity != null) {
+                activity.runOnUiThread(() -> {
+                    text.setText(Sights.size() + "");
+                    p.setProgress(progress);
+                });
+            }
+
         }).start();
 
     }

@@ -58,13 +58,6 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
 
-        MapViewModel mapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
-        mapViewModel.getCalculatedRoute().observe(this, new Observer<List<Point>>() {
-            @Override
-            public void onChanged(List<Point> points) {
-                Log.d("JESSSSSSSSSSSSSSE", "Got points: " + points.toString());
-            }
-        });
         new Thread(() -> {
             AppDatabaseManager manager = AppDatabaseManager.getInstance(getApplicationContext());
             this.routes.clear();
@@ -72,15 +65,6 @@ public class MainActivity extends AppCompatActivity {
             List<Route> tempList = manager.getRoutes();
 
             this.routes.addAll(tempList);
-
-            Log.d("JESSSSSSSSSSSSSSE", routes.get(0).toString());
-
-            MapManager mapManager = new MapManager(this);
-            mapManager.setMapViewModel(mapViewModel);
-
-            mapManager.calculateRoutePoints(routes.get(0));
-
-
 
             runOnUiThread(() -> Objects.requireNonNull(recyclerView.getAdapter()).notifyItemRangeChanged(0,tempList.size()));
 
