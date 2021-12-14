@@ -113,8 +113,7 @@ public class MapManager implements LocationObserver {
                     .orElse(waypointsInRoute.get(0));
 
             // Calling the Geofence service to set the next location
-            // TODO: 14-12-2021 Fix GeoFence system before using this line
-            //this.locationService.nearLocationManager.setNextNearLocation(new Point(sightWaypoint.getLongitude(), sightWaypoint.getLatitude()), DISTANCE_METERS);
+            this.locationService.nearLocationManager.setNextNearLocation(new Point(sightWaypoint.getLongitude(), sightWaypoint.getLatitude()), DISTANCE_METERS);
         }).start();
     }
 
