@@ -60,7 +60,9 @@ public class NearLocationManager implements NextNearLocation {
                         nextLocation.getLongitude(),
                         30f
                 )
-                //TODO add things like expirationtime and transitiontypes
+                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_DWELL)
+                .setLoiteringDelay(1)
+                .setExpirationDuration(Geofence.NEVER_EXPIRE)
                 .build();
     }
 

@@ -8,16 +8,18 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+
+import com.google.android.gms.location.Geofence;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import nl.ags.picum.R;
 import nl.ags.picum.UI.fragments.RouteDetailsFragment;
+import nl.ags.picum.dataStorage.dataUtil.Point;
 import nl.ags.picum.dataStorage.roomData.Route;
 import nl.ags.picum.UI.Util.RouteAdapter;
 import nl.ags.picum.location.gps.Location;
@@ -49,21 +51,25 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
         
 
-        Waypoint w1 = new Waypoint(1,false, 51.740484f, 4.544803f);
-        Waypoint w2 = new Waypoint(2,false, 51.771082f, 4.614198f);
-
-        List<Waypoint> waypointList = new ArrayList<>();
-        waypointList.add(w1);
-        waypointList.add(w2);
-
-        RouteCalculator calculator = new RouteCalculator(new RouteCalculatorListener() {
+        Location location = new Location(this);
+        location.start(new LocationObserver() {
             @Override
-            public void onRoutePointsCalculated(List<Point> points) {
-                Log.d("TESTSSSSSSSSSSSS", points.toString());
+            public void onLocationError() {
+
+            }
+
+            @Override
+            public void onLocationUpdate(Point point) {
+
+            }
+
+            @Override
+            public void onNearLocationEntered(Geofence geofence) {
+
             }
         });
 
-        calculator.calculate(waypointList);
+        location.nearLocationManager.setNextNearLocation(new Point(4.7926f, 51.5859f), 50.0);
     }
 
     //TODO change to nonstatic
