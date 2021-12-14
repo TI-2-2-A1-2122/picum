@@ -181,6 +181,9 @@ public class MapManager implements LocationObserver {
         // Sorting the list of waypoints to correct visited
         // Starting a new thread to run async
         new Thread(() -> {
+            // Checking if an active route has been set in this.mapViewModel
+            if (this.mapViewModel.getcurrentRoute() == null) return;
+
             // Getting a database
             DataStorage dataStorage = AppDatabaseManager.getInstance(context);
 
@@ -188,10 +191,9 @@ public class MapManager implements LocationObserver {
             List<Waypoint> waypointList = dataStorage.getHistory(this.mapViewModel.getcurrentRoute());
 
             // Loop over the list of waypoints
-            sortPointByVisited(point, waypointList);
+            sortPointByVisited(point, waypointList, dataStorage);
 
-            // TODO: 14-12-2021 fix
-            //dataStorage.setHistory(this.mapViewModel.getcurrentRoute(), waypointList);
+            // TODO: 14-12-2021 Update the values in the ViewModel once ViewModel is updated
         }).start();
 
     }
@@ -201,13 +203,13 @@ public class MapManager implements LocationObserver {
      * not visited points. The algorithm:
      * - If the point is visited, continue
      * - If the point in further away than 5m from current position, continue
-     * - If the point is within 5m, mark the point as visited and
-     * go back to mark all other previous points visited
+     * - If the point is within 5m: mark the point as visited, tell the database the change and
+     *      * go back to mark all other previous points visited
      *
      * @param currentLocation  The current location of the user
      * @param waypointList  The points to be sorted
      */
-    private void sortPointByVisited(Point currentLocation, List<Waypoint> waypointList) {
+    private void sortPointByVisited(Point currentLocation, List<Waypoint> waypointList, DataStorage dataStorage) {
         int markedWaypoint = 0;
 
         // Going over all the waypoints
@@ -216,6 +218,10 @@ public class MapManager implements LocationObserver {
             if (waypoint.isVisited()) continue;
             if (waypoint.toGeoPoint().distanceToAsDouble(currentLocation.toGeoPoint()) > DISTANCE_METERS)
                 continue;
+
+            // Marking the point as visited in the dataStorage
+            waypoint.setVisited(true);
+            dataStorage.setWaypointProgress(waypoint.getWaypointID(), true);
 
             // Setting the markedWaypoint to this waypoints index
             markedWaypoint = i;
