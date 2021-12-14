@@ -113,32 +113,13 @@ public class MapManager implements LocationObserver {
                     .orElse(waypointsInRoute.get(0));
 
             // Calling the Geofence service to set the next location
+            // TODO: 14-12-2021 Fix GeoFence system before using this line
             //this.locationService.nearLocationManager.setNextNearLocation(new Point(sightWaypoint.getLongitude(), sightWaypoint.getLatitude()), DISTANCE_METERS);
         }).start();
     }
 
     private void setupLocationService() {
         this.locationService = new Location(context);
-    }
-
-    /**
-     * This method wil check if any route is still marked as active.
-     * If this is the case, the route that is active is loaded into the ViewModel
-     *
-     * @param routes The list of routes to check
-     */
-    public void checkActiveRoute(List<Route> routes) {
-        // Starting a new thread to run async
-        Route activeRoute = null;
-
-        // Going over the routes to check active status
-        for (Route route : routes)
-            if (route.isInProgress()) activeRoute = route;
-
-
-        // Set the active route in the ViewModel
-        if (this.mapViewModel != null)
-            this.mapViewModel.setCurrentRoute(activeRoute);
     }
 
     /**
