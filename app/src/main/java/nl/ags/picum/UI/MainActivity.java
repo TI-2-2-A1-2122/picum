@@ -81,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
 
             runOnUiThread(() -> Objects.requireNonNull(recyclerView.getAdapter()).notifyItemRangeChanged(0,tempList.size()));
 
-
         }).start();
 
 

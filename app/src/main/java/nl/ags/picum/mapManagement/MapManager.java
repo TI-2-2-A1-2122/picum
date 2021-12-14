@@ -92,8 +92,7 @@ public class MapManager implements LocationObserver {
             // Getting a database
             DataStorage dataStorage = AppDatabaseManager.getInstance(context);
 
-            // TODO: 13-12-2021 Get all the sights from the database
-            List<Sight> sights = new ArrayList<>();
+            List<Sight> sights = dataStorage.getSightsPerRoute(route);
 
             // Setting the sights in the viewModel
             if (this.sightViewModel != null)
@@ -179,7 +178,7 @@ public class MapManager implements LocationObserver {
             // Loop over the list of waypoints
             sortPointByVisited(point, waypointList);
 
-            // TODO: 14-12-2021 fix 
+            // TODO: 14-12-2021 fix
             //dataStorage.setHistory(this.mapViewModel.getcurrentRoute(), waypointList);
         }).start();
 
