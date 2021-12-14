@@ -60,16 +60,16 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onLocationUpdate(Point point) {
-                Log.d("TESTTAG", "Punt: " + point.toString());
+                Log.d("TESTTAG", "Punt: " + point);
             }
 
             @Override
             public void onNearLocationEntered(Geofence geofence) {
-
+                Log.d("TESTTAG", "GeoFence: " + geofence);
             }
         });
 
-        location.nearLocationManager.setNextNearLocation(new Point(4.7926f, 51.5859f), 50.0);
+        location.nearLocationManager.setNextNearLocation(new Point(4.7926f, 51.5856f), 20.0);
     }
 
     //TODO change to nonstatic

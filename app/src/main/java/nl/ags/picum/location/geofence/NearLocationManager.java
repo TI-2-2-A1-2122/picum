@@ -48,18 +48,18 @@ public class NearLocationManager implements NextNearLocation {
             geofencingClient.removeGeofences(activeFenceList);
         }
         //set new geofence
-        setActiveGeofence(nextLocation);
+        setActiveGeofence(nextLocation, radiusInMeters);
         addGeofence();
     }
 
 
-    private void setActiveGeofence(Point nextLocation) {
+    private void setActiveGeofence(Point nextLocation, double radiusInMeters) {
         this.activeGeofence = new Geofence.Builder()
                 .setRequestId(nextLocation.getId())
                 .setCircularRegion(
                         nextLocation.getLatitude(),
                         nextLocation.getLongitude(),
-                        30f
+                        (float) radiusInMeters
                 )
                 .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_DWELL)
                 .setLoiteringDelay(1)

@@ -42,7 +42,6 @@ public class Location {
 
     public void start(LocationObserver observer) {
         this.nearLocationManager = new NearLocationManager(context);
-        this.geofenceBroadcastReceiver = new GeofenceBroadcastReceiver(observer);
         this.observer = observer;
         startLocationUpdates();
         //TODO start sending locationupdates to observer
