@@ -1,6 +1,8 @@
 package nl.ags.picum.UI;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
@@ -11,16 +13,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.Manifest;
+import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
 import nl.ags.picum.R;
+import nl.ags.picum.UI.dialog.PermissionDeniedDialog;
 import nl.ags.picum.UI.fragments.RouteDetailsFragment;
 import nl.ags.picum.UI.fragments.SettingsFragment;
 import nl.ags.picum.dataStorage.managing.AppDatabaseManager;
@@ -35,6 +40,8 @@ import nl.ags.picum.permission.PermissionManager;
 
 public class MainActivity extends AppCompatActivity {
     private List<Route> routes = new ArrayList<>();
+    private int timeRequested = 0;
+    private PermissionDeniedDialog dialogPermission;
 
     FragmentManager fragmentManager = getSupportFragmentManager();
 
@@ -46,11 +53,10 @@ public class MainActivity extends AppCompatActivity {
 
 
         setContentView(R.layout.activity_main);
-        PermissionManager permissionManager = new PermissionManager();
-        permissionManager.requestPermissions(new String[] {
-                Manifest.permission.ACCESS_FINE_LOCATION,
+        dialogPermission = new PermissionDeniedDialog();
+        requestPermission(new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION
-        }, this, getApplicationContext());
+        } );
 
         RecyclerView recyclerView = findViewById(R.id.main_routes_recyclerview);
         recyclerView.setAdapter(new RouteAdapter(routes, this));
@@ -95,6 +101,46 @@ public class MainActivity extends AppCompatActivity {
         });
 
         calculator.calculate(waypointList);
+    }
+
+    public void requestPermission(String[] permissions){
+        PermissionManager.requestPermissions(permissions, this, getApplicationContext());
+    }
+
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        for (int i = 0; i < grantResults.length; i++) {
+            if (grantResults[i] == -1)
+                if (timeRequested < 2) {
+                    requestPermission(new String[]{permissions[i]});
+                } else {
+                    showPermissionDialog();
+                }
+
+        }
+        timeRequested++;
+
+    }
+
+    public void showPermissionDialog(){
+        if (!dialogPermission.isAdded())
+        dialogPermission.show(getSupportFragmentManager(), "gps");
+    }
+
+    @Override
+    public void onResume() {
+        if (timeRequested >= 2) {
+            if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    || ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                showPermissionDialog();
+            }
+        }
+
+        super.onResume();
+
     }
 
     //TODO change to nonstatic
