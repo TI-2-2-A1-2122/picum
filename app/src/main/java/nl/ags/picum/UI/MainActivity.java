@@ -95,16 +95,19 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        String[] permissionstorequest = new String[permissions.length];
         for (int i = 0; i < grantResults.length; i++) {
             if (grantResults[i] == -1)
                 if (timeRequested < 2) {
-                    requestPermission(new String[]{permissions[i]});
+                    permissionstorequest[i] = permissions[i];
                 } else {
                     showPermissionDialog();
                 }
 
         }
         timeRequested++;
+        if (permissionstorequest.length < 1)
+            requestPermission(permissionstorequest);
 
     }
 
