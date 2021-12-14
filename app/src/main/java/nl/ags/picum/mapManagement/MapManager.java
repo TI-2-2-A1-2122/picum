@@ -139,7 +139,7 @@ public class MapManager implements LocationObserver {
         // On Error, log the error
         Log.e(LOGTAG, "Error in retrieving location from user");
 
-        // TODO: 13-12-2021 As extra notify user of location lost
+        // TODO: 13-12-2021 As extra notify user of location lost with notification / popup
     }
 
     /**
