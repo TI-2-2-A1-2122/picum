@@ -32,10 +32,10 @@ public class Location {
     public Location(Context context) {
         this.context = context;
         this.fusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
+        this.nearLocationManager = new NearLocationManager(context);
     }
 
     public void start(LocationObserver observer) {
-        this.nearLocationManager = new NearLocationManager(context);
         this.geofenceBroadcastReceiver = new GeofenceBroadcastReceiver(observer);
         this.observer = observer;
         startLocationUpdates();
