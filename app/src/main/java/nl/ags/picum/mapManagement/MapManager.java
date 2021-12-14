@@ -8,6 +8,7 @@ import com.google.android.gms.location.Geofence;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import nl.ags.picum.UI.viewmodels.MapViewModel;
 import nl.ags.picum.UI.viewmodels.SightViewModel;
@@ -82,7 +83,8 @@ public class MapManager implements LocationObserver {
 
     /**
      * Given a route the method with load all the routes from that route.
-     * The sights are put in the ViewModel
+     * The sights are put in the ViewModel.
+     * After the first Sight from the route is marked as a GeoFence
      *
      * @param route The route to load the sights of
      */
@@ -102,9 +104,16 @@ public class MapManager implements LocationObserver {
             setupLocationService();
 
             // Lastly setting next GeoFence to the first Sight
-            // TODO: 13-12-2021 Get the First next Sight from the list
-            //this.locationService.nearLocationManager.setNextNearLocation();
+            // Getting the location of the first sight
+            List<Waypoint> waypointsInRoute = dataStorage.getWaypointsPerRoute(route);
+            Waypoint sightWaypoint = waypointsInRoute
+                    .stream()
+                    .filter((waypoint -> waypoint.getWaypointID() == sights.get(0).getWaypointID()))
+                    .findFirst()
+                    .orElse(waypointsInRoute.get(0));
 
+            // Calling the Geofence service to set the next location
+            this.locationService.nearLocationManager.setNextNearLocation(new Point(sightWaypoint.getLongitude(), sightWaypoint.getLatitude()), DISTANCE_METERS);
         }).start();
     }
 

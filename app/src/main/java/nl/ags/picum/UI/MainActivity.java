@@ -81,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
 
             runOnUiThread(() -> Objects.requireNonNull(recyclerView.getAdapter()).notifyItemRangeChanged(0,tempList.size()));
 
+            new MapManager(this).loadSightsPerRoute(routes.get(0));
         }).start();
 
 
