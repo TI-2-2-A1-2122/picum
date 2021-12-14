@@ -18,6 +18,7 @@ import org.osmdroid.views.overlay.gestures.RotationGestureOverlay;
 import nl.ags.picum.R;
 import nl.ags.picum.UI.viewmodels.MapViewModel;
 import nl.ags.picum.dataStorage.roomData.Route;
+import nl.ags.picum.mapManagement.MapManager;
 
 public class MapActivity extends AppCompatActivity {
 
@@ -40,6 +41,9 @@ public class MapActivity extends AppCompatActivity {
         mapViewModel.setCurrentRoute(selectedRoute);
 
         Log.d("pizzaparty", "onCreate: " + mapViewModel.getcurrentRoute());
+        MapManager m = new MapManager(this);
+        m.setMapViewModel(mapViewModel);
+        m.startGPSUpdates();
     }
 
     public void onStartRouteButtonClick(View view){

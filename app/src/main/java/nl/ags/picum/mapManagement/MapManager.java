@@ -30,7 +30,7 @@ import nl.ags.picum.mapManagement.routeCalculation.RouteCalculator;
  */
 public class MapManager implements LocationObserver {
     public static String LOGTAG = MapManager.class.getName();
-    private static final double DISTANCE_METERS = 5;
+    private static final double DISTANCE_METERS = 10;
 
     // Object //
     private final Context context;
@@ -223,7 +223,7 @@ public class MapManager implements LocationObserver {
         }
 
         // Going back all the waypoints from the one selected
-        while (markedWaypoint >= 0) {
+        while (markedWaypoint > 0) {
             waypointList.get(markedWaypoint).setVisited(true);
 
             markedWaypoint--;
