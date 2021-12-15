@@ -10,7 +10,6 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
-import kotlin.NotImplementedError;
 import nl.ags.picum.dataStorage.dataUtil.Point;
 import nl.ags.picum.dataStorage.linkingTables.RouteWaypointCrossRef;
 import nl.ags.picum.dataStorage.linkingTables.RouteWithWaypoints;
@@ -71,7 +70,7 @@ public class AppDatabaseManager implements DataStorage {
 
     @Override
     public void clearHistory(Route route) {
-        throw new NotImplementedError("error");
+        throw new UnsupportedOperationException("Not yet implemented");
     }
 
     @Override
