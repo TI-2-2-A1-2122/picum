@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onNearLocationEntered(Geofence geofence) {
-
+                Log.d("LOCATOIM", "Geofence trigger: " + geofence);
             }
         });
         location.nearLocationManager.setNextNearLocation(new Point(4.7926f, 51.5856f), 20.0);

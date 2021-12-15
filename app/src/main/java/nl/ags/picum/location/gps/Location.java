@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.GeofencingEvent;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
@@ -45,7 +46,7 @@ public class Location {
         geofenceBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                Log.d("TEST!@#", "YESJASIUI");
+                observer.onNearLocationEntered(GeofencingEvent.fromIntent(intent).getTriggeringGeofences().get(0));
             }
         };
     }
