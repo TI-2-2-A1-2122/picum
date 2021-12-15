@@ -11,9 +11,6 @@ import com.google.android.gms.location.GeofencingEvent;
 public class GeofenceBroadcastReceiver extends BroadcastReceiver {
     public static String LOGTAG = GeofenceBroadcastReceiver.class.getName();
 
-    public GeofenceBroadcastReceiver() {
-    }
-
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d(LOGTAG, "Received a trigger with intent: " + intent);

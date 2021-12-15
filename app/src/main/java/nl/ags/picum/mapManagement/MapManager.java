@@ -40,6 +40,8 @@ public class MapManager implements LocationObserver {
 
     private Location locationService;
 
+    private Sight setSight;
+
     /**
      * Main constructor for the MapManager.
      * Private constructor since MapManager uses the singleton pattern
@@ -114,6 +116,7 @@ public class MapManager implements LocationObserver {
 
             // Calling the Geofence service to set the next location
             this.locationService.nearLocationManager.setNextNearLocation(new Point(sightWaypoint.getLongitude(), sightWaypoint.getLatitude()), DISTANCE_METERS);
+            this.setSight = sights.get(0);
         }).start();
     }
 
@@ -184,10 +187,10 @@ public class MapManager implements LocationObserver {
      * - If the point is visited, continue
      * - If the point in further away than 5m from current position, continue
      * - If the point is within 5m: mark the point as visited, tell the database the change and
-     *      * go back to mark all other previous points visited
+     * * go back to mark all other previous points visited
      *
-     * @param currentLocation  The current location of the user
-     * @param waypointList  The points to be sorted
+     * @param currentLocation The current location of the user
+     * @param waypointList    The points to be sorted
      */
     private void sortPointByVisited(Point currentLocation, List<Waypoint> waypointList, DataStorage dataStorage) {
         int markedWaypoint = 0;
@@ -221,13 +224,47 @@ public class MapManager implements LocationObserver {
     // TODO: 14-12-2021 Method is not implemented, method is never called since broadcast receiver not yet functional
     @Override
     public void onNearLocationEntered(Geofence geofence) {
-        // Get the sight that was marked as next in the list
-        if (sightViewModel != null)
-            this.sightViewModel.getCurrentSight();
+        Log.d(LOGTAG, "onNearLocationEntered triggered with geofenceL " + geofence);
 
-        // Put the next Sight to the ViewModel
+        // Return if there is no SightViewModel
+        if (sightViewModel == null ||
+                mapViewModel == null ||
+                sightViewModel.getSights().getValue() == null ||
+                this.setSight == null
+        ) return;
 
-        // Setting the GoeFence to the next Sight
+        // Updating the viewModel with the set Sight (this.setSight)
+        this.sightViewModel.setCurrentSight(this.setSight);
+
+        // Getting a database
+        DataStorage dataStorage = AppDatabaseManager.getInstance(context);
+
+        // Getting all the sights
+        List<Sight> sights = this.sightViewModel.getSights().getValue();
+
+        // Default nextSight to the last value
+        Sight nextSight = sights.get(sights.size() - 1);
+
+        // Go over each value of sights to find the next one up
+        for (int i = 0; i < sights.size() - 1; i++) {
+            if (sights.get(i).equals(this.setSight)) {
+                nextSight = sights.get(i + 1);
+                break;
+            }
+        }
+
+        // Getting the Waypoint of the nextSight
+        List<Waypoint> waypointsInRoute = dataStorage.getWaypointsPerRoute(this.mapViewModel.getcurrentRoute());
+        Waypoint sightWaypoint = waypointsInRoute
+                .stream()
+                .filter((waypoint -> waypoint.getWaypointID() == sights.get(0).getWaypointID()))
+                .findFirst()
+                .orElse(waypointsInRoute.get(0));
+
+        this.locationService.nearLocationManager.setNextNearLocation(new Point(sightWaypoint.getLongitude(), sightWaypoint.getLatitude()), DISTANCE_METERS);
+
+        // Updating setSight
+        this.setSight = nextSight;
     }
 
 }
