@@ -4,6 +4,8 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Looper;
 import android.util.Log;
@@ -12,69 +14,55 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.GeofencingEvent;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 
 import nl.ags.picum.dataStorage.dataUtil.Point;
 import nl.ags.picum.location.geofence.NearLocationManager;
-import nl.ags.picum.location.geofence.NextNearLocation;
 
 public class Location {
 
-    private BroadcastReceiver geofenceBroadcastReceiver;
+    public static BroadcastReceiver geofenceBroadcastReceiver;
+
     private final Context context;
     private FusedLocationProviderClient fusedLocationClient;
     private LocationObserver observer;
 
+    public NearLocationManager nearLocationManager;
+
     public Location(Context context) {
         this.context = context;
         this.fusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
-        //PermissionManager permissionManager = new PermissionManager
-        //permissionManager.getLocationPermissions()
-
+        this.nearLocationManager = new NearLocationManager(context);
     }
 
     public void start(LocationObserver observer) {
-        NearLocationManager nearLocationManager = new NearLocationManager(context);
-        this.geofenceBroadcastReceiver = new GeofenceBroadcastReceiver(observer);
         this.observer = observer;
         startLocationUpdates();
-        //TODO start sending locationupdates to observer
-    }
 
-    private Point getCurrentLocation() {
-        //TODO get current location code
-        return new Point(0f, 0f);
+        geofenceBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                observer.onNearLocationEntered(GeofencingEvent.fromIntent(intent).getTriggeringGeofences().get(0));
+            }
+        };
     }
 
     @SuppressLint("MissingPermission")
-    private Point getLastLocation() {
+    //you must listen to LocationObserver.onLocationUpdate() for the returnvalue of this method
+    private void getLastLocation() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
-        fusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<android.location.Location>() {
-            @Override
-            public void onComplete(@NonNull Task<android.location.Location> task) {
-                if (task.isSuccessful() && task.getResult() != null) {
-                    var lastLocation = task.getResult();
-                    observer.onLocationUpdate(new Point((float) lastLocation.getLatitude(), (float) lastLocation.getLongitude()));
-                } else {
-                    Log.w("debug", "getLastLocation:exception" + task.getException());
-                }
+        fusedLocationClient.getLastLocation().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                var lastLocation = task.getResult();
+                observer.onLocationUpdate(new Point((float) lastLocation.getLatitude(), (float) lastLocation.getLongitude()));
+            } else {
+                Log.w("debug", "getLastLocation:exception" + task.getException());
             }
         });
-        return new Point(0f, 0f);
-    }
-
-    private NextNearLocation getNextNearLocation() {
-        return new NextNearLocation() {
-            @Override
-            public void setNextNearLocation(Point point, Double radiusInMeters) {
-
-            }
-        };
     }
 
     private LocationRequest getLocationRequest() {
@@ -87,10 +75,7 @@ public class Location {
 
     private LocationCallback getLocationCallback() {
         return new LocationCallback() {
-            public void onLocationResult(LocationResult locationResult) {
-                if (locationResult == null) {
-                    return;
-                }
+            public void onLocationResult(@NonNull LocationResult locationResult) {
                 for (android.location.Location location : locationResult.getLocations()) {
                     //Update location to interface
                     observer.onLocationUpdate(new Point((float) location.getLatitude(), (float) location.getLongitude()));

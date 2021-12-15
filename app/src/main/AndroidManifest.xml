@@ -14,6 +14,7 @@
         android:roundIcon="@mipmap/picum_launcheicon_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Picum">
+        <receiver android:name=".location.gps.GeofenceBroadcastReceiver"/>
         <activity
             android:name=".UI.MainActivity"
             android:exported="true">

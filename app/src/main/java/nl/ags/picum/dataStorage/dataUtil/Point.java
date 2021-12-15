@@ -1,5 +1,7 @@
 package nl.ags.picum.dataStorage.dataUtil;
 
+import org.osmdroid.util.GeoPoint;
+
 public class Point {
     private float longitude;
     private float latitude;
@@ -42,6 +44,10 @@ public class Point {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public GeoPoint toGeoPoint(){
+        return new GeoPoint(latitude, longitude);
     }
 
     @Override

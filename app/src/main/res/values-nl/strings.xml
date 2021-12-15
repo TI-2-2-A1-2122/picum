@@ -10,4 +10,8 @@
     <string name="does_it_work">Het werkt</string>
     <string name="choose_your_language">Kies je taal:</string>
     <string name="Start">Start</string>
+    <string name="Settings">Instellingen</string>
+    <string name="toast_no_dismiss">Om de app te gebruiken hebben we toegang tot de GPS nodig</string>
+    <string name="GPS_PERMISSION_DENIED">Permissie voor GPS geweigerd</string>
+    <string name="GPS_PERMISSION_EXPLAINER">Om de app te gebruiken en een tour te volgen maken we gebruik van de GPS in je telefoon. Zonder toegang tot GPS kan de app niet werken. Je kan de Instellingen knop gebruiken om de toestemming te geven.</string>
 </resources>

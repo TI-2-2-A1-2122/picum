@@ -1,28 +1,24 @@
 package nl.ags.picum.UI.fragments;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import java.util.List;
 
 import nl.ags.picum.R;
-import nl.ags.picum.UI.MainActivity;
 import nl.ags.picum.UI.MapActivity;
 import nl.ags.picum.UI.viewmodels.MapViewModel;
 import nl.ags.picum.dataStorage.managing.AppDatabaseManager;
@@ -65,12 +61,7 @@ public class RouteDetailsFragment extends DialogFragment {
     private void setTextAndButtons(View view){
         ((TextView)view.findViewById(R.id.route_details_fragment_details_description)).setText(selectedRoute.getDescription());
         ((TextView)view.findViewById(R.id.route_details_fragment_details_name)).setText(selectedRoute.getRouteName());
-        ((Button)view.findViewById(R.id.route_details_fragment_details_backButton)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-            }
-        });
+        ((Button)view.findViewById(R.id.route_details_fragment_details_backButton)).setOnClickListener(v -> dismiss());
 
         ((Button)view.findViewById(R.id.route_details_fragment_details_showButton)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,8 +84,6 @@ public class RouteDetailsFragment extends DialogFragment {
         new Thread(() -> {
             List<Sight> Sights = AppDatabaseManager.getInstance(getContext()).getSightsPerRoute(selectedRoute);
 
-            text.setText(Sights.size() + "");
-
             double amountOfVisitedSights = 0;
             List<Waypoint> waypoints = AppDatabaseManager.getInstance(getContext()).getWaypointsPerRoute(selectedRoute);
 
@@ -105,7 +94,15 @@ public class RouteDetailsFragment extends DialogFragment {
 
             double divide = amountOfVisitedSights / waypoints.size();
             int progress = (int)(divide * 100);
-            p.setProgress(progress);
+
+            Activity activity = getActivity();
+            if(activity != null) {
+                activity.runOnUiThread(() -> {
+                    text.setText(Sights.size() + "");
+                    p.setProgress(progress);
+                });
+            }
+
         }).start();
 
     }
@@ -114,6 +111,9 @@ public class RouteDetailsFragment extends DialogFragment {
         MapViewModel mapViewModel = new ViewModelProvider(requireActivity()).get(MapViewModel.class);
         mapViewModel.setCurrentRoute(selectedRoute);
         Intent intent = new Intent(getContext(), MapActivity.class);
+
+        intent.putExtra("SelectedRoute",selectedRoute);
+
         startActivity(intent);
         dismiss();
     }

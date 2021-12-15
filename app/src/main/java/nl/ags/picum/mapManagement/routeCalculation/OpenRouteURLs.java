@@ -13,7 +13,7 @@ public class OpenRouteURLs {
      * @return  The base URL needed for ORS
      */
     private static String getWrapURL() {
-        return "https://api.openrouteservice.org/v2/directions/foot-walking" + "?api_key=" + API_KEY;
+        return "https://api.openrouteservice.org/v2/directions/foot-walking/geojson" + "?api_key=" + API_KEY;
     }
 
     /**

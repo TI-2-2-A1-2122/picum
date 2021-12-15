@@ -69,18 +69,13 @@ public class AppDatabaseManager implements DataStorage {
     }
 
     @Override
-    public void setHistory(Route route, List<Waypoint> waypoints) {
-
-    }
-
-    @Override
-    public void appendHistory(Route route, Waypoint waypoint) {
-
-    }
-
-    @Override
     public void clearHistory(Route route) {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
 
+    @Override
+    public void setWaypointProgress(int waypoint, boolean state) {
+        this.database.waypointDAO().setProgress(state, waypoint);
     }
 
     public void setRoute(Route route) {
@@ -95,14 +90,11 @@ public class AppDatabaseManager implements DataStorage {
         this.database.sightDAO().insertSight(sight);
     }
 
-    public void setWaypointProgress(int waypoint) {
-        this.database.waypointDAO().setProgress(true, waypoint);
-    }
-
     public void setRouteWaypoint(RouteWaypointCrossRef crossRef) {
         this.database.routeDAO().insertRouteWaypointCrossRef(crossRef);
     }
 
+    @Override
     public List<Waypoint> getWaypointsPerRoute(Route r) {
         List<RouteWithWaypoints> routeWithWaypoints = this.database.waypointDAO().getWaypointsPerRoute(r.getRouteName());
         List<Waypoint> waypoints = new ArrayList<>();
@@ -114,6 +106,7 @@ public class AppDatabaseManager implements DataStorage {
         return waypoints;
     }
 
+    @Override
     public List<Sight> getSightsPerRoute(Route route) {
         List<Sight> sights = new ArrayList<>();
         List<RouteWithWaypoints> waypointsPerRoute = database.waypointDAO().getWaypointsPerRoute(route.getRouteName());

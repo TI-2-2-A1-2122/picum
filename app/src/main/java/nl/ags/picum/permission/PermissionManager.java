@@ -4,13 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
 
-public class PermissionManager extends AppCompatActivity {
+public class PermissionManager {
 
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
 
@@ -26,6 +25,7 @@ public class PermissionManager extends AppCompatActivity {
             }
         }
         if (permissionsToRequest.size() > 0) {
+            int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
             ActivityCompat.requestPermissions(
                     activty,
                     permissionsToRequest.toArray(new String[0]),
