@@ -24,7 +24,8 @@ import nl.ags.picum.location.geofence.NearLocationManager;
 
 public class Location {
 
-    private BroadcastReceiver geofenceBroadcastReceiver;
+    public static BroadcastReceiver geofenceBroadcastReceiver;
+
     private final Context context;
     private FusedLocationProviderClient fusedLocationClient;
     private LocationObserver observer;
@@ -40,7 +41,13 @@ public class Location {
     public void start(LocationObserver observer) {
         this.observer = observer;
         startLocationUpdates();
-        //TODO start sending locationupdates to observer
+
+        geofenceBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.d("TEST!@#", "YESJASIUI");
+            }
+        };
     }
 
     @SuppressLint("MissingPermission")

@@ -25,6 +25,8 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.location.Geofence;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,9 +39,12 @@ import nl.ags.picum.UI.dialog.PermissionDeniedDialog;
 import nl.ags.picum.UI.fragments.RouteDetailsFragment;
 import nl.ags.picum.UI.fragments.SettingsFragment;
 import nl.ags.picum.UI.viewmodels.MapViewModel;
+import nl.ags.picum.dataStorage.dataUtil.Point;
 import nl.ags.picum.dataStorage.managing.AppDatabaseManager;
 import nl.ags.picum.dataStorage.roomData.Route;
 import nl.ags.picum.dataStorage.roomData.Waypoint;
+import nl.ags.picum.location.gps.Location;
+import nl.ags.picum.location.gps.LocationObserver;
 import nl.ags.picum.mapManagement.MapManager;
 import nl.ags.picum.mapManagement.routeCalculation.RouteCalculator;
 import nl.ags.picum.mapManagement.routeCalculation.RouteCalculatorListener;
@@ -82,7 +87,24 @@ public class MainActivity extends AppCompatActivity {
         }).start();
 
 
+        Location location = new Location(this);
+        location.start(new LocationObserver() {
+            @Override
+            public void onLocationError() {
 
+            }
+
+            @Override
+            public void onLocationUpdate(Point point) {
+                Log.d("LOCATIOM", "punt: " + point);
+            }
+
+            @Override
+            public void onNearLocationEntered(Geofence geofence) {
+
+            }
+        });
+        location.nearLocationManager.setNextNearLocation(new Point(4.7926f, 51.5856f), 20.0);
     }
 
     public void requestPermission(String[] permissions){

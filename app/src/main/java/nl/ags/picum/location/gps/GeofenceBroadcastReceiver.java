@@ -10,8 +10,6 @@ import com.google.android.gms.location.GeofencingEvent;
 
 public class GeofenceBroadcastReceiver extends BroadcastReceiver {
 
-    private LocationObserver observer;
-
     public GeofenceBroadcastReceiver() {
     }
 
@@ -25,7 +23,9 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
         }
         for (Geofence geofence : geofencingEvent.getTriggeringGeofences()) {
             Log.d("Geofence", "Geofence entered: " + geofence.getRequestId());
-            //observer.onNearLocationEntered(geofence);
+
+            if (Location.geofenceBroadcastReceiver != null)
+                Location.geofenceBroadcastReceiver.onReceive(context, intent);
 
         }
 
