@@ -221,8 +221,6 @@ public class MapManager implements LocationObserver {
 
     }
 
-
-    // TODO: 14-12-2021 Method is not implemented, method is never called since broadcast receiver not yet functional
     @Override
     public void onNearLocationEntered(Geofence geofence) {
         Log.d(LOGTAG, "onNearLocationEntered triggered with geofenceL " + geofence);
