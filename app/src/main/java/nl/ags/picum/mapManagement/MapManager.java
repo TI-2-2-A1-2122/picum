@@ -154,6 +154,7 @@ public class MapManager implements LocationObserver {
      */
     @Override
     public void onLocationUpdate(Point point) {
+        Log.d(LOGTAG, "Received new location update: " + point);
 
         // First checking if the MapViewModel is set
         if (this.mapViewModel == null) return;
