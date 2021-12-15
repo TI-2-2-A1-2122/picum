@@ -85,26 +85,6 @@ public class MainActivity extends AppCompatActivity {
 
             runOnUiThread(() -> Objects.requireNonNull(recyclerView.getAdapter()).notifyItemRangeChanged(0,tempList.size()));
         }).start();
-
-
-        Location location = new Location(this);
-        location.start(new LocationObserver() {
-            @Override
-            public void onLocationError() {
-
-            }
-
-            @Override
-            public void onLocationUpdate(Point point) {
-                Log.d("LOCATIOM", "punt: " + point);
-            }
-
-            @Override
-            public void onNearLocationEntered(Geofence geofence) {
-                Log.d("LOCATOIM", "Geofence trigger: " + geofence);
-            }
-        });
-        location.nearLocationManager.setNextNearLocation(new Point(4.7926f, 51.5856f), 20.0);
     }
 
     public void requestPermission(String[] permissions){
