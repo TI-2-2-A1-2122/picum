@@ -53,7 +53,7 @@ public class MapActivity extends AppCompatActivity {
 
     public void initializeMap(){
         mMap.setTileSource(TileSourceFactory.MAPNIK);
-        mMapController.setZoom(20.0);
+        mMapController.setZoom(20.1);
         //TODO Get Location
         GeoPoint startPoint = new GeoPoint(51.585474, 4.792315);
         //TODO
