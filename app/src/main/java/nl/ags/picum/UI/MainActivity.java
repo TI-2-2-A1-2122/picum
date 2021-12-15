@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
         timeRequested++;
-        if (permissionstorequest.size() < 1)
+        if (permissionstorequest.size() >= 1)
             requestPermission(permissionstorequest.toArray(new String[0]));
 
     }
