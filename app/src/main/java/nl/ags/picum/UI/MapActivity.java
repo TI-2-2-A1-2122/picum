@@ -16,13 +16,13 @@ import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.gestures.RotationGestureOverlay;
 
-import java.lang.reflect.Array;
-import java.util.Collections;
+import java.util.List;
 
 import nl.ags.picum.R;
 import nl.ags.picum.UI.viewmodels.MapViewModel;
 import nl.ags.picum.UI.viewmodels.SightViewModel;
 import nl.ags.picum.dataStorage.roomData.Route;
+import nl.ags.picum.dataStorage.roomData.Sight;
 
 public class MapActivity extends AppCompatActivity {
 
@@ -40,6 +40,11 @@ public class MapActivity extends AppCompatActivity {
         this.mapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
         this.sightViewModel = new ViewModelProvider(this).get(SightViewModel.class);
 
+        this.mapViewModel.getMapManager().setSightViewModel(this.sightViewModel);
+
+        this.sightViewModel.getCurrentSight().observe(this, this::onSightChanged);
+        this.sightViewModel.getSights().observe(this, this::onSightsChanged);
+
         this.mMap = findViewById(R.id.MainMap);
         mMapController = mMap.getController();
         initializeMap();
@@ -50,6 +55,15 @@ public class MapActivity extends AppCompatActivity {
 
         Log.d("pizzaparty", "onCreate: " + mapViewModel.getCurrentRoute());
     }
+
+    private void onSightsChanged(List<Sight> sights) {
+        Log.d("TAG", "Sights updated: " + sights.toString());
+    }
+
+    private void onSightChanged(Sight sight) {
+        Log.d("TAG", "Sight location triggered: " + sight);
+    }
+
 
     public void onStartRouteButtonClick(View view){
         ((Button)view).setVisibility(View.INVISIBLE);
