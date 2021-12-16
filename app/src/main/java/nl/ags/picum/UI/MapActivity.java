@@ -23,6 +23,7 @@ import java.util.List;
 import nl.ags.picum.R;
 import nl.ags.picum.UI.fragments.RouteDetailsFragment;
 import nl.ags.picum.UI.fragments.SightDetailsPopupFragment;
+import nl.ags.picum.UI.fragments.SightsListFragment;
 import nl.ags.picum.UI.viewmodels.MapViewModel;
 import nl.ags.picum.dataStorage.managing.AppDatabaseManager;
 import nl.ags.picum.dataStorage.roomData.AppDatabase;
@@ -106,6 +107,6 @@ public class MapActivity extends AppCompatActivity {
     }
 
     public void onFABClicked(View view){
-
+        new SightsListFragment(sights, this).show(getSupportFragmentManager(), "list");
     }
 }
