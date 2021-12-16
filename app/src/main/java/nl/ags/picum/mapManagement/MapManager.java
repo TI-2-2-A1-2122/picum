@@ -5,6 +5,10 @@ import android.util.Log;
 
 import com.google.android.gms.location.Geofence;
 
+import org.w3c.dom.ProcessingInstruction;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import nl.ags.picum.UI.viewmodels.MapViewModel;
@@ -75,8 +79,12 @@ public class MapManager implements LocationObserver {
             // Creating a RouteCalculator to calculate a route, implementing the callback function
             // to update the view model
             RouteCalculator calculator = new RouteCalculator((points) -> {
-                if (this.mapViewModel != null)
-                    this.mapViewModel.setCalculatedRoute(points);
+                if (this.mapViewModel != null) {
+                    HashMap<Boolean, List<Point>> markedPoints = new HashMap<>();
+                    markedPoints.put(false, points);
+                    markedPoints.put(true, new ArrayList<>());
+                    this.mapViewModel.setCalculatedRoute(markedPoints);
+                }
             });
 
             // Call the calculate function
@@ -177,8 +185,6 @@ public class MapManager implements LocationObserver {
 
             // Loop over the list of waypoints
             sortPointByVisited(point, waypointList, dataStorage);
-
-            // TODO: 14-12-2021 Update the values in the ViewModel once ViewModel is updated
         }).start();
     }
 
@@ -220,11 +226,45 @@ public class MapManager implements LocationObserver {
         }
 
         // Given the waypoint that was visited, sort the list to update the ViewModel
-        calculatedRouteAsVisited(waypointList.get(markedWaypoint));
+        if(markedWaypoint != -1)
+            calculatedRouteAsVisited(waypointList.get(markedWaypoint));
 
     }
 
-    private void calculatedRouteAsVisited(Waypoint waypoint) {
+    private void calculatedRouteAsVisited(Waypoint waypoints) {
+        // Checking if MapViewModel is set and the calculated route is not null
+        if (this.mapViewModel == null ||
+                this.mapViewModel.getCalculatedRoute() == null ||
+                this.mapViewModel.getCalculatedRoute().getValue() == null
+        ) return;
+
+        // Getting the list of not yet visited points
+        HashMap<Boolean, List<Point>> routeList = this.mapViewModel.getCalculatedRoute().getValue();
+        List<Point> notVisitedPoints = routeList.get(false);
+        List<Point> visitedPoints = routeList.get(true);
+
+        if(notVisitedPoints == null || visitedPoints == null || notVisitedPoints.size() == 0) return;
+
+        int lowestPoint = 0;
+        double lowestDistance = notVisitedPoints.get(0).toGeoPoint().distanceToAsDouble(waypoints.toGeoPoint());
+
+        // Checking the distance from the marked waypoint to the list of not yet visited points
+        for(int i = 0; i < notVisitedPoints.size(); i++) {
+            double distanceToWaypoint = notVisitedPoints.get(i).toGeoPoint().distanceToAsDouble(waypoints.toGeoPoint());
+            if(distanceToWaypoint > lowestDistance) continue;
+
+            lowestDistance = distanceToWaypoint;
+            lowestPoint = i;
+        }
+
+        // Adding up to i to the list
+        for(int i = 0; i < lowestPoint; i++) {
+            Point movePoint = notVisitedPoints.get(i);
+            notVisitedPoints.remove(movePoint);
+            visitedPoints.add(movePoint);
+        }
+
+        this.mapViewModel.setCalculatedRoute(routeList);
     }
 
 
