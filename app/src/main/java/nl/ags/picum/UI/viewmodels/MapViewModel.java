@@ -70,26 +70,6 @@ public class MapViewModel extends AndroidViewModel {
         this.currentRoute.setValue(route);
     }
 
-    private final MutableLiveData<List<Route>> routes = new MutableLiveData<>();
-
-    /**
-     * this MutableLiveData of routes
-     * you can observe this with getRoutes().observe
-     * you can get the object point with getRoutes().getValue
-     * @return MutableLiveData<List<Route>>
-     */
-    public MutableLiveData<List<Route>> getRoutes() {
-        return routes;
-    }
-
-    public void setRoutes(List<Route> routes)
-    {
-        getRoutes().postValue(routes);
-    }
-
-    private void loadRoutes() {
-    }
-
     private final MutableLiveData<List<Point>> calculatedRoute = new MutableLiveData<>();
 
     public MutableLiveData<List<Point>> getCalculatedRoute()

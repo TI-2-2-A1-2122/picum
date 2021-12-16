@@ -69,6 +69,7 @@ public class MapManager implements LocationObserver {
             DataStorage dataStorage = AppDatabaseManager.getInstance(context);
 
             List<Waypoint> waypoints = dataStorage.getHistory(route);
+            Log.d("test", waypoints.toString());
 
             // Creating a RouteCalculator to calculate a route, implementing the callback function
             // to update the view model

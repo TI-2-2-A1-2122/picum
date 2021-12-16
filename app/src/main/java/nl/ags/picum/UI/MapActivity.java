@@ -20,11 +20,14 @@ import java.util.Collections;
 
 import nl.ags.picum.R;
 import nl.ags.picum.UI.viewmodels.MapViewModel;
+import nl.ags.picum.UI.viewmodels.SightViewModel;
 import nl.ags.picum.dataStorage.roomData.Route;
 
 public class MapActivity extends AppCompatActivity {
 
     private MapViewModel mapViewModel;
+    private SightViewModel sightViewModel;
+
     private MapView mMap;
     private IMapController mMapController;
 
@@ -32,13 +35,16 @@ public class MapActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+
         this.mapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
+        this.sightViewModel = new ViewModelProvider(this).get(SightViewModel.class);
+
         this.mMap = findViewById(R.id.MainMap);
         mMapController = mMap.getController();
         initializeMap();
 
         Route selectedRoute = (Route)getIntent().getSerializableExtra("SelectedRoute");
-        
+
         mapViewModel.setCurrentRoute(selectedRoute);
 
         Log.d("pizzaparty", "onCreate: " + mapViewModel.getCurrentRoute());
