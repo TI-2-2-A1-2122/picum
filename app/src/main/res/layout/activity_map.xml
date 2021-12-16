@@ -9,7 +9,7 @@
 <org.osmdroid.views.MapView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/mapview_mapview"
+    android:id="@+id/MainMap"
     />
     <Button
         android:layout_width="220dp"

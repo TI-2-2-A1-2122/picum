@@ -33,4 +33,8 @@
     <string name="Ridderstraat">\"The Ridderstraat is an important shopping street in the heart of Breda. The Ginnekenstraat, Eindstraat, Karrestraat Torenstraat and Vismarktstraat must date from the twelfth century. It is generally assumed that these streets were part of the pre-urban settlement as</string>
     <string name="DeGroteMarkt">\"The Grote Markt is the beating heart of Breda and connects a large number of shopping streets. You will mainly find nice restaurants here, but also a number of beautiful shops such as Boekhandel Libris de Buitenlaar, van Bommel shoes, van Gurp jeweler and more. of events</string>
     <string name="Bevrijdingsmonument">\"The statue of Judith, the monument in memory of the Breda fallen in the Second World War on the Grote Markt, was unveiled on June 24, 1952. It was made by Niel Steenbergen (1911-1997). It is the best known of the many peace memorials. from his hand.</string>
+    <string name="Settings">Settings</string>
+    <string name="toast_no_dismiss">To use the app we need the GPS permission</string>
+    <string name="GPS_PERMISSION_DENIED">Permission to access GPS denied</string>
+    <string name="GPS_PERMISSION_EXPLAINER">To use the app and follow a tour we are required to use the GPS in your phone. Without the GPS permission the app can not function, you can press the settings button to allow us permission.</string>
 </resources>

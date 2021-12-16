@@ -1,7 +1,9 @@
 package nl.ags.picum.location.geofence;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -17,6 +19,9 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import nl.ags.picum.dataStorage.dataUtil.Point;
 import nl.ags.picum.location.gps.GeofenceBroadcastReceiver;
 
@@ -30,26 +35,38 @@ public class NearLocationManager implements NextNearLocation {
     private Geofence activeGeofence;
     private PendingIntent geofencePendingIntent;
 
+    private BroadcastReceiver broadcastReceiver;
+
     public NearLocationManager(Context context) {
-        LocationServices.getGeofencingClient(context);
+        geofencingClient = LocationServices.getGeofencingClient(context);
         this.context = context;
     }
 
     @Override
     public void setNextNearLocation(Point nextLocation, Double radiusInMeters) {
-        setActiveGeofence(nextLocation);
+        //remove current geofence
+        if(activeGeofence != null) {
+            List<String> activeFenceList = new ArrayList<>();
+            activeFenceList.add(activeGeofence.getRequestId());
+            geofencingClient.removeGeofences(activeFenceList);
+        }
+        //set new geofence
+        setActiveGeofence(nextLocation, radiusInMeters);
         addGeofence();
     }
 
-    private void setActiveGeofence(Point nextLocation) {
+
+    private void setActiveGeofence(Point nextLocation, double radiusInMeters) {
         this.activeGeofence = new Geofence.Builder()
                 .setRequestId(nextLocation.getId())
                 .setCircularRegion(
                         nextLocation.getLatitude(),
                         nextLocation.getLongitude(),
-                        30f
+                        (float) radiusInMeters
                 )
-                //TODO add things like expirationtime and transitiontypes
+                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_DWELL)
+                .setLoiteringDelay(1)
+                .setExpirationDuration(Geofence.NEVER_EXPIRE)
                 .build();
     }
 
@@ -73,35 +90,21 @@ public class NearLocationManager implements NextNearLocation {
         return geofencePendingIntent;
     }
 
-    private boolean addGeofence() {
-        final boolean[] addingSucceeded = new boolean[1];
-        if (ActivityCompat.checkSelfPermission(this.context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            Log.d("Geo", "Permissions required for geofence!");
-            return false;
-        }
+    @SuppressLint("MissingPermission")
+    private void addGeofence() {
         geofencingClient.addGeofences(getGeofencingRequest(), getGeofencePendingIntent())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        addingSucceeded[0] = true;
                         Log.d("Geo", "Geofence added sucessfully!");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        addingSucceeded[0] = true;
                         Log.d("Geo", "Adding geofence failed, " + e.getLocalizedMessage());
                     }
                 });
-        return addingSucceeded[0];
     }
 
 }

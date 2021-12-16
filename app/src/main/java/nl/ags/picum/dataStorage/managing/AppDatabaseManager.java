@@ -7,9 +7,13 @@ import androidx.room.Room;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import nl.ags.picum.dataStorage.dataUtil.Point;
 import nl.ags.picum.dataStorage.linkingTables.RouteWaypointCrossRef;
+import nl.ags.picum.dataStorage.linkingTables.RouteWithWaypoints;
+import nl.ags.picum.dataStorage.linkingTables.WaypointWithSight;
 import nl.ags.picum.dataStorage.roomData.AppDatabase;
 import nl.ags.picum.dataStorage.roomData.Route;
 import nl.ags.picum.dataStorage.roomData.Sight;
@@ -54,22 +58,24 @@ public class AppDatabaseManager implements DataStorage {
 
     @Override
     public List<Waypoint> getHistory(Route route) {
-        return null;
-    }
+        List<Waypoint> waypoints = new ArrayList<>();
+        List<RouteWithWaypoints> routeAndWaypoints = this.database.waypointDAO().getWaypointsPerRoute(route.getRouteName());
 
-    @Override
-    public void setHistory(Route route, List<Waypoint> waypoints) {
+        for (RouteWithWaypoints r : routeAndWaypoints) {
+            waypoints.addAll(r.waypoints);
+        }
 
-    }
-
-    @Override
-    public void appendHistory(Route route, Waypoint waypoint) {
-
+        return waypoints;
     }
 
     @Override
     public void clearHistory(Route route) {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
 
+    @Override
+    public void setWaypointProgress(int waypoint, boolean state) {
+        this.database.waypointDAO().setProgress(state, waypoint);
     }
 
     public void setRoute(Route route) {
@@ -90,5 +96,48 @@ public class AppDatabaseManager implements DataStorage {
 
     public Sight getSight(String name) {
         return this.database.sightDAO().getSight(name);
+    @Override
+    public List<Waypoint> getWaypointsPerRoute(Route r) {
+        List<RouteWithWaypoints> routeWithWaypoints = this.database.waypointDAO().getWaypointsPerRoute(r.getRouteName());
+        List<Waypoint> waypoints = new ArrayList<>();
+
+        for (RouteWithWaypoints i : routeWithWaypoints) {
+            waypoints.addAll(i.waypoints);
+        }
+
+        return waypoints;
+    }
+
+    @Override
+    public List<Sight> getSightsPerRoute(Route route) {
+        List<Sight> sights = new ArrayList<>();
+        List<RouteWithWaypoints> waypointsPerRoute = database.waypointDAO().getWaypointsPerRoute(route.getRouteName());
+
+        for (RouteWithWaypoints r : waypointsPerRoute) {
+            List<Waypoint> waypoints = r.waypoints;
+
+            for (Waypoint w : waypoints) {
+                List<WaypointWithSight> waypointsight = database.sightDAO().getSightWithWaypoint(w.getWaypointID());
+
+                for (WaypointWithSight s : waypointsight) {
+                    if (s.sight != null)
+                        sights.add(s.sight);
+                }
+            }
+        }
+
+        return sights;
+    }
+
+    public Point getPointFromWaypoint(Waypoint waypoint) {
+        List<WaypointWithSight> waypointAndSight = this.database.sightDAO().getSightWithWaypoint(waypoint.getWaypointID());
+        Point p = new Point();
+
+        for (WaypointWithSight w : waypointAndSight) {
+            p.setLongitude(w.waypoint.getLongitude());
+            p.setLatitude(w.waypoint.getLatitude());
+        }
+
+        return p;
     }
 }
