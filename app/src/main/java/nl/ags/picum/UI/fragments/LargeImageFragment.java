@@ -12,19 +12,20 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import nl.ags.picum.R;
 
 public class LargeImageFragment extends DialogFragment {
 
-    private Drawable drawable;
+    private int resource;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
-    public LargeImageFragment(Drawable drawable){
-        this.drawable = drawable;
+    public LargeImageFragment(int resource){
+        this.resource = resource;
     }
 
     @Override
@@ -36,7 +37,7 @@ public class LargeImageFragment extends DialogFragment {
             int height = ViewGroup.LayoutParams.MATCH_PARENT;
             dialog.getWindow().setLayout(width, height);
         }
-        view.findViewById(R.id.large_image_image).setBackgroundDrawable(drawable);
+        ((ImageView)view.findViewById(R.id.large_image_image)).setImageResource(resource);
         view.findViewById(R.id.large_image_image).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

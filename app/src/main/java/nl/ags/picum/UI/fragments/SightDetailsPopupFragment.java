@@ -47,13 +47,12 @@ public class SightDetailsPopupFragment extends DialogFragment {
             dialog.getWindow().setLayout(width, height);
         }
         String photoUrl = "@" + sight.getPhotoURL().substring(0, sight.getPhotoURL().indexOf("."));
-        Drawable drawable = context.getDrawable(context.getResources().getIdentifier(photoUrl, null, context.getPackageName()));
         ImageView image = (ImageView)getView().findViewById(R.id.sight_details_image);
-        image.setImageDrawable(drawable);
+        image.setImageResource(context.getResources().getIdentifier(photoUrl, null, context.getPackageName()));
         image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new LargeImageFragment(drawable).show(getParentFragmentManager(), "image");
+                new LargeImageFragment(context.getResources().getIdentifier(photoUrl, null, context.getPackageName())).show(getParentFragmentManager(), "image");
             }
         });
         ((TextView)getView().findViewById(R.id.sight_details_title)).setText(sight.getSightName());

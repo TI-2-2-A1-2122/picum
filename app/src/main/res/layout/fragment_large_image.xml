@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:id="@+id/large_image_image"
-        android:scaleType="center"
+
         />
 
 </FrameLayout>
