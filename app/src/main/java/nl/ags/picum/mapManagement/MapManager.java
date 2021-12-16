@@ -1,14 +1,11 @@
 package nl.ags.picum.mapManagement;
 
-import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
 import com.google.android.gms.location.Geofence;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import nl.ags.picum.UI.viewmodels.MapViewModel;
 import nl.ags.picum.UI.viewmodels.SightViewModel;
@@ -18,7 +15,6 @@ import nl.ags.picum.dataStorage.managing.DataStorage;
 import nl.ags.picum.dataStorage.roomData.Route;
 import nl.ags.picum.dataStorage.roomData.Sight;
 import nl.ags.picum.dataStorage.roomData.Waypoint;
-import nl.ags.picum.location.geofence.NearLocationManager;
 import nl.ags.picum.location.gps.Location;
 import nl.ags.picum.location.gps.LocationObserver;
 import nl.ags.picum.mapManagement.routeCalculation.RouteCalculator;
@@ -67,20 +63,24 @@ public class MapManager implements LocationObserver {
      * @param route The route to calculate the points to walk of
      */
     public void calculateRoutePoints(Route route) {
-        // Getting all the waypoints bases on the route
-        DataStorage dataStorage = AppDatabaseManager.getInstance(context);
+        // Creating a new thread to run async
+        new Thread(() -> {
+            // Getting all the waypoints bases on the route
+            DataStorage dataStorage = AppDatabaseManager.getInstance(context);
 
-        List<Waypoint> waypoints = dataStorage.getHistory(route);
+            List<Waypoint> waypoints = dataStorage.getHistory(route);
+            Log.d("test", waypoints.toString());
 
-        // Creating a RouteCalculator to calculate a route, implementing the callback function
-        // to update the view model
-        RouteCalculator calculator = new RouteCalculator((points) -> {
-            if (this.mapViewModel != null)
-                this.mapViewModel.setCalculatedRoute(points);
-        });
+            // Creating a RouteCalculator to calculate a route, implementing the callback function
+            // to update the view model
+            RouteCalculator calculator = new RouteCalculator((points) -> {
+                if (this.mapViewModel != null)
+                    this.mapViewModel.setCalculatedRoute(points);
+            });
 
-        // Call the calculate function
-        calculator.calculate(waypoints);
+            // Call the calculate function
+            calculator.calculate(waypoints);
+        }).start();
     }
 
     /**
@@ -154,7 +154,7 @@ public class MapManager implements LocationObserver {
      */
     @Override
     public void onLocationUpdate(Point point) {
-        Log.d(LOGTAG, "Received new location update: " + point);
+        Log.i(LOGTAG, "Received new location update: " + point);
 
         // First checking if the MapViewModel is set
         if (this.mapViewModel == null) return;
@@ -166,13 +166,13 @@ public class MapManager implements LocationObserver {
         // Starting a new thread to run async
         new Thread(() -> {
             // Checking if an active route has been set in this.mapViewModel
-            if (this.mapViewModel.getcurrentRoute() == null) return;
+            if (this.mapViewModel.getCurrentRoute() == null) return;
 
             // Getting a database
             DataStorage dataStorage = AppDatabaseManager.getInstance(context);
 
             // Get the list of waypoints of the current route
-            List<Waypoint> waypointList = dataStorage.getHistory(this.mapViewModel.getcurrentRoute());
+            List<Waypoint> waypointList = dataStorage.getHistory(this.mapViewModel.getCurrentRoute());
 
             // Loop over the list of waypoints
             sortPointByVisited(point, waypointList, dataStorage);
@@ -223,7 +223,7 @@ public class MapManager implements LocationObserver {
 
     @Override
     public void onNearLocationEntered(Geofence geofence) {
-        Log.d(LOGTAG, "onNearLocationEntered triggered with geofenceL " + geofence);
+        Log.i(LOGTAG, "onNearLocationEntered triggered with geofence " + geofence);
 
         // Return if there is no SightViewModel
         if (sightViewModel == null ||
@@ -253,7 +253,7 @@ public class MapManager implements LocationObserver {
         }
 
         // Getting the Waypoint of the nextSight
-        List<Waypoint> waypointsInRoute = dataStorage.getWaypointsPerRoute(this.mapViewModel.getcurrentRoute());
+        List<Waypoint> waypointsInRoute = dataStorage.getWaypointsPerRoute(this.mapViewModel.getCurrentRoute());
         Waypoint sightWaypoint = waypointsInRoute
                 .stream()
                 .filter((waypoint -> waypoint.getWaypointID() == sights.get(0).getWaypointID()))

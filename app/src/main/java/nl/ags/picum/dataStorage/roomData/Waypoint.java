@@ -66,4 +66,14 @@ public class Waypoint {
     public GeoPoint toGeoPoint() {
         return new GeoPoint(latitude, longitude);
     }
+
+    @Override
+    public String toString() {
+        return "Waypoint{" +
+                "waypointID=" + waypointID +
+                ", visited=" + visited +
+                ", longitude=" + longitude +
+                ", latitude=" + latitude +
+                '}';
+    }
 }
