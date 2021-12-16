@@ -139,7 +139,7 @@ public class AppDatabaseManager implements DataStorage {
 
             return p;
         }
-    }
+
 
     @Override
     public Point getPointFromSight(String sightName) {
