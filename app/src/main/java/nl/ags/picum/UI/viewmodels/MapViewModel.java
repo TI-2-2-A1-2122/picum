@@ -1,6 +1,10 @@
 package nl.ags.picum.UI.viewmodels;
 
 
+import android.app.Application;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -8,8 +12,17 @@ import java.util.List;
 
 import nl.ags.picum.dataStorage.dataUtil.Point;
 import nl.ags.picum.dataStorage.roomData.Route;
+import nl.ags.picum.mapManagement.MapManager;
 
-public class MapViewModel extends ViewModel {
+public class MapViewModel extends AndroidViewModel {
+
+    private final MapManager mapManager;
+
+    public MapViewModel(@NonNull Application application) {
+        super(application);
+        this.mapManager = new MapManager(application);
+        this.mapManager.setMapViewModel(this);
+    }
 
     private final MutableLiveData<Point> currentlocation = new MutableLiveData<>();
 
