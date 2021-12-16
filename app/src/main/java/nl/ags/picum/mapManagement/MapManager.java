@@ -154,7 +154,7 @@ public class MapManager implements LocationObserver {
      */
     @Override
     public void onLocationUpdate(Point point) {
-        Log.d(LOGTAG, "Received new location update: " + point);
+        Log.i(LOGTAG, "Received new location update: " + point);
 
         // First checking if the MapViewModel is set
         if (this.mapViewModel == null) return;
@@ -223,7 +223,7 @@ public class MapManager implements LocationObserver {
 
     @Override
     public void onNearLocationEntered(Geofence geofence) {
-        Log.d(LOGTAG, "onNearLocationEntered triggered with geofenceL " + geofence);
+        Log.i(LOGTAG, "onNearLocationEntered triggered with geofence " + geofence);
 
         // Return if there is no SightViewModel
         if (sightViewModel == null ||

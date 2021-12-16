@@ -36,14 +36,10 @@ public class MapActivity extends AppCompatActivity {
         initializeMap();
 
         Route selectedRoute = (Route)getIntent().getSerializableExtra("SelectedRoute");
-        mapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
 
         mapViewModel.setCurrentRoute(selectedRoute);
 
         Log.d("pizzaparty", "onCreate: " + mapViewModel.getcurrentRoute());
-        MapManager m = new MapManager(this);
-        m.setMapViewModel(mapViewModel);
-        m.startGPSUpdates();
     }
 
     public void onStartRouteButtonClick(View view){

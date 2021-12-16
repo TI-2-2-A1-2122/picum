@@ -2,11 +2,12 @@ package nl.ags.picum.UI.viewmodels;
 
 
 import android.app.Application;
+import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
 import java.util.List;
 
@@ -16,12 +17,20 @@ import nl.ags.picum.mapManagement.MapManager;
 
 public class MapViewModel extends AndroidViewModel {
 
-    private final MapManager mapManager;
+    private MapManager mapManager;
 
     public MapViewModel(@NonNull Application application) {
         super(application);
         this.mapManager = new MapManager(application);
+        init();
+    }
+
+    private void init() {
+        // Setting the ViewModel to this ViewModel
         this.mapManager.setMapViewModel(this);
+
+        // Tell the manager to start updates
+        this.mapManager.startGPSUpdates();
     }
 
     private final MutableLiveData<Point> currentlocation = new MutableLiveData<>();
@@ -33,12 +42,12 @@ public class MapViewModel extends AndroidViewModel {
      * you can get the object point with getCurrentlocation().getValue
      * @return MutableLiveData<Point>
      */
-    public MutableLiveData<Point> getCurrentlocation() {
+    public MutableLiveData<Point> getCurrentLocation() {
         return currentlocation;
     }
 
     public void setCurrentlocation(Point currentlocation) {
-        getCurrentlocation().postValue(currentlocation);
+        getCurrentLocation().postValue(currentlocation);
     }
 
     private final MutableLiveData<Route> currentRoute = new MutableLiveData<>();
