@@ -141,3 +141,17 @@ public class AppDatabaseManager implements DataStorage {
         }
     }
 
+    @Override
+    public Point getPointFromSight(String sightName) {
+        Sight s = this.database.sightDAO().getSight(sightName);
+
+        Waypoint w = this.database.waypointDAO().getWaypoint(s.getWaypointID());
+
+        Point p = new Point();
+        p.setLatitude(w.getLatitude());
+        p.setLongitude(w.getLongitude());
+
+        return p;
+    }
+}
+
