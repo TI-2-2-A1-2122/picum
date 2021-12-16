@@ -60,9 +60,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-
-
         setContentView(R.layout.activity_main);
         dialogPermission = new PermissionDeniedDialog();
         requestPermission(new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
