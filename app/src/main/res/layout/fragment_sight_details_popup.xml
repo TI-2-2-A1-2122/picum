@@ -53,6 +53,7 @@
             android:textSize="14sp"
             android:layout_marginTop="20dp"
             android:id="@+id/sight_details_siteRef"
+            android:text="www.test.test"
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
