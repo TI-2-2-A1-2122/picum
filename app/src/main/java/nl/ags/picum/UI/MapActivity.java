@@ -68,7 +68,7 @@ public class MapActivity extends AppCompatActivity {
 
     public void getSights(){
         AppDatabaseManager dbManager = new AppDatabaseManager(this);
-        sights = dbManager.getSightsPerRoute(mapViewModel.getcurrentRoute());
+        sights = dbManager.getSightsPerRoute(mapViewModel.getCurrentRoute());
     }
 
 
