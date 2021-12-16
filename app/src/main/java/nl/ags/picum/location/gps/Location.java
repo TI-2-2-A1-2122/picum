@@ -31,6 +31,8 @@ public class Location {
     private FusedLocationProviderClient fusedLocationClient;
     private LocationObserver observer;
 
+    private boolean isRunning = false;
+
     public NearLocationManager nearLocationManager;
 
     public Location(Context context) {
@@ -96,9 +98,13 @@ public class Location {
             Log.d("location", "no permissinos");
             return;
         }
+
+        if (this.isRunning) return;
+
         fusedLocationClient.requestLocationUpdates(getLocationRequest(),
                 getLocationCallback(),
                 Looper.getMainLooper());
+        this.isRunning = true;
         Log.d("location", "Starting locationupdates");
     }
 
