@@ -94,50 +94,50 @@ public class AppDatabaseManager implements DataStorage {
         this.database.routeDAO().insertRouteWaypointCrossRef(crossRef);
     }
 
-    public Sight getSight(String name) {
-        return this.database.sightDAO().getSight(name);
-    @Override
-    public List<Waypoint> getWaypointsPerRoute(Route r) {
-        List<RouteWithWaypoints> routeWithWaypoints = this.database.waypointDAO().getWaypointsPerRoute(r.getRouteName());
-        List<Waypoint> waypoints = new ArrayList<>();
 
-        for (RouteWithWaypoints i : routeWithWaypoints) {
-            waypoints.addAll(i.waypoints);
+        @Override
+        public List<Waypoint> getWaypointsPerRoute (Route r){
+            List<RouteWithWaypoints> routeWithWaypoints = this.database.waypointDAO().getWaypointsPerRoute(r.getRouteName());
+            List<Waypoint> waypoints = new ArrayList<>();
+
+            for (RouteWithWaypoints i : routeWithWaypoints) {
+                waypoints.addAll(i.waypoints);
+            }
+
+            return waypoints;
         }
 
-        return waypoints;
-    }
+        @Override
+        public List<Sight> getSightsPerRoute (Route route){
+            List<Sight> sights = new ArrayList<>();
+            List<RouteWithWaypoints> waypointsPerRoute = database.waypointDAO().getWaypointsPerRoute(route.getRouteName());
 
-    @Override
-    public List<Sight> getSightsPerRoute(Route route) {
-        List<Sight> sights = new ArrayList<>();
-        List<RouteWithWaypoints> waypointsPerRoute = database.waypointDAO().getWaypointsPerRoute(route.getRouteName());
+            for (RouteWithWaypoints r : waypointsPerRoute) {
+                List<Waypoint> waypoints = r.waypoints;
 
-        for (RouteWithWaypoints r : waypointsPerRoute) {
-            List<Waypoint> waypoints = r.waypoints;
+                for (Waypoint w : waypoints) {
+                    List<WaypointWithSight> waypointsight = database.sightDAO().getSightWithWaypoint(w.getWaypointID());
 
-            for (Waypoint w : waypoints) {
-                List<WaypointWithSight> waypointsight = database.sightDAO().getSightWithWaypoint(w.getWaypointID());
-
-                for (WaypointWithSight s : waypointsight) {
-                    if (s.sight != null)
-                        sights.add(s.sight);
+                    for (WaypointWithSight s : waypointsight) {
+                        if (s.sight != null)
+                            sights.add(s.sight);
+                    }
                 }
             }
+
+            return sights;
         }
 
-        return sights;
-    }
+        public Point getPointFromWaypoint (Waypoint waypoint){
+            List<WaypointWithSight> waypointAndSight = this.database.sightDAO().getSightWithWaypoint(waypoint.getWaypointID());
+            Point p = new Point();
 
-    public Point getPointFromWaypoint(Waypoint waypoint) {
-        List<WaypointWithSight> waypointAndSight = this.database.sightDAO().getSightWithWaypoint(waypoint.getWaypointID());
-        Point p = new Point();
+            for (WaypointWithSight w : waypointAndSight) {
+                p.setLongitude(w.waypoint.getLongitude());
+                p.setLatitude(w.waypoint.getLatitude());
+            }
 
-        for (WaypointWithSight w : waypointAndSight) {
-            p.setLongitude(w.waypoint.getLongitude());
-            p.setLatitude(w.waypoint.getLatitude());
+            return p;
         }
-
-        return p;
     }
-}
+
