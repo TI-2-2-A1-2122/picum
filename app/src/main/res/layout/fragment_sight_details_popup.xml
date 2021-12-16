@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".UI.fragments.SightDetailsPopupFragment"
+    android:backgroundTint="@android:color/transparent"
+    android:layout_margin="20dp"
+    android:layout_gravity="center"
+    >
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="16dp"
+        >
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:id="@+id/sight_details_image"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toRightOf="parent"
+            android:background="@color/primary"
+            android:scaleType="centerCrop"
+            />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/sight_details_image"
+            app:layout_constraintLeft_toLeftOf="@id/sight_details_image"
+            app:layout_constraintRight_toRightOf="@id/sight_details_image"
+            android:textSize="24sp"
+            android:text="testname of sight"
+            android:id="@+id/sight_details_title"
+            />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="360dp"
+            app:layout_constraintTop_toBottomOf="@id/sight_details_title"
+            android:layout_marginTop="16dp"
+            app:layout_constraintLeft_toLeftOf="@id/sight_details_image"
+            app:layout_constraintRight_toRightOf="@id/sight_details_image"
+            android:text="test text for sight bla bla bla bla bla bla blblblblblb"
+            android:textSize="16sp"
+            android:id="@+id/sight_details_detailsText"
+            android:scrollbars="vertical"
+            />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@id/sight_details_image"
+            app:layout_constraintRight_toRightOf="@id/sight_details_image"
+            app:layout_constraintTop_toBottomOf="@id/sight_details_detailsText"
+            android:textSize="14sp"
+            android:layout_marginTop="20dp"
+            android:id="@+id/sight_details_siteRef"
+            android:text="www.test.test"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>
