@@ -59,7 +59,7 @@ public class RouteDetailsFragment extends DialogFragment {
     }
 
     private void setTextAndButtons(View view){
-        ((TextView)view.findViewById(R.id.route_details_fragment_details_description)).setText(selectedRoute.getDescription());
+        ((TextView)view.findViewById(R.id.route_details_fragment_details_descriptionText)).setText(selectedRoute.getDescription());
         ((TextView)view.findViewById(R.id.route_details_fragment_details_name)).setText(selectedRoute.getRouteName());
         ((Button)view.findViewById(R.id.route_details_fragment_details_backButton)).setOnClickListener(v -> dismiss());
 
