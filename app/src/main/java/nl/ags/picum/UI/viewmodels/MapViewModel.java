@@ -35,7 +35,6 @@ public class MapViewModel extends AndroidViewModel {
 
     private final MutableLiveData<Point> currentlocation = new MutableLiveData<>();
 
-
     /**
      * this MutableLiveData of point
      * you can observe this with getCurrentlocation().observe
@@ -55,7 +54,7 @@ public class MapViewModel extends AndroidViewModel {
     /**
      * @return returns the current route
      */
-    public Route getcurrentRoute() {
+    public Route getCurrentRoute() {
         return currentRoute.getValue();
     }
 
@@ -64,6 +63,10 @@ public class MapViewModel extends AndroidViewModel {
      * @param route the new current route
      */
     public void setCurrentRoute(Route route) {
+        // First starting to calculate the route
+        this.mapManager.calculateRoutePoints(route);
+
+        // Return the value
         this.currentRoute.setValue(route);
     }
 
@@ -96,7 +99,7 @@ public class MapViewModel extends AndroidViewModel {
 
     public void setCalculatedRoute(List<Point> points)
     {
-        getCalculatedRoute().postValue(points);
+        calculatedRoute.postValue(points);
     }
 
 

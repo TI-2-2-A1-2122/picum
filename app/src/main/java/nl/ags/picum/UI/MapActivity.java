@@ -15,10 +15,12 @@ import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.gestures.RotationGestureOverlay;
 
+import java.lang.reflect.Array;
+import java.util.Collections;
+
 import nl.ags.picum.R;
 import nl.ags.picum.UI.viewmodels.MapViewModel;
 import nl.ags.picum.dataStorage.roomData.Route;
-import nl.ags.picum.mapManagement.MapManager;
 
 public class MapActivity extends AppCompatActivity {
 
@@ -36,10 +38,10 @@ public class MapActivity extends AppCompatActivity {
         initializeMap();
 
         Route selectedRoute = (Route)getIntent().getSerializableExtra("SelectedRoute");
-
+        
         mapViewModel.setCurrentRoute(selectedRoute);
 
-        Log.d("pizzaparty", "onCreate: " + mapViewModel.getcurrentRoute());
+        Log.d("pizzaparty", "onCreate: " + mapViewModel.getCurrentRoute());
     }
 
     public void onStartRouteButtonClick(View view){
