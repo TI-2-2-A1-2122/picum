@@ -46,12 +46,15 @@
 
     <TextView
         android:id="@+id/route_details_fragment_details_descriptionText"
-        android:layout_width="240dp"
+        android:layout_width="0dp"
         android:layout_height="140dp"
         android:text="Mockuptext for description bla bla bla bla bla bla bla bla bla bla bla"
         android:textSize="20sp"
         app:layout_constraintLeft_toLeftOf="@id/route_details_fragment_details_description"
-        app:layout_constraintTop_toBottomOf="@id/route_details_fragment_details_description" />
+        app:layout_constraintTop_toBottomOf="@id/route_details_fragment_details_description"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginRight="20dp"
+        />
 
     <TextView
         android:id="@+id/route_details_fragment_details_amountOfSights"
@@ -81,16 +84,6 @@
         app:layout_constraintLeft_toLeftOf="@id/route_details_fragment_details_amountOfSightsNumber"
         app:layout_constraintTop_toBottomOf="@id/route_details_fragment_details_amountOfSightsNumber" />
 
-    <ProgressBar
-        android:id="@+id/route_details_fragment_details_progressBar"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-        android:layout_width="0dp"
-        android:layout_height="30dp"
-        android:layout_margin="10dp"
-        android:progressDrawable="@drawable/custom_progressbar"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/route_details_fragment_details_progress" />
 
     <Button
         android:id="@+id/route_details_fragment_details_backButton"
@@ -113,10 +106,12 @@
     <ProgressBar
         android:id="@+id/progressBar2"
         style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/route_details_fragment_details_progressBar" />
+        app:layout_constraintStart_toStartOf="@id/route_details_fragment_details_progress"
+        app:layout_constraintTop_toBottomOf="@+id/route_details_fragment_details_progress"
+        android:layout_marginEnd="20dp"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
