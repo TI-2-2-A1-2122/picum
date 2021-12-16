@@ -20,7 +20,7 @@ public class Sight {
 
     @NonNull
     @ColumnInfo(name = "SightDescription")
-    private int sightDescription;
+    private String sightDescription;
 
     @NonNull
     @ColumnInfo(name = "WebsiteURL")
@@ -32,7 +32,7 @@ public class Sight {
 
     }
 
-    public Sight(String sightName, int photoURL, int sightDescription, String websiteURL, int waypointID) {
+    public Sight(String sightName, int photoURL, String sightDescription, String websiteURL, int waypointID) {
         this.sightName = sightName;
         this.photoURL = photoURL;
         this.sightDescription = sightDescription;
@@ -56,11 +56,11 @@ public class Sight {
         this.photoURL = photoURL;
     }
 
-    public int getSightDescription() {
+    public String getSightDescription() {
         return sightDescription;
     }
 
-    public void setSightDescription(int sightDescription) {
+    public void setSightDescription(String sightDescription) {
         this.sightDescription = sightDescription ;
     }
 

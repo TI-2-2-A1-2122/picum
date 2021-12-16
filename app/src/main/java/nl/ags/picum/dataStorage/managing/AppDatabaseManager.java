@@ -87,4 +87,8 @@ public class AppDatabaseManager implements DataStorage {
     public void setRouteWaypoint(RouteWaypointCrossRef crossRef) {
         this.database.routeDAO().insertRouteWaypointCrossRef(crossRef);
     }
+
+    public Sight getSight(String name) {
+        return this.database.sightDAO().getSight(name);
+    }
 }
