@@ -26,7 +26,8 @@ import nl.ags.picum.mapManagement.routeCalculation.RouteCalculator;
  */
 public class MapManager implements LocationObserver {
     public static String LOGTAG = MapManager.class.getName();
-    private static final double DISTANCE_METERS = 10;
+    private static final double DISTANCE_METER_VISITED = 10;
+    private static final double DISTANCE_METER_GEOFENCE = 50;
 
     // Object //
     private final Context context;
@@ -115,7 +116,7 @@ public class MapManager implements LocationObserver {
                     .orElse(waypointsInRoute.get(0));
 
             // Calling the Geofence service to set the next location
-            this.locationService.nearLocationManager.setNextNearLocation(new Point(sightWaypoint.getLongitude(), sightWaypoint.getLatitude()), DISTANCE_METERS);
+            this.locationService.nearLocationManager.setNextNearLocation(new Point(sightWaypoint.getLongitude(), sightWaypoint.getLatitude()), DISTANCE_METER_GEOFENCE);
             this.setSight = sights.get(0);
         }).start();
     }
@@ -200,7 +201,7 @@ public class MapManager implements LocationObserver {
         for (int i = 0; i < waypointList.size(); i++) {
             Waypoint waypoint = waypointList.get(i);
             if (waypoint.isVisited()) continue;
-            if (waypoint.toGeoPoint().distanceToAsDouble(currentLocation.toGeoPoint()) > DISTANCE_METERS)
+            if (waypoint.toGeoPoint().distanceToAsDouble(currentLocation.toGeoPoint()) > DISTANCE_METER_VISITED)
                 continue;
 
             // Marking the point as visited in the dataStorage
@@ -223,47 +224,48 @@ public class MapManager implements LocationObserver {
 
     @Override
     public void onNearLocationEntered(Geofence geofence) {
-        Log.i(LOGTAG, "onNearLocationEntered triggered with geofence " + geofence);
+        new Thread(() -> {
+            Log.i(LOGTAG, "onNearLocationEntered triggered with geofence " + geofence);
 
-        // Return if there is no SightViewModel
-        if (sightViewModel == null ||
-                mapViewModel == null ||
-                sightViewModel.getSights().getValue() == null ||
-                this.setSight == null
-        ) return;
+            // Return if there is no SightViewModel
+            if (sightViewModel == null ||
+                    mapViewModel == null ||
+                    sightViewModel.getSights().getValue() == null ||
+                    this.setSight == null
+            ) return;
 
-        // Updating the viewModel with the set Sight (this.setSight)
-        this.sightViewModel.setCurrentSight(this.setSight);
+            // Updating the viewModel with the set Sight (this.setSight)
+            this.sightViewModel.setCurrentSight(this.setSight);
 
-        // Getting a database
-        DataStorage dataStorage = AppDatabaseManager.getInstance(context);
+            // Getting a database
+            DataStorage dataStorage = AppDatabaseManager.getInstance(context);
 
-        // Getting all the sights
-        List<Sight> sights = this.sightViewModel.getSights().getValue();
+            // Getting all the sights
+            List<Sight> sights = this.sightViewModel.getSights().getValue();
 
-        // Default nextSight to the last value
-        Sight nextSight = sights.get(sights.size() - 1);
+            // Default nextSight to the last value
+            Sight nextSight = sights.get(sights.size() - 1);
 
-        // Go over each value of sights to find the next one up
-        for (int i = 0; i < sights.size() - 1; i++) {
-            if (sights.get(i).equals(this.setSight)) {
-                nextSight = sights.get(i + 1);
-                break;
+            // Go over each value of sights to find the next one up
+            for (int i = 0; i < sights.size() - 1; i++) {
+                if (sights.get(i).equals(this.setSight)) {
+                    nextSight = sights.get(i + 1);
+                    break;
+                }
             }
-        }
 
-        // Getting the Waypoint of the nextSight
-        List<Waypoint> waypointsInRoute = dataStorage.getWaypointsPerRoute(this.mapViewModel.getCurrentRoute());
-        Waypoint sightWaypoint = waypointsInRoute
-                .stream()
-                .filter((waypoint -> waypoint.getWaypointID() == sights.get(0).getWaypointID()))
-                .findFirst()
-                .orElse(waypointsInRoute.get(0));
+            // Getting the Waypoint of the nextSight
+            List<Waypoint> waypointsInRoute = dataStorage.getWaypointsPerRoute(this.mapViewModel.getCurrentRoute());
+            Waypoint sightWaypoint = waypointsInRoute
+                    .stream()
+                    .filter((waypoint -> waypoint.getWaypointID() == sights.get(0).getWaypointID()))
+                    .findFirst()
+                    .orElse(waypointsInRoute.get(0));
 
-        this.locationService.nearLocationManager.setNextNearLocation(new Point(sightWaypoint.getLongitude(), sightWaypoint.getLatitude()), DISTANCE_METERS);
+            this.locationService.nearLocationManager.setNextNearLocation(new Point(sightWaypoint.getLongitude(), sightWaypoint.getLatitude()), DISTANCE_METER_VISITED);
 
-        // Updating setSight
-        this.setSight = nextSight;
+            // Updating setSight
+            this.setSight = nextSight;
+        }).start();
     }
-
 }

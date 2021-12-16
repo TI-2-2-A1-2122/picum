@@ -2,8 +2,6 @@ package nl.ags.picum.UI.viewmodels;
 
 
 import android.app.Application;
-import android.content.Context;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -31,6 +29,11 @@ public class MapViewModel extends AndroidViewModel {
 
         // Tell the manager to start updates
         this.mapManager.startGPSUpdates();
+    }
+
+    public MapManager getMapManager()
+    {
+        return mapManager;
     }
 
     private final MutableLiveData<Point> currentlocation = new MutableLiveData<>();
@@ -65,7 +68,7 @@ public class MapViewModel extends AndroidViewModel {
     public void setCurrentRoute(Route route) {
         // First starting to calculate the route
         this.mapManager.calculateRoutePoints(route);
-
+        this.mapManager.loadSightsPerRoute(route);
         // Return the value
         this.currentRoute.setValue(route);
     }
@@ -81,9 +84,6 @@ public class MapViewModel extends AndroidViewModel {
     {
         calculatedRoute.postValue(points);
     }
-
-
-
 
 
 }
