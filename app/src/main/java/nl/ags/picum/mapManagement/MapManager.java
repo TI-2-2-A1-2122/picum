@@ -180,7 +180,6 @@ public class MapManager implements LocationObserver {
 
             // TODO: 14-12-2021 Update the values in the ViewModel once ViewModel is updated
         }).start();
-
     }
 
     /**
@@ -195,7 +194,7 @@ public class MapManager implements LocationObserver {
      * @param waypointList    The points to be sorted
      */
     private void sortPointByVisited(Point currentLocation, List<Waypoint> waypointList, DataStorage dataStorage) {
-        int markedWaypoint = 0;
+        int markedWaypoint = -1;
 
         // Going over all the waypoints
         for (int i = 0; i < waypointList.size(); i++) {
@@ -220,7 +219,14 @@ public class MapManager implements LocationObserver {
             markedWaypoint--;
         }
 
+        // Given the waypoint that was visited, sort the list to update the ViewModel
+        calculatedRouteAsVisited(waypointList.get(markedWaypoint));
+
     }
+
+    private void calculatedRouteAsVisited(Waypoint waypoint) {
+    }
+
 
     @Override
     public void onNearLocationEntered(Geofence geofence) {
