@@ -33,6 +33,7 @@
         android:src="@drawable/ic_baseline_checklist_24"
         android:scaleType="center"
         android:backgroundTint="@color/secondary"
+        android:onClick="onFABClicked"
         />
 
 

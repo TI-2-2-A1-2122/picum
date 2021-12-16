@@ -108,13 +108,12 @@ public class RouteDetailsFragment extends DialogFragment {
     }
 
     private void openSelectedRoute(){
-        MapViewModel mapViewModel = new ViewModelProvider(requireActivity()).get(MapViewModel.class);
-        mapViewModel.setCurrentRoute(selectedRoute);
         Intent intent = new Intent(getContext(), MapActivity.class);
 
         intent.putExtra("SelectedRoute",selectedRoute);
 
         startActivity(intent);
+
         dismiss();
     }
 

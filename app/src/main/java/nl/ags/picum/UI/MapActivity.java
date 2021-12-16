@@ -1,11 +1,13 @@
 package nl.ags.picum.UI;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 
@@ -16,9 +18,16 @@ import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.gestures.RotationGestureOverlay;
 
+import java.util.List;
+
 import nl.ags.picum.R;
+import nl.ags.picum.UI.fragments.RouteDetailsFragment;
+import nl.ags.picum.UI.fragments.SightDetailsPopupFragment;
 import nl.ags.picum.UI.viewmodels.MapViewModel;
+import nl.ags.picum.dataStorage.managing.AppDatabaseManager;
+import nl.ags.picum.dataStorage.roomData.AppDatabase;
 import nl.ags.picum.dataStorage.roomData.Route;
+import nl.ags.picum.dataStorage.roomData.Sight;
 import nl.ags.picum.mapManagement.MapManager;
 
 public class MapActivity extends AppCompatActivity {
@@ -26,6 +35,7 @@ public class MapActivity extends AppCompatActivity {
     private MapViewModel mapViewModel;
     private MapView mMap;
     private IMapController mMapController;
+    private List<Sight> sights;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,14 +47,19 @@ public class MapActivity extends AppCompatActivity {
         initializeMap();
 
         Route selectedRoute = (Route)getIntent().getSerializableExtra("SelectedRoute");
-        mapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
-
         mapViewModel.setCurrentRoute(selectedRoute);
+        new Thread(() -> {getSights();}).start();
+
 
         Log.d("pizzaparty", "onCreate: " + mapViewModel.getcurrentRoute());
         MapManager m = new MapManager(this);
         m.setMapViewModel(mapViewModel);
         m.startGPSUpdates();
+    }
+
+    public void getSights(){
+        AppDatabaseManager dbManager = new AppDatabaseManager(this);
+        sights = dbManager.getSightsPerRoute(mapViewModel.getcurrentRoute());
     }
 
     public void onStartRouteButtonClick(View view){
@@ -88,5 +103,9 @@ public class MapActivity extends AppCompatActivity {
         //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         //Configuration.getInstance().save(this, prefs);
         mMap.onPause();  //needed for compass, my location overlays, v6.0.0 and up
+    }
+
+    public void onFABClicked(View view){
+
     }
 }
