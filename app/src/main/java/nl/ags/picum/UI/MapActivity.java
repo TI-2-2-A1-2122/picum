@@ -30,10 +30,13 @@ import nl.ags.picum.dataStorage.roomData.AppDatabase;
 import nl.ags.picum.dataStorage.roomData.Route;
 import nl.ags.picum.dataStorage.roomData.Sight;
 import nl.ags.picum.mapManagement.MapManager;
+import nl.ags.picum.UI.viewmodels.SightViewModel;
 
 public class MapActivity extends AppCompatActivity {
 
     private MapViewModel mapViewModel;
+    private SightViewModel sightViewModel;
+
     private MapView mMap;
     private IMapController mMapController;
     private List<Sight> sights;
@@ -42,7 +45,15 @@ public class MapActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+
         this.mapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
+        this.sightViewModel = new ViewModelProvider(this).get(SightViewModel.class);
+
+        this.mapViewModel.getMapManager().setSightViewModel(this.sightViewModel);
+
+        this.sightViewModel.getCurrentSight().observe(this, this::onSightChanged);
+        this.sightViewModel.getSights().observe(this, this::onSightsChanged);
+
         this.mMap = findViewById(R.id.MainMap);
         mMapController = mMap.getController();
         initializeMap();
@@ -52,15 +63,21 @@ public class MapActivity extends AppCompatActivity {
         new Thread(() -> {getSights();}).start();
 
 
-        Log.d("pizzaparty", "onCreate: " + mapViewModel.getcurrentRoute());
-        MapManager m = new MapManager(this);
-        m.setMapViewModel(mapViewModel);
-        m.startGPSUpdates();
+        Log.d("pizzaparty", "onCreate: " + mapViewModel.getCurrentRoute());
     }
 
     public void getSights(){
         AppDatabaseManager dbManager = new AppDatabaseManager(this);
         sights = dbManager.getSightsPerRoute(mapViewModel.getcurrentRoute());
+    }
+
+
+    private void onSightsChanged(List<Sight> sights) {
+        Log.d("TAG", "Sights updated: " + sights.toString());
+    }
+
+    private void onSightChanged(Sight sight) {
+        Log.d("TAG", "Sight location triggered: " + sight);
     }
 
     public void onStartRouteButtonClick(View view){

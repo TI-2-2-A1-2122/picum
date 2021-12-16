@@ -38,7 +38,6 @@ import nl.ags.picum.UI.Util.RouteAdapter;
 import nl.ags.picum.UI.dialog.PermissionDeniedDialog;
 import nl.ags.picum.UI.fragments.RouteDetailsFragment;
 import nl.ags.picum.UI.fragments.SettingsFragment;
-import nl.ags.picum.UI.viewmodels.MapViewModel;
 import nl.ags.picum.dataStorage.dataUtil.Point;
 import nl.ags.picum.dataStorage.managing.AppDatabaseManager;
 import nl.ags.picum.dataStorage.roomData.Route;
@@ -60,9 +59,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-
 
         setContentView(R.layout.activity_main);
         dialogPermission = new PermissionDeniedDialog();
