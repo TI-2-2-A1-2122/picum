@@ -11,6 +11,7 @@ import java.util.List;
 
 import nl.ags.picum.dataStorage.dataUtil.Point;
 import nl.ags.picum.dataStorage.roomData.Route;
+import nl.ags.picum.dataStorage.roomData.Waypoint;
 import nl.ags.picum.mapManagement.MapManager;
 
 public class MapViewModel extends AndroidViewModel {
@@ -85,5 +86,16 @@ public class MapViewModel extends AndroidViewModel {
         calculatedRoute.postValue(points);
     }
 
+    private final MutableLiveData<List<Waypoint>> rawRoute = new MutableLiveData<>();
+
+    public MutableLiveData<List<Waypoint>> getRawRoute()
+    {
+        return rawRoute;
+    }
+
+    public void setRawRoute(List<Waypoint> points)
+    {
+        rawRoute.postValue(points);
+    }
 
 }
