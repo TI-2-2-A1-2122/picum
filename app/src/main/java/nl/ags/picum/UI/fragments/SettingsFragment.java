@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,13 +17,14 @@ import android.widget.Button;
 import java.util.Locale;
 
 import nl.ags.picum.R;
-import nl.ags.picum.UI.viewmodels.MapViewModel;
 
 public class SettingsFragment extends DialogFragment {
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
     }
 

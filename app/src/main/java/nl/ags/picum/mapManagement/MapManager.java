@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.google.android.gms.location.Geofence;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +29,7 @@ import nl.ags.picum.mapManagement.routeCalculation.RouteCalculator;
  */
 public class MapManager implements LocationObserver {
     public static String LOGTAG = MapManager.class.getName();
-    private static final double DISTANCE_METER_VISITED = 25;
+    private static final double DISTANCE_METER_VISITED = 10;
     private static final double DISTANCE_METER_GEOFENCE = 50;
 
     // Object //
@@ -39,7 +40,6 @@ public class MapManager implements LocationObserver {
 
     private Location locationService;
 
-    private List<Waypoint> sights;
     private Sight setSight;
 
     /**
@@ -72,24 +72,18 @@ public class MapManager implements LocationObserver {
             // Getting all the waypoints bases on the route
             DataStorage dataStorage = AppDatabaseManager.getInstance(context);
 
-            this.sights = dataStorage.getHistory(route);
-            Log.d("test", this.sights.toString());
+            List<Waypoint> waypoints = dataStorage.getHistory(route);
+            Log.d("test", waypoints.toString());
 
             // Creating a RouteCalculator to calculate a route, implementing the callback function
             // to update the view model
             RouteCalculator calculator = new RouteCalculator((points) -> {
-                if (this.mapViewModel != null) {
-                    HashMap<Boolean, List<Point>> markedPoints = new HashMap<>();
-                    markedPoints.put(false, points);
-                    ArrayList<Point> visitedPoints = new ArrayList<>();
-                    visitedPoints.add(points.get(0));
-                    markedPoints.put(true, visitedPoints);
-                    this.mapViewModel.setCalculatedRoute(markedPoints);
-                }
+                if (this.mapViewModel != null)
+                    this.mapViewModel.setCalculatedRoute(points);
             });
 
             // Call the calculate function
-            calculator.calculate(this.sights);
+            calculator.calculate(waypoints);
         }).start();
     }
 
@@ -183,9 +177,57 @@ public class MapManager implements LocationObserver {
             // Checking if an active route has been set in this.mapViewModel
             if (this.mapViewModel.getCurrentRoute() == null) return;
 
+            // Getting a database
+            DataStorage dataStorage = AppDatabaseManager.getInstance(context);
+
+            // Get the list of waypoints of the current route
+            List<Waypoint> waypointList = dataStorage.getHistory(this.mapViewModel.getCurrentRoute());
+
             // Loop over the list of waypoints
-            sortPointByVisited(point);
+            sortPointByVisited(point, waypointList, dataStorage);
+
+            // TODO: 14-12-2021 Update the values in the ViewModel once ViewModel is updated
         }).start();
+
+    }
+
+    /**
+     * This algorithm sorts a given list and a current location to the correct visited and
+     * not visited points. The algorithm:
+     * - If the point is visited, continue
+     * - If the point in further away than 5m from current position, continue
+     * - If the point is within 5m: mark the point as visited, tell the database the change and
+     * * go back to mark all other previous points visited
+     *
+     * @param currentLocation The current location of the user
+     * @param waypointList    The points to be sorted
+     */
+    private void sortPointByVisited(Point currentLocation, List<Waypoint> waypointList, DataStorage dataStorage) {
+        int markedWaypoint = 0;
+
+        // Going over all the waypoints
+        for (int i = 0; i < waypointList.size(); i++) {
+            Waypoint waypoint = waypointList.get(i);
+            if (waypoint.isVisited()) continue;
+            if (waypoint.toGeoPoint().distanceToAsDouble(currentLocation.toGeoPoint()) > DISTANCE_METER_VISITED)
+                continue;
+
+            // Marking the point as visited in the dataStorage
+            waypoint.setVisited(true);
+            dataStorage.setWaypointProgress(waypoint.getWaypointID(), true);
+
+            // Setting the markedWaypoint to this waypoints index
+            markedWaypoint = i;
+            break;
+        }
+
+        // Going back all the waypoints from the one selected
+        while (markedWaypoint > 0) {
+            waypointList.get(markedWaypoint).setVisited(true);
+
+            markedWaypoint--;
+        }
+
     }
 
     @Override
@@ -229,87 +271,10 @@ public class MapManager implements LocationObserver {
                     .findFirst()
                     .orElse(waypointsInRoute.get(0));
 
-            dataStorage.setWaypointProgress(sightWaypoint.getWaypointID(), true);
             this.locationService.nearLocationManager.setNextNearLocation(new Point(sightWaypoint.getLongitude(), sightWaypoint.getLatitude()), DISTANCE_METER_VISITED);
 
             // Updating setSight
             this.setSight = nextSight;
-
-            // Calculating to show visited sight to the user.
-            markRouteOfSight(sightWaypoint);
         }).start();
-    }
-
-    /**
-     * This algorithm sorts a given list and a current location to the correct visited and
-     * not visited points. The algorithm:
-     * - If the point is visited, continue
-     * - If the point in further away than 5m from current position, continue
-     * - If the point is within 5m: mark the point as visited, tell the database the change and
-     * * go back to mark all other previous points visited
-     *
-     * @param currentLocation The current location of the user
-     */
-    private void sortPointByVisited(Point currentLocation) {
-
-        // Checking if MapViewModel is set and the calculated route is not null
-        if (this.mapViewModel == null ||
-                this.mapViewModel.getCalculatedRoute() == null ||
-                this.mapViewModel.getCalculatedRoute().getValue() == null
-        ) return;
-
-        // Getting the list of not yet visited points
-        HashMap<Boolean, List<Point>> routeList = this.mapViewModel.getCalculatedRoute().getValue();
-        List<Point> notVisitedPoints = routeList.get(false);
-        List<Point> visitedPoints = routeList.get(true);
-
-        if(notVisitedPoints == null || visitedPoints == null || notVisitedPoints.size() == 0) return;
-
-        // Get distance to next next point
-        int i = 0;
-        double distanceToWaypoint = notVisitedPoints.get(i).toGeoPoint().distanceToAsDouble(currentLocation.toGeoPoint());;
-        Log.d("TAG", "Distance to next point is: " + distanceToWaypoint + "m");
-
-        while (distanceToWaypoint < DISTANCE_METER_VISITED) {
-            Log.d("TAG", "Distance to next point is: " + distanceToWaypoint + "m");
-
-            // Removing the first item from not visited list
-            notVisitedPoints.remove(0);
-
-            // Adding the next first (second) item from the not visited list
-            visitedPoints.add(notVisitedPoints.get(0));
-
-            i++;
-            distanceToWaypoint = notVisitedPoints.get(i).toGeoPoint().distanceToAsDouble(currentLocation.toGeoPoint());
-        }
-
-        if (i != 0) this.mapViewModel.setCalculatedRoute(routeList);
-    }
-
-
-    private void markRouteOfSight(Waypoint waypoint) {
-        HashMap<Boolean, List<Point>> pointsMap = this.mapViewModel.getCalculatedRoute().getValue();
-        if(pointsMap == null) return;
-
-        List<Point> vPoints = pointsMap.get(true);
-        List<Point> nvPoints = pointsMap.get(false);
-        if (vPoints == null || nvPoints == null) return;
-
-        double closedDistance = Integer.MAX_VALUE;
-        int closestPoint = -1;
-        // get closest point to the waypoint
-        for (int i = 0; i < nvPoints.size(); i++) {
-            Point point = nvPoints.get(i);
-            double distanceTo = point.toGeoPoint().distanceToAsDouble(waypoint.toGeoPoint());
-            if (distanceTo < closedDistance)
-                closedDistance = distanceTo;
-                closestPoint = i;
-        }
-
-        // Move all other points
-        for (int i = closestPoint; i >= 0; i--) {
-            Point point = nvPoints.remove(0);
-            vPoints.add(point);
-        }
     }
 }

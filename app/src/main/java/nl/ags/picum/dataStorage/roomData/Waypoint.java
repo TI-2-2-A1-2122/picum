@@ -64,8 +64,7 @@ public class Waypoint {
     }
 
     public GeoPoint toGeoPoint() {
-        // long, lat are reversed in database, so correcting here
-        return new GeoPoint(longitude, latitude);
+        return new GeoPoint(latitude, longitude);
     }
 
     @Override
