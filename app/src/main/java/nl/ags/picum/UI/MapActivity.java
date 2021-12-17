@@ -106,6 +106,9 @@ public class MapActivity extends AppCompatActivity {
         Log.d("pizzaparty", "onCreate: " + mapViewModel.getCurrentRoute());
     }
 
+    private Polyline visitedLine;
+    private Polyline notVisitedLine;
+
     private void drawRouteList(HashMap<Boolean, List<Point>> pointsMap) {
         // Checking if the lists exist
         if (pointsMap.get(true) == null || pointsMap.get(false) == null) return;
@@ -114,19 +117,22 @@ public class MapActivity extends AppCompatActivity {
         List<GeoPoint> visitedPoints = converPointToGeoPoint(pointsMap.get(true));
         List<GeoPoint> notVisitedPoints = converPointToGeoPoint(pointsMap.get(false));
 
+        // Checking if the lines have been made
+        if(visitedLine == null || notVisitedLine == null) {
+            this.visitedLine = new Polyline();
+            this.visitedLine.getOutlinePaint().setColor(getColor(R.color.visited_line_color));
+            this.visitedLine.getOutlinePaint().setStrokeCap(Paint.Cap.ROUND);
+            mMap.getOverlayManager().add(this.visitedLine);
+
+            this.notVisitedLine = new Polyline();
+            this.notVisitedLine.getOutlinePaint().setColor(getColor(R.color.not_visited_line_color));
+            this.notVisitedLine.getOutlinePaint().setStrokeCap(Paint.Cap.ROUND);
+            mMap.getOverlayManager().add(this.notVisitedLine);
+        }
+
         //Drawing the two lines
-        Polyline visitedLine = new Polyline();
-        visitedLine.getOutlinePaint().setColor(getColor(R.color.visited_line_color));
-        visitedLine.setPoints(visitedPoints);
-        visitedLine.getOutlinePaint().setStrokeCap(Paint.Cap.ROUND);
-
-        Polyline notVisitedLine = new Polyline();
-        notVisitedLine.getOutlinePaint().setColor(getColor(R.color.not_visited_line_color));
         notVisitedLine.setPoints(notVisitedPoints);
-        notVisitedLine.getOutlinePaint().setStrokeCap(Paint.Cap.ROUND);
-
-        mMap.getOverlayManager().add(visitedLine);
-        mMap.getOverlayManager().add(notVisitedLine);
+        visitedLine.setPoints(visitedPoints);
 
         mMap.invalidate();
         Log.d("MapActivity", notVisitedPoints.toString());
