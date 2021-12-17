@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
+import java.util.HashMap;
 import java.util.List;
 
 import nl.ags.picum.dataStorage.dataUtil.Point;
@@ -73,14 +74,14 @@ public class MapViewModel extends AndroidViewModel {
         this.currentRoute.setValue(route);
     }
 
-    private final MutableLiveData<List<Point>> calculatedRoute = new MutableLiveData<>();
+    private final MutableLiveData<HashMap<Boolean, List<Point>>> calculatedRoute = new MutableLiveData<>();
 
-    public MutableLiveData<List<Point>> getCalculatedRoute()
+    public MutableLiveData<HashMap<Boolean, List<Point>>> getCalculatedRoute()
     {
         return calculatedRoute;
     }
 
-    public void setCalculatedRoute(List<Point> points)
+    public void setCalculatedRoute(HashMap<Boolean, List<Point>> points)
     {
         calculatedRoute.postValue(points);
     }
