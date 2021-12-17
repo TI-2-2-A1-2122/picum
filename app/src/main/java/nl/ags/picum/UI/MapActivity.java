@@ -93,7 +93,7 @@ public class MapActivity extends AppCompatActivity {
         Configuration.getInstance().setUserAgentValue(BuildConfig.APPLICATION_ID);
         mMapController = mMap.getController();
         initializeMap();
-        mMapController.setZoom(19.1);
+        mMapController.setZoom(20.1);
 
 
         Route selectedRoute = (Route) getIntent().getSerializableExtra("SelectedRoute");
