@@ -4,8 +4,9 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import java.util.List;
+import java.util.Map;
 
+import nl.ags.picum.dataStorage.dataUtil.Point;
 import nl.ags.picum.dataStorage.roomData.Sight;
 
 public class SightViewModel extends ViewModel {
@@ -22,13 +23,14 @@ public class SightViewModel extends ViewModel {
         this.currentSight.postValue(sight);
     }
 
-    private final MutableLiveData<List<Sight>> sightsLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Map<Sight, Point>> sightsLiveData = new MutableLiveData<>();
 
-    public LiveData<List<Sight>> getSights() {
+
+    public LiveData<Map<Sight, Point>> getSights() {
         return sightsLiveData;
     }
 
-    public void setSights(List<Sight> sights)
+    public void setSights(Map<Sight, Point> sights)
     {
         this.sightsLiveData.postValue(sights);
     }

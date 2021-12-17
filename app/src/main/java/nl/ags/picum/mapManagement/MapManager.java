@@ -4,12 +4,10 @@ import android.content.Context;
 import android.util.Log;
 
 import com.google.android.gms.location.Geofence;
-
-import org.w3c.dom.ProcessingInstruction;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import nl.ags.picum.UI.viewmodels.MapViewModel;
 import nl.ags.picum.UI.viewmodels.SightViewModel;
@@ -106,10 +104,15 @@ public class MapManager implements LocationObserver {
             DataStorage dataStorage = AppDatabaseManager.getInstance(context);
 
             List<Sight> sights = dataStorage.getSightsPerRoute(route);
+            Map<Sight, Point> sightsMap = new HashMap<>();
+
+            for (Sight sight:sights) {
+                sightsMap.put(sight, dataStorage.getPointFromSight(sight.getSightName()));
+            }
 
             // Setting the sights in the viewModel
             if (this.sightViewModel != null)
-                this.sightViewModel.setSights(sights);
+                this.sightViewModel.setSights(sightsMap);
 
             // Setting up Location manager
             setupLocationService();
@@ -287,10 +290,11 @@ public class MapManager implements LocationObserver {
             DataStorage dataStorage = AppDatabaseManager.getInstance(context);
 
             // Getting all the sights
-            List<Sight> sights = this.sightViewModel.getSights().getValue();
+            Map<Sight, Point> sightsMap = this.sightViewModel.getSights().getValue();
+            List<Sight> sights = new ArrayList<>(sightsMap.keySet());
 
             // Default nextSight to the last value
-            Sight nextSight = sights.get(sights.size() - 1);
+            Sight nextSight = sights.get(sights.size()-1);
 
             // Go over each value of sights to find the next one up
             for (int i = 0; i < sights.size() - 1; i++) {
