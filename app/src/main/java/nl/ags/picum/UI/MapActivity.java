@@ -1,7 +1,9 @@
 package nl.ags.picum.UI;
 
+
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
+
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
@@ -12,7 +14,6 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-
 import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.routing.OSRMRoadManager;
 import org.osmdroid.bonuspack.routing.Road;
@@ -22,10 +23,12 @@ import org.osmdroid.config.Configuration;
 import org.osmdroid.library.BuildConfig;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.MapView;
+
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Polyline;
+import org.osmdroid.views.CustomZoomButtonsController;
+
 import org.osmdroid.views.overlay.gestures.RotationGestureOverlay;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
@@ -283,7 +286,9 @@ public class MapActivity extends AppCompatActivity {
         mMap.onPause();  //needed for compass, my location overlays, v6.0.0 and up
     }
 
-    public void onFABClicked(View view) {
+
+    public void onFABClicked (View view){
+
         new SightsListFragment(sights, this).show(getSupportFragmentManager(), "list");
     }
 

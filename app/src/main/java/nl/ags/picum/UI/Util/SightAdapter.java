@@ -2,6 +2,12 @@ package nl.ags.picum.UI.Util;
 
 import android.app.Activity;
 import android.content.Context;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.os.Build;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +52,7 @@ public class SightAdapter extends RecyclerView.Adapter<SightAdapter.SightViewHol
         holder.layout.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
+                playNotification();
                 new SightDetailsPopupFragment(sight, context).show(context.getSupportFragmentManager(), null);
             }
         });
@@ -74,5 +81,21 @@ public class SightAdapter extends RecyclerView.Adapter<SightAdapter.SightViewHol
         public void onClick(View view) {
 
         }
+    }
+
+    public void playNotification() {
+        Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Ringtone r = RingtoneManager.getRingtone(this.context, notification);
+        r.play();
+
+        Vibrator v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+// Vibrate for 500 milliseconds
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            v.vibrate(VibrationEffect.createOneShot(500, 255));
+        } else {
+            //deprecated in API 26
+            v.vibrate(500);
+        }
+
     }
 }

@@ -12,9 +12,13 @@ import java.util.List;
 
 import nl.ags.picum.dataStorage.dataUtil.Point;
 import nl.ags.picum.dataStorage.linkingTables.RouteWaypointCrossRef;
+import nl.ags.picum.dataStorage.linkingTables.RouteWithCalculatedWaypoints;
+import nl.ags.picum.dataStorage.linkingTables.RouteWithCurrentLocations;
 import nl.ags.picum.dataStorage.linkingTables.RouteWithWaypoints;
 import nl.ags.picum.dataStorage.linkingTables.WaypointWithSight;
 import nl.ags.picum.dataStorage.roomData.AppDatabase;
+import nl.ags.picum.dataStorage.roomData.CalculatedWaypoint;
+import nl.ags.picum.dataStorage.roomData.CurrentLocation;
 import nl.ags.picum.dataStorage.roomData.Route;
 import nl.ags.picum.dataStorage.roomData.Sight;
 import nl.ags.picum.dataStorage.roomData.Waypoint;
@@ -141,6 +145,7 @@ public class AppDatabaseManager implements DataStorage {
         }
 
 
+
     @Override
     public Point getPointFromSight(String sightName) {
         Sight s = this.database.sightDAO().getSight(sightName);
@@ -152,6 +157,29 @@ public class AppDatabaseManager implements DataStorage {
         p.setLongitude(w.getLongitude());
 
         return p;
+    }
+  
+    public void setCurrentLocation(Point point, Route route) {
+        this.database.currentLocationDAO().insertLocation(new CurrentLocation(point.getLatitude(), point.getLongitude(), route.getRouteName()));
+    }
+
+    public List<CurrentLocation> getCurrentLocationsFromRoute(Route route) {
+        List<RouteWithCurrentLocations> currentLocations = this.database.currentLocationDAO().getCurrentLocationsPerRoute(route.getRouteName());
+
+        return currentLocations.get(0).locations;
+    }
+
+    public void setCalculatedWaypoints(List<Point> points, Route route) {
+        for (Point p : points) {
+            this.database.calculatedWaypointDAO().insertCalculatedWaypoint(new CalculatedWaypoint(p.getLatitude(), p.getLongitude(), route.getRouteName()));
+        }
+    }
+
+    public List<CalculatedWaypoint> getCalculatedWaypointsFromRoute(Route route) {
+        List<RouteWithCalculatedWaypoints> waypoints = this.database.calculatedWaypointDAO().getCalculatedWaypointsPerRoute(route.getRouteName());
+
+        return waypoints.get(0).calculatedWaypoints;
+
     }
 }
 

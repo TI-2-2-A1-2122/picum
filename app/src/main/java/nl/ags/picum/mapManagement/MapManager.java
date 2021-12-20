@@ -204,6 +204,10 @@ public class MapManager implements LocationObserver {
     public void onLocationUpdate(Point point) {
         Log.i(LOGTAG, "Received new location update: " + point);
 
+        new Thread(() -> {
+            AppDatabaseManager.getInstance(context).setCurrentLocation(point, mapViewModel.getCurrentRoute());
+        }).start();
+
         // First checking if the MapViewModel is set
         if (this.mapViewModel == null) return;
 
