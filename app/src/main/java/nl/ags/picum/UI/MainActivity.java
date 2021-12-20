@@ -80,6 +80,12 @@ public class MainActivity extends AppCompatActivity {
             this.routes.addAll(tempList);
 
             runOnUiThread(() -> Objects.requireNonNull(recyclerView.getAdapter()).notifyItemRangeChanged(0,tempList.size()));
+
+            if (manager.getCurrentRoute() != null) {
+                Intent openMapIntent = new Intent(this, MapActivity.class);
+                openMapIntent.putExtra("SelectedRoute", manager.getCurrentRoute());
+                startActivity(openMapIntent);
+            }
         }).start();
     }
 

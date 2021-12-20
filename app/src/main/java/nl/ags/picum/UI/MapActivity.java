@@ -1,10 +1,6 @@
 package nl.ags.picum.UI;
 
 import android.content.Context;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
@@ -13,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 
@@ -26,10 +23,16 @@ import org.osmdroid.views.overlay.gestures.RotationGestureOverlay;
 import java.util.List;
 
 import nl.ags.picum.R;
+import nl.ags.picum.UI.fragments.RouteDetailsFragment;
+import nl.ags.picum.UI.fragments.SightDetailsPopupFragment;
+import nl.ags.picum.UI.fragments.SightsListFragment;
 import nl.ags.picum.UI.viewmodels.MapViewModel;
-import nl.ags.picum.UI.viewmodels.SightViewModel;
+import nl.ags.picum.dataStorage.managing.AppDatabaseManager;
+import nl.ags.picum.dataStorage.roomData.AppDatabase;
 import nl.ags.picum.dataStorage.roomData.Route;
 import nl.ags.picum.dataStorage.roomData.Sight;
+import nl.ags.picum.mapManagement.MapManager;
+import nl.ags.picum.UI.viewmodels.SightViewModel;
 
 public class MapActivity extends AppCompatActivity {
 
@@ -38,6 +41,7 @@ public class MapActivity extends AppCompatActivity {
 
     private MapView mMap;
     private IMapController mMapController;
+    private List<Sight> sights;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,11 +61,18 @@ public class MapActivity extends AppCompatActivity {
         initializeMap();
 
         Route selectedRoute = (Route)getIntent().getSerializableExtra("SelectedRoute");
-
         mapViewModel.setCurrentRoute(selectedRoute);
+        new Thread(() -> {getSights();}).start();
+
 
         Log.d("pizzaparty", "onCreate: " + mapViewModel.getCurrentRoute());
     }
+
+    public void getSights(){
+        AppDatabaseManager dbManager = new AppDatabaseManager(this);
+        sights = dbManager.getSightsPerRoute(mapViewModel.getCurrentRoute());
+    }
+
 
     private void onSightsChanged(List<Sight> sights) {
         Log.d("TAG", "Sights updated: " + sights.toString());
@@ -70,7 +81,6 @@ public class MapActivity extends AppCompatActivity {
     private void onSightChanged(Sight sight) {
         Log.d("TAG", "Sight location triggered: " + sight);
     }
-
 
     public void onStartRouteButtonClick(View view){
         ((Button)view).setVisibility(View.INVISIBLE);
@@ -128,5 +138,7 @@ public class MapActivity extends AppCompatActivity {
             //deprecated in API 26
             v.vibrate(500);
         }
+    public void onFABClicked(View view){
+        new SightsListFragment(sights, this).show(getSupportFragmentManager(), "list");
     }
 }
