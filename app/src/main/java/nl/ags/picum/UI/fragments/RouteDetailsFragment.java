@@ -7,20 +7,17 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import java.util.List;
 
 import nl.ags.picum.R;
 import nl.ags.picum.UI.MapActivity;
-import nl.ags.picum.UI.viewmodels.MapViewModel;
 import nl.ags.picum.dataStorage.managing.AppDatabaseManager;
 import nl.ags.picum.dataStorage.roomData.Route;
 import nl.ags.picum.dataStorage.roomData.Sight;
@@ -28,8 +25,10 @@ import nl.ags.picum.dataStorage.roomData.Waypoint;
 
 public class RouteDetailsFragment extends DialogFragment {
 
+
     private Route selectedRoute;
     private ProgressBar progressBar;
+
 
     public RouteDetailsFragment(Route route) {
         this.selectedRoute = route;
@@ -64,18 +63,13 @@ public class RouteDetailsFragment extends DialogFragment {
         AppDatabaseManager manager = new AppDatabaseManager(getContext());
 
         ((TextView)view.findViewById(R.id.route_details_fragment_details_name)).setText(selectedRoute.getRouteName());
-        ((Button)view.findViewById(R.id.route_details_fragment_details_backButton)).setOnClickListener(v -> dismiss());
+        view.findViewById(R.id.route_details_fragment_details_backButton).setOnClickListener(v -> dismiss());
 
-        ((Button)view.findViewById(R.id.route_details_fragment_details_showButton)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        view.findViewById(R.id.route_details_fragment_details_showButton).setOnClickListener(view1 -> {
 
-                new  Thread(() -> {
-                    AppDatabaseManager.getInstance(getContext()).setCurrentRoute(selectedRoute);
-                }).start();
+            new  Thread(() -> AppDatabaseManager.getInstance(getContext()).setCurrentRoute(selectedRoute)).start();
 
-                openSelectedRoute();
-            }
+            openSelectedRoute();
         });
 
         //TODO image
@@ -107,8 +101,10 @@ public class RouteDetailsFragment extends DialogFragment {
             Activity activity = getActivity();
             if(activity != null) {
                 activity.runOnUiThread(() -> {
+
                     text.setText(Sights.size() + "");
                     progressBar.setProgress(progress);
+
                 });
             }
 

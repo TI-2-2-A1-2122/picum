@@ -25,7 +25,7 @@ import nl.ags.picum.dataStorage.roomData.Waypoint;
 
 public class AppDatabaseManager implements DataStorage {
     private static AppDatabaseManager databaseManager;
-    private AppDatabase database;
+    private final AppDatabase database;
     private static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {

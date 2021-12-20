@@ -19,8 +19,8 @@ import nl.ags.picum.dataStorage.roomData.Route;
 
 public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHolder>{
 
-    private List<Route> routes;
-    private MainActivity mainActivity;
+    private final List<Route> routes;
+    private final MainActivity mainActivity;
     public RouteAdapter(List<Route> routes, MainActivity mainActivity){
         this.routes = routes;
         this.mainActivity = mainActivity;
@@ -30,8 +30,7 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
     @Override
     public RouteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View viewItem = LayoutInflater.from(parent.getContext()).inflate(R.layout.route_list_item, parent, false);
-        RouteViewHolder viewHolder = new RouteViewHolder(viewItem);
-        return viewHolder;
+        return new RouteViewHolder(viewItem);
     }
 
     @Override
@@ -45,12 +44,7 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
 //        }
         //TODO set progressBar
 
-        holder.layout.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                mainActivity.showDetailsFragment(selectedRoute);
-            }
-        });
+        holder.layout.setOnClickListener(view -> mainActivity.showDetailsFragment(selectedRoute));
     }
 
     @Override
@@ -58,12 +52,12 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
         return routes.size();
     }
 
-    class RouteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        TextView title;
-        TextView description;
-        ImageView image;
-        ProgressBar progressBar;
-        ConstraintLayout layout;
+    static class RouteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        final TextView title;
+        final TextView description;
+        final ImageView image;
+        final ProgressBar progressBar;
+        final ConstraintLayout layout;
         public RouteViewHolder(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.route_listItem_nameView);

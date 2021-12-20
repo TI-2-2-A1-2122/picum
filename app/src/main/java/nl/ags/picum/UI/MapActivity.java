@@ -3,32 +3,26 @@ package nl.ags.picum.UI;
 
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
-
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.lifecycle.ViewModelProvider;
 
 import org.osmdroid.api.IMapController;
-import org.osmdroid.bonuspack.routing.OSRMRoadManager;
 import org.osmdroid.bonuspack.routing.Road;
-import org.osmdroid.bonuspack.routing.RoadManager;
 import org.osmdroid.bonuspack.routing.RoadNode;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.library.BuildConfig;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.MapView;
-
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Polyline;
-import org.osmdroid.views.CustomZoomButtonsController;
-
 import org.osmdroid.views.overlay.gestures.RotationGestureOverlay;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
@@ -37,29 +31,27 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import nl.ags.picum.R;
 import nl.ags.picum.UI.fragments.SightsListFragment;
 import nl.ags.picum.UI.viewmodels.MapViewModel;
+import nl.ags.picum.UI.viewmodels.SightViewModel;
 import nl.ags.picum.dataStorage.dataUtil.Point;
 import nl.ags.picum.dataStorage.managing.AppDatabaseManager;
 import nl.ags.picum.dataStorage.roomData.CurrentLocation;
 import nl.ags.picum.dataStorage.roomData.Route;
 import nl.ags.picum.dataStorage.roomData.Sight;
-import nl.ags.picum.UI.viewmodels.SightViewModel;
 import nl.ags.picum.dataStorage.roomData.Waypoint;
 
 public class MapActivity extends AppCompatActivity {
 
     private MapViewModel mapViewModel;
-    private SightViewModel sightViewModel;
 
 
     private MapView mMap;
     private IMapController mMapController;
     private List<Sight> sights;
-
-    private MyLocationNewOverlay mLocationOverlay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,29 +61,33 @@ public class MapActivity extends AppCompatActivity {
         // this.items = new ArrayList<OverlayItem>();
         Configuration.getInstance().setUserAgentValue("AGSPicum/1.0");
         this.mapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
-        this.sightViewModel = new ViewModelProvider(this).get(SightViewModel.class);
+        SightViewModel sightViewModel = new ViewModelProvider(this).get(SightViewModel.class);
 
-        this.mapViewModel.getMapManager().setSightViewModel(this.sightViewModel);
+        this.mapViewModel.getMapManager().setSightViewModel(sightViewModel);
 
-        this.sightViewModel.getCurrentSight().observe(this, this::onSightChanged);
-        this.sightViewModel.getSights().observe(this, this::onSightsChanged);
+        sightViewModel.getCurrentSight().observe(this, this::onSightChanged);
+        sightViewModel.getSights().observe(this, this::onSightsChanged);
 
 
         /*
         // Observe CalculatedRoute points
         this.mapViewModel.getCalculatedRoute().observe(this, (pointsMap) -> {
             List<Point> points = pointsMap.get(false);
-            mMapController.setCenter(convertPointToGeoPoint(points.get(0)));
+            if (points != null) {
+                mMapController.setCenter(convertPointToGeoPoint(points.get(0)));
+            }
             // TODO: 17-12-2021 setPointsInMap method not called, visited points line are other method
             //setPointsInMap(points);
             drawRouteList(pointsMap);
         });
 
         // observer the raw-route
+
         this.mapViewModel.getOSMRoute().observe(this, (nodes) ->{
             setPointsInMap(nodes);
         });
         */
+
 
         this.mMap = findViewById(R.id.MainMap);
         Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
@@ -158,8 +154,8 @@ public class MapActivity extends AppCompatActivity {
         if (pointsMap.get(true) == null || pointsMap.get(false) == null) return;
 
         // Getting the two lists from the map
-        List<GeoPoint> visitedPoints = convertPointToGeoPoint(pointsMap.get(true));
-        List<GeoPoint> notVisitedPoints = convertPointToGeoPoint(pointsMap.get(false));
+        List<GeoPoint> visitedPoints = convertPointToGeoPoint(Objects.requireNonNull(pointsMap.get(true)));
+        List<GeoPoint> notVisitedPoints = convertPointToGeoPoint(Objects.requireNonNull(pointsMap.get(false)));
 
         // Checking if the lines have been made
         if(visitedLine == null || notVisitedLine == null) {
@@ -198,14 +194,14 @@ public class MapActivity extends AppCompatActivity {
     }
 
     public void onStartRouteButtonClick(View view) {
-        ((Button) view).setVisibility(View.INVISIBLE);
+        view.setVisibility(View.INVISIBLE);
         //TODO add function to start route
     }
 
 
     public void setPointsInMap(List<RoadNode> points) {
 
-        Drawable nodeIcon = getDrawable(R.drawable.osm_ic_follow_me);
+        Drawable nodeIcon = AppCompatResources.getDrawable(this,R.drawable.osm_ic_follow_me);
 //            nodeIcon.setHotspot(0.5f, 0.5f);spo
         int actualSteps = 1;
         String lastInstruction = "";
@@ -214,17 +210,14 @@ public class MapActivity extends AppCompatActivity {
             Log.d("MarkerNodes", "NODE: " + node.mInstructions);
             //
             if (node.mManeuverType != 24 && node.mInstructions != null) {
-                if (node.mInstructions.equals(lastInstruction) && node.mLength < 0.01) {
-
-                } else {
-
+                if (!(node.mInstructions.equals(lastInstruction) && node.mLength < 0.01)) {
                     Marker nodeMarker = new Marker(mMap);
                     nodeMarker.setPosition(node.mLocation);
                     nodeMarker.setIcon(nodeIcon);
                     nodeMarker.setSnippet(node.mInstructions);
                     nodeMarker.setSubDescription(Road.getLengthDurationText(this, node.mLength, node.mDuration));
                     nodeMarker.setTitle("Step " + actualSteps);
-                    Drawable icon = getDrawable(getDirectionIcon(node.mManeuverType));
+                    Drawable icon =  AppCompatResources.getDrawable(this,getDirectionIcon(node.mManeuverType));
                     nodeMarker.setImage(icon);
                     actualSteps++;
                     lastInstruction = node.mInstructions;
@@ -286,7 +279,7 @@ public class MapActivity extends AppCompatActivity {
             Marker m = new Marker(mMap);
             m.setPosition(convertPointToGeoPoint(v));
             m.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-            m.setIcon(getResources().getDrawable(R.drawable.marker_default));
+            m.setIcon(AppCompatResources.getDrawable(this,R.drawable.marker_default));
             m.setTitle(k.getSightName());
             m.setSnippet(k.getSightDescription());
             mMap.getOverlays().add(m);
@@ -298,7 +291,7 @@ public class MapActivity extends AppCompatActivity {
     public void initializeMap() {
         mMap.setTileSource(TileSourceFactory.MAPNIK);
         mMapController.setZoom(20.1);
-        mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(getApplicationContext()), mMap);
+        MyLocationNewOverlay mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(getApplicationContext()), mMap);
         mLocationOverlay.enableMyLocation();
         RotationGestureOverlay mRotationGestureOverlay = new RotationGestureOverlay(mMap);
         mRotationGestureOverlay.setEnabled(true);

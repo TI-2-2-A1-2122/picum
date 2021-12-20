@@ -9,7 +9,7 @@ import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
 
 public class GeofenceBroadcastReceiver extends BroadcastReceiver {
-    public static String LOGTAG = GeofenceBroadcastReceiver.class.getName();
+    public static final String LOGTAG = GeofenceBroadcastReceiver.class.getName();
 
     @Override
     public void onReceive(Context context, Intent intent) {
