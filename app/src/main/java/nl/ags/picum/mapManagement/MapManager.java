@@ -238,6 +238,7 @@ public class MapManager implements LocationObserver {
             // Calculating to show visited sight to the user.
             markRouteOfSight(sightWaypoint);
         }).start();
+        
     }
 
     /**
