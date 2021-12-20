@@ -111,8 +111,7 @@ public class MapManager implements LocationObserver {
             if (this.mapViewModel == null) return;
             RoadManager roadManager = new OSRMRoadManager(context.getApplicationContext(), Configuration.getInstance().getUserAgentValue());
             ((OSRMRoadManager) roadManager).setMean(OSRMRoadManager.MEAN_BY_FOOT);
-            //add new point so that the navigation does not ignore the start because this is not in the api.
-            //  points.add(1, new Waypoint(0, false, points.get(0).getLongitude(), (float) (points.get(0).getLatitude()+0.000005)));
+
             ArrayList<GeoPoint> waypoints = new ArrayList<>(convertWayPointToGeoPoint(points));
             Road road = roadManager.getRoad(waypoints);
             this.mapViewModel.setOSMRoute(road.mNodes);
