@@ -221,7 +221,32 @@ public class MapManager implements LocationObserver {
 
             // Loop over the list of waypoints
             sortPointByVisited(point);
+            checkForDeviation(point);
         }).start();
+    }
+
+    private boolean checkForDeviation(Point currentLocation) {
+        // Checking if MapViewModel is set and the calculated route is not null
+        if (this.mapViewModel == null ||
+                this.mapViewModel.getCalculatedRoute() == null ||
+                this.mapViewModel.getCalculatedRoute().getValue() == null
+        ) return false;
+
+        // Getting the list of not yet visited points
+        HashMap<Boolean, List<Point>> routeList = this.mapViewModel.getCalculatedRoute().getValue();
+        List<Point> notVisitedPoints = routeList.get(false);
+        List<Point> visitedPoints = routeList.get(true);
+
+        if (notVisitedPoints == null || visitedPoints == null || notVisitedPoints.size() == 0)
+            return false;
+
+        Point nextWayPoint = notVisitedPoints.get(0);
+        double distanceBetweenWaypoints = visitedPoints.get(visitedPoints.size() - 1).toGeoPoint().distanceToAsDouble(nextWayPoint.toGeoPoint());
+        double distanceToNextWayPoint= currentLocation.toGeoPoint().distanceToAsDouble(nextWayPoint.toGeoPoint());
+
+        boolean deviated = distanceBetweenWaypoints > distanceToNextWayPoint;
+        if(deviated) Log.d(LOGTAG, "Deviated with a distance of" + (distanceBetweenWaypoints - distanceToNextWayPoint));
+        return deviated;
     }
 
     @Override
