@@ -1,12 +1,10 @@
 package nl.ags.picum.dataStorage.roomData;
 
-import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
-
-import nl.ags.picum.R;
 
 @Entity
 public class Sight {
@@ -31,7 +29,7 @@ public class Sight {
     public Sight() {
 
     }
-
+    @Ignore
     public Sight(String sightName, String photoURL, String sightDescription, String websiteURL, int waypointID) {
         this.sightName = sightName;
         this.photoURL = photoURL;

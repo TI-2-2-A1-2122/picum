@@ -7,8 +7,6 @@ import com.google.android.gms.location.Geofence;
 
 import org.osmdroid.bonuspack.routing.OSRMRoadManager;
 import org.osmdroid.bonuspack.routing.Road;
-import org.osmdroid.bonuspack.routing.RoadManager;
-import org.osmdroid.bonuspack.routing.RoadNode;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.util.GeoPoint;
 
@@ -35,7 +33,7 @@ import nl.ags.picum.mapManagement.routeCalculation.RouteCalculator;
  * The GUI can access this class to request data
  */
 public class MapManager implements LocationObserver {
-    public static String LOGTAG = MapManager.class.getName();
+    public static final String LOGTAG = MapManager.class.getName();
     private static final double DISTANCE_METER_VISITED = 30;
     private static final double DISTANCE_METER_GEOFENCE = 50;
 
@@ -109,8 +107,8 @@ public class MapManager implements LocationObserver {
         new Thread(() ->{
             List<Waypoint> points = this.sights;
             if (this.mapViewModel == null) return;
-            RoadManager roadManager = new OSRMRoadManager(context.getApplicationContext(), Configuration.getInstance().getUserAgentValue());
-            ((OSRMRoadManager) roadManager).setMean(OSRMRoadManager.MEAN_BY_FOOT);
+            OSRMRoadManager roadManager = new OSRMRoadManager(context.getApplicationContext(), Configuration.getInstance().getUserAgentValue());
+            roadManager.setMean(OSRMRoadManager.MEAN_BY_FOOT);
 
             ArrayList<GeoPoint> waypoints = new ArrayList<>(convertWayPointToGeoPoint(points));
             Road road = roadManager.getRoad(waypoints);
@@ -203,9 +201,7 @@ public class MapManager implements LocationObserver {
     public void onLocationUpdate(Point point) {
         Log.i(LOGTAG, "Received new location update: " + point);
 
-        new Thread(() -> {
-            AppDatabaseManager.getInstance(context).setCurrentLocation(point, mapViewModel.getCurrentRoute());
-        }).start();
+        new Thread(() -> AppDatabaseManager.getInstance(context).setCurrentLocation(point, mapViewModel.getCurrentRoute())).start();
 
         // First checking if the MapViewModel is set
         if (this.mapViewModel == null) return;
