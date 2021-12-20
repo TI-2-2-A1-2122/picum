@@ -340,6 +340,7 @@ public class MapActivity extends AppCompatActivity {
 
     public void onFSBClicked(View view) {
         if (this.mapViewModel == null) return;
-            mapViewModel.getMapManager().stopRoute(mapViewModel.getCurrentRoute());
+          new Thread(() ->{ mapViewModel.getMapManager().stopRoute(mapViewModel.getCurrentRoute());}).start();
+        finish();
     }
 }

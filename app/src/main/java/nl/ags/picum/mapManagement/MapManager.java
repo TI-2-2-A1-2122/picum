@@ -181,6 +181,10 @@ public class MapManager implements LocationObserver {
         locationService.start(this);
     }
 
+    public void stopGPSUpdates(){
+        locationService.stop();
+    }
+
     @Override
     public void onLocationError() {
         // On Error, log the error
@@ -323,6 +327,7 @@ public class MapManager implements LocationObserver {
     public void stopRoute(Route route){
         DataStorage dataStorage = AppDatabaseManager.getInstance(context);
         dataStorage.stopRoute(route);
+        stopGPSUpdates();
     }
 
     private void markRouteOfSight(Waypoint waypoint) {
