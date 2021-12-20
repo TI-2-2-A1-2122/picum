@@ -97,7 +97,7 @@ public class MapManager implements LocationObserver {
                 public void onRoutePointsCalculated(List<PointWithInstructions> pointsWithInfo) {
                     onRouteCalculated(pointsWithInfo);
                     DataStorage instance = AppDatabaseManager.getInstance(context);
-                    instance.setCalculatedWaypoints(pointsWithInfo,route);
+                    instance.setCalculatedWaypoints(pointsWithInfo, route);
                 }
 
                 @Override
@@ -286,23 +286,24 @@ public class MapManager implements LocationObserver {
             Log.d(LOGTAG, "Now set the geofence to: " + nextSight + " name: " + nextSight.getSightDescription() + " locatie: " + sightsMap.get(nextSight).toGeoPoint().toDoubleString());
 
 
+            // Updating the sights in the ViewModel from the database
+            dataStorage.setWaypointProgress(this.setSight.getWaypointID(), true);
+
+            //Marking the site as visited
+            sightsMap.get(this.setSight).setVisited(true);
+            this.sightViewModel.setSights(sightsMap);
+            // Calculating to show visited sight to the user.
+            markRouteOfSight(sightsMap.get(this.setSight));
+
+
             // Getting the Waypoint of the nextSight
             Waypoint sightWaypoint = sightsMap.get(nextSight);
-            sightWaypoint.setVisited(true);
 
-            dataStorage.setWaypointProgress(sightWaypoint.getWaypointID(), true);
             this.locationService.nearLocationManager.setNextNearLocation(new Point(sightWaypoint.getLongitude(), sightWaypoint.getLatitude()), DISTANCE_METER_VISITED);
 
             // Updating setSight
             this.setSight = nextSight;
-
-            // Updating the sights in the ViewModel from the database
-            this.sightViewModel.setSights(sightsMap);
-
-            // Calculating to show visited sight to the user.
-            markRouteOfSight(sightWaypoint);
         }).start();
-
     }
 
     /**
@@ -352,7 +353,7 @@ public class MapManager implements LocationObserver {
         if (i != 0) this.mapViewModel.setCalculatedRoute(routeList);
     }
 
-    public void stopRoute(Route route){
+    public void stopRoute(Route route) {
         DataStorage dataStorage = AppDatabaseManager.getInstance(context);
         dataStorage.stopRoute(route);
     }
