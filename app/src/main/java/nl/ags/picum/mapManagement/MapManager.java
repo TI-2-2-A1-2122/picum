@@ -167,10 +167,10 @@ public class MapManager implements LocationObserver {
             DataStorage dataStorage = AppDatabaseManager.getInstance(context);
 
             List<Sight> sights = dataStorage.getSightsPerRoute(route);
-            Map<Sight, Point> sightsMap = new HashMap<>();
+            Map<Sight, Waypoint> sightsMap = new HashMap<>();
 
             for (Sight sight : sights) {
-                sightsMap.put(sight, dataStorage.getPointFromSight(sight.getSightName()));
+                sightsMap.put(sight, dataStorage.getWaypointFromSight(sight));
             }
 
             // Setting the sights in the viewModel
@@ -269,7 +269,7 @@ public class MapManager implements LocationObserver {
             DataStorage dataStorage = AppDatabaseManager.getInstance(context);
 
             // Getting all the sights
-            Map<Sight, Point> sightsMap = this.sightViewModel.getSights().getValue();
+            Map<Sight, Waypoint> sightsMap = this.sightViewModel.getSights().getValue();
             List<Sight> sights = new ArrayList<>(sightsMap.keySet()).stream().sorted(Comparator.comparingInt(Sight::getWaypointID)).collect(Collectors.toList());
 
             // Default nextSight to the last value
@@ -285,13 +285,9 @@ public class MapManager implements LocationObserver {
 
             Log.d(LOGTAG, "Now set the geofence to: " + nextSight + " name: " + nextSight.getSightDescription() + " locatie: " + sightsMap.get(nextSight).toGeoPoint().toDoubleString());
 
-            ContextCompat.getMainExecutor(context).execute(()  -> {
-                        Toast.makeText(this.context, "Sight ", Toast.LENGTH_LONG).show();
-            });
-
 
             // Getting the Waypoint of the nextSight
-            Waypoint sightWaypoint = dataStorage.getWaypointFromSight(nextSight);
+            Waypoint sightWaypoint = sightsMap.get(nextSight);
 
             dataStorage.setWaypointProgress(sightWaypoint.getWaypointID(), true);
             this.locationService.nearLocationManager.setNextNearLocation(new Point(sightWaypoint.getLongitude(), sightWaypoint.getLatitude()), DISTANCE_METER_VISITED);

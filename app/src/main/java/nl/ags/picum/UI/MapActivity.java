@@ -123,7 +123,7 @@ public class MapActivity extends AppCompatActivity {
         // Observe CalculatedRoute points
         this.mapViewModel.getCalculatedRoute().observe(this, (pointsMap) -> {
             List<Point> points = pointsMap.get(false);
-            mMapController.setCenter(convertPointToGeoPoint(points.get(0)));
+            mMapController.setCenter(points.get(0).toGeoPoint());
             // TODO: 17-12-2021 setPointsInMap method not called, visited points line are other method
             //setPointsInMap(points);
             drawRouteList(pointsMap);
@@ -191,7 +191,7 @@ public class MapActivity extends AppCompatActivity {
         sights = dbManager.getSightsPerRoute(mapViewModel.getCurrentRoute());
     }
 
-    private void onSightsChanged(Map<Sight, Point> sights) {
+    private void onSightsChanged(Map<Sight, Waypoint> sights) {
         setMarkersInMap(sights);
         Log.d("TAG", "Sights updated: " + sights.toString());
     }
@@ -306,7 +306,7 @@ public class MapActivity extends AppCompatActivity {
         return new GeoPoint((latPoints / points.size()), (longPoints / points.size()));
     }
 
-    public void setMarkersInMap(Map<Sight, Point> sights) {
+    public void setMarkersInMap(Map<Sight, Waypoint> sights) {
         sights.forEach((k, v) -> {
             Marker m = new Marker(mMap);
             m.setPosition(convertPointToGeoPoint(v));
@@ -367,7 +367,7 @@ public class MapActivity extends AppCompatActivity {
 
 
 
-    public GeoPoint convertPointToGeoPoint(Point point) {
+    public GeoPoint convertPointToGeoPoint(Waypoint point) {
         return new GeoPoint(point.getLatitude(), point.getLongitude());
     }
 
