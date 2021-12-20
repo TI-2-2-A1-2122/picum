@@ -10,6 +10,7 @@ import org.json.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import nl.ags.picum.dataStorage.dataUtil.Point;
 import nl.ags.picum.dataStorage.roomData.Waypoint;
@@ -20,7 +21,7 @@ import okhttp3.*;
  * The calculated route is called back to the RouteCalculatorListener given in the constructor
  */
 public class RouteCalculator {
-    public static String LOG_TAG = RouteCalculator.class.getName();
+    public static final String LOG_TAG = RouteCalculator.class.getName();
 
     // The media type marked is JSON
     public static final MediaType JSON
@@ -137,7 +138,7 @@ public class RouteCalculator {
         // Try parsing the data to JSON
         try {
             // Ignore possible nullPointerException, this is not possible see above check
-            String dataResponse = response.body().string();
+            String dataResponse = Objects.requireNonNull(response.body()).string();
             JSONObject jsonResponse = new JSONObject(dataResponse);
 
             // Getting the nested JSON array coordinates

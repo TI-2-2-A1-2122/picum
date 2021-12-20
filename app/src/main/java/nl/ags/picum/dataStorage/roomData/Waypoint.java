@@ -2,6 +2,7 @@ package nl.ags.picum.dataStorage.roomData;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import org.osmdroid.util.GeoPoint;
@@ -23,7 +24,7 @@ public class Waypoint {
     public Waypoint() {
 
     }
-
+    @Ignore
     public Waypoint(int waypointID, boolean visited, float longitude, float latitude) {
         this.waypointID = waypointID;
         this.visited = visited;
