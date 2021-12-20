@@ -47,8 +47,22 @@
         android:backgroundTint="@color/secondary"
         android:onClick="onFFBClicked"
         android:scaleType="center"
+        android:visibility="invisible"
         android:src="@drawable/ic_menu_mylocation"
         app:layout_constraintBottom_toTopOf="@+id/floatingActionButton"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingStopButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:backgroundTint="@color/secondary"
+        android:onClick="onFSBClicked"
+        android:scaleType="center"
+        android:visibility="invisible"
+        android:src="@android:drawable/ic_delete"
+        app:layout_constraintBottom_toTopOf="@+id/floatingFollowButton"
         app:layout_constraintStart_toStartOf="parent" />
 
 

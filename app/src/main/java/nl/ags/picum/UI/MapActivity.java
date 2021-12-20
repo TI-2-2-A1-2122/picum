@@ -52,7 +52,6 @@ import nl.ags.picum.dataStorage.dataUtil.Point;
 import nl.ags.picum.dataStorage.managing.AppDatabaseManager;
 import nl.ags.picum.dataStorage.roomData.Route;
 import nl.ags.picum.dataStorage.roomData.Sight;
-import nl.ags.picum.UI.viewmodels.SightViewModel;
 import nl.ags.picum.dataStorage.roomData.Waypoint;
 
 public class MapActivity extends AppCompatActivity {
@@ -72,7 +71,6 @@ public class MapActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-        findViewById(R.id.floatingFollowButton).setVisibility(View.INVISIBLE);
         // this.items = new ArrayList<OverlayItem>();
         Configuration.getInstance().setUserAgentValue("AGSPicum/1.0");
         this.mapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
@@ -161,6 +159,7 @@ public class MapActivity extends AppCompatActivity {
 
         ((Button) view).setVisibility(View.INVISIBLE);
         findViewById(R.id.floatingFollowButton).setVisibility(View.VISIBLE);
+        findViewById(R.id.floatingStopButton).setVisibility(View.VISIBLE);
         mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(getApplicationContext()), mMap);
         mLocationOverlay.enableMyLocation();
         mLocationOverlay.enableFollowLocation();
@@ -339,4 +338,8 @@ public class MapActivity extends AppCompatActivity {
         return geoPoints;
     }
 
+    public void onFSBClicked(View view) {
+        if (this.mapViewModel == null) return;
+            mapViewModel.getMapManager().stopRoute(mapViewModel.getCurrentRoute());
+    }
 }

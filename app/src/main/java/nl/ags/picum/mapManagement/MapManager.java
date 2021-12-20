@@ -320,6 +320,10 @@ public class MapManager implements LocationObserver {
         if (i != 0) this.mapViewModel.setCalculatedRoute(routeList);
     }
 
+    public void stopRoute(Route route){
+        DataStorage dataStorage = AppDatabaseManager.getInstance(context);
+        dataStorage.stopRoute(route);
+    }
 
     private void markRouteOfSight(Waypoint waypoint) {
         HashMap<Boolean, List<Point>> pointsMap = this.mapViewModel.getCalculatedRoute().getValue();
