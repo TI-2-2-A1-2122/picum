@@ -44,11 +44,20 @@ public class SightAdapter extends RecyclerView.Adapter<SightAdapter.SightViewHol
         Sight sight = sights.get(position);
         holder.title.setText(sight.getSightName());
         String url = "@" + sight.getPhotoURL().substring(0, sight.getPhotoURL().lastIndexOf("."));
-        holder.image.setImageDrawable(AppCompatResources.getDrawable(context,context.getResources().getIdentifier(url, null, context.getPackageName())));
-        holder.description.setText(sight.getSightDescription().substring(0, sight.getSightDescription().indexOf(".", 100) + 1));
-        holder.layout.setOnClickListener(view -> {
-            playNotification();
-            new SightDetailsPopupFragment(sight, context).show(context.getSupportFragmentManager(), null);
+        holder.image.setImageDrawable(context.getDrawable(context.getResources().getIdentifier(url, null, context.getPackageName())));
+        String description = context.getString(context.getResources().getIdentifier("@string/" + sight.getSightDescription(), null, context.getPackageName()));
+        System.out.println(sight.getSightName());
+        if (description.length() >160){
+        holder.description.setText(description.substring(0, 160) + "...");}
+        else    {
+            holder.description.setText(description.substring(0, description.length() - 1) + "...");
+        }
+        holder.layout.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                playNotification();
+                new SightDetailsPopupFragment(sight, context).show(context.getSupportFragmentManager(), null);
+            }
         });
         //TODO add visual indication that sight has been visited
     }

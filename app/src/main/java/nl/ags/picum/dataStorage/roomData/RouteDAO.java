@@ -23,6 +23,9 @@ public interface RouteDAO {
     @Query("UPDATE Route SET inProgress = 1 WHERE routeName = :routeName")
     void setRoute(String routeName);
 
+    @Query("UPDATE Route SET inProgress = 0 WHERE routeName = :routeName")
+    void stopRoute(String routeName);
+
     @Query("SELECT * FROM Route")
     List<Route> getAllRoutes();
 

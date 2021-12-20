@@ -9,6 +9,7 @@ import androidx.room.Transaction;
 import java.util.List;
 
 import nl.ags.picum.dataStorage.linkingTables.RouteWithWaypoints;
+import nl.ags.picum.dataStorage.linkingTables.WaypointWithSight;
 
 @Dao
 public interface WaypointDAO {
@@ -27,6 +28,10 @@ public interface WaypointDAO {
     @Transaction
     @Query("SELECT * FROM Route WHERE routeName =:routeName")
     List<RouteWithWaypoints> getWaypointsPerRoute(String routeName);
+
+    @Transaction
+    @Query("SELECT * FROM Sight WHERE sightName =:sightName")
+    List<WaypointWithSight> getWaypointPerSight(String sightName);
 
 
 }

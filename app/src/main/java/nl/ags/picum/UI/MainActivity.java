@@ -15,6 +15,9 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.location.Geofence;
+import org.osmdroid.util.GeoPoint;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -33,12 +36,16 @@ public class MainActivity extends AppCompatActivity {
     private final List<Route> routes = new ArrayList<>();
     private int timeRequested = 0;
     private PermissionDeniedDialog dialogPermission;
+    private RouteAdapter adapter;
+    private RecyclerView recyclerView;
 
     final FragmentManager fragmentManager = getSupportFragmentManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        adapter = new RouteAdapter(routes, this);
 
         setContentView(R.layout.activity_main);
         dialogPermission = new PermissionDeniedDialog();
@@ -58,10 +65,11 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
-        RecyclerView recyclerView = findViewById(R.id.main_routes_recyclerview);
-        recyclerView.setAdapter(new RouteAdapter(routes, this));
+        recyclerView = findViewById(R.id.main_routes_recyclerview);
+        recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
+
 
         new Thread(() -> {
             AppDatabaseManager manager = AppDatabaseManager.getInstance(getApplicationContext());
@@ -149,9 +157,16 @@ public class MainActivity extends AppCompatActivity {
         getBaseContext().getResources().updateConfiguration(configuration, getBaseContext().getResources().getDisplayMetrics());
         Intent intent = getIntent();
         finish();
+
+        recyclerView = findViewById(R.id.main_routes_recyclerview);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+        recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
+        adapter.notifyItemChanged(0);
         overridePendingTransition(0, 0);
         startActivity(intent);
         overridePendingTransition(0, 0);
+
     }
 
     /**
@@ -166,6 +181,12 @@ public class MainActivity extends AppCompatActivity {
         getBaseContext().getResources().updateConfiguration(configuration, getBaseContext().getResources().getDisplayMetrics());
         Intent intent = getIntent();
         finish();
+
+        recyclerView = findViewById(R.id.main_routes_recyclerview);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+        recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
+        adapter.notifyItemChanged(0);
         overridePendingTransition(0, 0);
         startActivity(intent);
         overridePendingTransition(0, 0);

@@ -14,6 +14,8 @@ public interface DataStorage {
     Route getCurrentRoute();
     void setCurrentRoute(Route route);
 
+    void stopRoute(Route route);
+
     List<Waypoint> getHistory(Route route);
     void clearHistory(Route route);
 
@@ -22,6 +24,13 @@ public interface DataStorage {
     List<Waypoint> getWaypointsPerRoute(Route r);
 
     List<Sight> getSightsPerRoute(Route route);
+
+    List<Waypoint> getWaypointsWithSight(Route route);
+
+    Point getPointFromWaypoint(Waypoint waypoint);
+
+    Waypoint getWaypointFromSight(Sight s);
+
     Point getPointFromSight(String sightName);
 
     void setCalculatedWaypoints(List<PointWithInstructions> points, Route route);
