@@ -69,7 +69,7 @@ public class MapActivity extends AppCompatActivity {
         sightViewModel.getSights().observe(this, this::onSightsChanged);
 
 
-        /*
+
         // Observe CalculatedRoute points
         this.mapViewModel.getCalculatedRoute().observe(this, (pointsMap) -> {
             List<Point> points = pointsMap.get(false);

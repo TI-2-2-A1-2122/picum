@@ -2,6 +2,9 @@ package nl.ags.picum.mapManagement;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
+
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.location.Geofence;
 
@@ -36,7 +39,7 @@ import nl.ags.picum.mapManagement.routeCalculation.RouteCalculator;
  */
 public class MapManager implements LocationObserver {
     public static final String LOGTAG = MapManager.class.getName();
-    private static final double DISTANCE_METER_VISITED = 30;
+    private static final double DISTANCE_METER_VISITED = 25;
     private static final double DISTANCE_METER_GEOFENCE = 50;
 
     // Object //
@@ -257,17 +260,16 @@ public class MapManager implements LocationObserver {
 
             Log.d(LOGTAG, "Now set the geofence to: " + nextSight + " name: " + nextSight.getSightDescription() + " locatie: " + sightsMap.get(nextSight).toGeoPoint().toDoubleString());
 
+            ContextCompat.getMainExecutor(context).execute(()  -> {
+                        Toast.makeText(this.context, "Sight ", Toast.LENGTH_LONG).show();
+            });
+
+
             // Getting the Waypoint of the nextSight
-            List<Waypoint> waypointsInRoute = dataStorage.getWaypointsPerRoute(this.mapViewModel.getCurrentRoute());
-            Waypoint sightWaypoint = waypointsInRoute
-                    .stream()
-                    .filter((waypoint -> waypoint.getWaypointID() == sights.get(0).getWaypointID()))
-                    .findFirst()
-                    .orElse(waypointsInRoute.get(0));
+            Waypoint sightWaypoint = dataStorage.getWaypointFromSight(nextSight);
 
             dataStorage.setWaypointProgress(sightWaypoint.getWaypointID(), true);
             this.locationService.nearLocationManager.setNextNearLocation(new Point(sightWaypoint.getLongitude(), sightWaypoint.getLatitude()), DISTANCE_METER_VISITED);
-            Log.d(LOGTAG, "TEST2 " + new Point(sightWaypoint.getLongitude(), sightWaypoint.getLatitude()));
 
             // Updating setSight
             this.setSight = nextSight;
