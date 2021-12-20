@@ -53,12 +53,15 @@ public class MainActivity extends AppCompatActivity {
     private final List<Route> routes = new ArrayList<>();
     private int timeRequested = 0;
     private PermissionDeniedDialog dialogPermission;
+    private RouteAdapter adapter;
 
     FragmentManager fragmentManager = getSupportFragmentManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        adapter = new RouteAdapter(routes, this);
 
         setContentView(R.layout.activity_main);
         dialogPermission = new PermissionDeniedDialog();
@@ -70,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         RecyclerView recyclerView = findViewById(R.id.main_routes_recyclerview);
-        recyclerView.setAdapter(new RouteAdapter(routes, this));
+        recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
 
@@ -163,6 +166,7 @@ public class MainActivity extends AppCompatActivity {
         overridePendingTransition(0, 0);
         startActivity(intent);
         overridePendingTransition(0, 0);
+        adapter.notifyDataSetChanged();
     }
 
     /**
@@ -180,6 +184,7 @@ public class MainActivity extends AppCompatActivity {
         overridePendingTransition(0, 0);
         startActivity(intent);
         overridePendingTransition(0, 0);
+        adapter.notifyDataSetChanged();
     }
 
     /**
