@@ -25,7 +25,10 @@ import nl.ags.picum.dataStorage.roomData.Waypoint;
 
 public class RouteDetailsFragment extends DialogFragment {
 
-    private final Route selectedRoute;
+
+    private Route selectedRoute;
+    private ProgressBar progressBar;
+
 
     public RouteDetailsFragment(Route route) {
         this.selectedRoute = route;
@@ -72,8 +75,14 @@ public class RouteDetailsFragment extends DialogFragment {
         //TODO image
 
         //TODO amount of sights
+
+        calculateProgress(view);
+
+    }
+
+    private void calculateProgress(View view) {
         TextView text = view.findViewById(R.id.route_details_fragment_details_amountOfSightsNumber);
-        ProgressBar p = view.findViewById(R.id.progressBar2);
+        progressBar = view.findViewById(R.id.progressBar2);
 
         new Thread(() -> {
             List<Sight> Sights = AppDatabaseManager.getInstance(getContext()).getSightsPerRoute(selectedRoute);
@@ -92,19 +101,20 @@ public class RouteDetailsFragment extends DialogFragment {
             Activity activity = getActivity();
             if(activity != null) {
                 activity.runOnUiThread(() -> {
-                    String s = Sights.size() +"";
-                    text.setText(s);
-                    p.setProgress(progress);
+
+                    text.setText(Sights.size() + "");
+                    progressBar.setProgress(progress);
+
                 });
             }
 
         }).start();
-
     }
 
     private void openSelectedRoute(){
         Intent intent = new Intent(getContext(), MapActivity.class);
         intent.putExtra("SelectedRoute",selectedRoute);
+        intent.putExtra("CurrentProgress", progressBar.getProgress());
 
         startActivity(intent);
 
