@@ -1,21 +1,12 @@
 package nl.ags.picum.UI;
 
-import android.content.Context;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.VibrationEffect;
-import android.os.Vibrator;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
-
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
@@ -129,21 +120,7 @@ public class MapActivity extends AppCompatActivity {
         mMap.onPause();  //needed for compass, my location overlays, v6.0.0 and up
     }
 
-    public void playNotification() {
-        Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
-        r.play();
 
-        Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-// Vibrate for 500 milliseconds
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            v.vibrate(VibrationEffect.createOneShot(500, 255));
-        } else {
-            //deprecated in API 26
-            v.vibrate(500);
-        }
-
-    }
 
     public void onFABClicked (View view){
         new SightsListFragment(sights, this).show(getSupportFragmentManager(), "list");
