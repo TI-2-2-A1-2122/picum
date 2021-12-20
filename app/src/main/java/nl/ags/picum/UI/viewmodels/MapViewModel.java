@@ -7,10 +7,14 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
+import java.util.HashMap;
 import java.util.List;
+
+import org.osmdroid.bonuspack.routing.RoadNode;
 
 import nl.ags.picum.dataStorage.dataUtil.Point;
 import nl.ags.picum.dataStorage.roomData.Route;
+import nl.ags.picum.dataStorage.roomData.Waypoint;
 import nl.ags.picum.mapManagement.MapManager;
 
 public class MapViewModel extends AndroidViewModel {
@@ -29,6 +33,7 @@ public class MapViewModel extends AndroidViewModel {
 
         // Tell the manager to start updates
         this.mapManager.startGPSUpdates();
+       
     }
 
     public MapManager getMapManager()
@@ -73,17 +78,27 @@ public class MapViewModel extends AndroidViewModel {
         this.currentRoute.setValue(route);
     }
 
-    private final MutableLiveData<List<Point>> calculatedRoute = new MutableLiveData<>();
+    private final MutableLiveData<HashMap<Boolean, List<Point>>> calculatedRoute = new MutableLiveData<>();
 
-    public MutableLiveData<List<Point>> getCalculatedRoute()
+    public MutableLiveData<HashMap<Boolean, List<Point>>> getCalculatedRoute()
     {
         return calculatedRoute;
     }
 
-    public void setCalculatedRoute(List<Point> points)
+    public void setCalculatedRoute(HashMap<Boolean, List<Point>> points)
     {
         calculatedRoute.postValue(points);
     }
 
+    private final MutableLiveData<List<RoadNode>> OSMRoute = new MutableLiveData<>();
 
+    public MutableLiveData<List<RoadNode>> getOSMRoute()
+    {
+        return OSMRoute;
+    }
+
+    public void setOSMRoute(List<RoadNode> points)
+    {
+        OSMRoute.postValue(points);
+    }
 }

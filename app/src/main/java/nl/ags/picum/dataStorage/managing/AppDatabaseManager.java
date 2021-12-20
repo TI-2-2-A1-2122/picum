@@ -144,6 +144,21 @@ public class AppDatabaseManager implements DataStorage {
             return p;
         }
 
+
+
+    @Override
+    public Point getPointFromSight(String sightName) {
+        Sight s = this.database.sightDAO().getSight(sightName);
+
+        Waypoint w = this.database.waypointDAO().getWaypoint(s.getWaypointID());
+
+        Point p = new Point();
+        p.setLatitude(w.getLatitude());
+        p.setLongitude(w.getLongitude());
+
+        return p;
+    }
+  
     public void setCurrentLocation(Point point, Route route) {
         this.database.currentLocationDAO().insertLocation(new CurrentLocation(point.getLatitude(), point.getLongitude(), route.getRouteName()));
     }
@@ -164,6 +179,7 @@ public class AppDatabaseManager implements DataStorage {
         List<RouteWithCalculatedWaypoints> waypoints = this.database.calculatedWaypointDAO().getCalculatedWaypointsPerRoute(route.getRouteName());
 
         return waypoints.get(0).calculatedWaypoints;
+
     }
 }
 

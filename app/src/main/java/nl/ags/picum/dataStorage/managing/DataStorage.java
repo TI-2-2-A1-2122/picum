@@ -2,6 +2,7 @@ package nl.ags.picum.dataStorage.managing;
 
 import java.util.List;
 
+import nl.ags.picum.dataStorage.dataUtil.Point;
 import nl.ags.picum.dataStorage.roomData.Route;
 import nl.ags.picum.dataStorage.roomData.Sight;
 import nl.ags.picum.dataStorage.roomData.Waypoint;
@@ -19,4 +20,6 @@ public interface DataStorage {
     List<Waypoint> getWaypointsPerRoute(Route r);
 
     List<Sight> getSightsPerRoute(Route route);
+    Point getPointFromSight(String sightName);
+
 }

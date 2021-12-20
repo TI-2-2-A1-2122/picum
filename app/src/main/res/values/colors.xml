@@ -13,5 +13,7 @@
     <color name="primary_light">#A0AAFB</color>
     <color name="secondary">#FF03DAC5</color>
     <color name="secondary_dark">#FF018786</color>
+    <color name="not_visited_line_color">#7282FF</color>
+    <color name="visited_line_color">#FF8a65</color>
 
 </resources>
