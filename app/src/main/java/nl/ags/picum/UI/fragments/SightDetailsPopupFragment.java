@@ -43,10 +43,15 @@ public class SightDetailsPopupFragment extends DialogFragment {
         String photoUrl = "@" + sight.getPhotoURL().substring(0, sight.getPhotoURL().indexOf("."));
         ImageView image = requireView().findViewById(R.id.sight_details_image);
         image.setImageResource(context.getResources().getIdentifier(photoUrl, null, context.getPackageName()));
-        image.setOnClickListener(view1 -> new LargeImageFragment(context.getResources().getIdentifier(photoUrl, null, context.getPackageName())).show(getParentFragmentManager(), "image"));
-        ((TextView) requireView().findViewById(R.id.sight_details_title)).setText(sight.getSightName());
-        ((TextView) requireView().findViewById(R.id.sight_details_detailsText)).setText(sight.getSightDescription());
-        ((TextView) requireView().findViewById(R.id.sight_details_detailsText)).setMovementMethod(new ScrollingMovementMethod());
+        image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new LargeImageFragment(context.getResources().getIdentifier(photoUrl, null, context.getPackageName())).show(getParentFragmentManager(), "image");
+            }
+        });
+        ((TextView)getView().findViewById(R.id.sight_details_title)).setText(sight.getSightName());
+        ((TextView)getView().findViewById(R.id.sight_details_detailsText)).setText(getContext().getResources().getString(getContext().getResources().getIdentifier("@string/" + sight.getSightDescription(), null, getContext().getPackageName())));
+        ((TextView)getView().findViewById(R.id.sight_details_detailsText)).setMovementMethod(new ScrollingMovementMethod());
         if(sight.getWebsiteURL().equals("") || sight.getWebsiteURL() == null){
             ((TextView) requireView().findViewById(R.id.sight_details_siteRef)).setText("");
         } else {

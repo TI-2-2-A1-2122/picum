@@ -37,7 +37,7 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
     public void onBindViewHolder(@NonNull RouteViewHolder holder, int position) {
         Route selectedRoute = routes.get(position);
         holder.title.setText(selectedRoute.getRouteName());
-        holder.description.setText(selectedRoute.getDescription());
+        holder.description.setText(mainActivity.getApplicationContext().getResources().getString(mainActivity.getApplicationContext().getResources().getIdentifier("@string/" + selectedRoute.getDescription(), null, mainActivity.getPackageName())));
         //TODO Dit kan niet meer want INT
 //        if(!selectedRoute.getPhotoURL().equals("")){
 //            //TODO set image recourse
