@@ -219,8 +219,8 @@ public class MapActivity extends AppCompatActivity {
 
 
     public void setPointsInMap(List<PointWithInstructions> points) {
-
-        Drawable nodeIcon = AppCompatResources.getDrawable(this,R.drawable.osm_ic_follow_me);
+        Drawable drawable = AppCompatResources.getDrawable(this, R.drawable.osm_ic_follow_me);
+        Drawable nodeIcon = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(((BitmapDrawable) drawable).getBitmap(), (int) (36.0f * getResources().getDisplayMetrics().density), (int) (36.0f * getResources().getDisplayMetrics().density), true));
 //            nodeIcon.setHotspot(0.5f, 0.5f);spo
         int actualSteps = 1;
         String lastInstruction = "";
@@ -312,7 +312,7 @@ public class MapActivity extends AppCompatActivity {
             m.setPosition(convertPointToGeoPoint(v));
             m.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
             Drawable drawable = AppCompatResources.getDrawable(this, R.mipmap.sight_image);
-            Drawable dr = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(((BitmapDrawable) drawable).getBitmap(), (int) (36.0f * getResources().getDisplayMetrics().density), (int) (36.0f * getResources().getDisplayMetrics().density), true));
+            Drawable dr = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(((BitmapDrawable) drawable).getBitmap(), (int) (48.0f * getResources().getDisplayMetrics().density), (int) (48.0f * getResources().getDisplayMetrics().density), true));
             m.setIcon(dr);
             m.setTitle(k.getSightName());
             m.setSnippet(k.getSightDescription());
