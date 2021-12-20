@@ -126,6 +126,7 @@ public class MapManager implements LocationObserver {
             markedPoints.put(false, points);
             ArrayList<Point> visitedPoints = new ArrayList<>();
             visitedPoints.add(points.get(0));
+            points.remove(0);
             markedPoints.put(true, visitedPoints);
             MapManager.this.mapViewModel.setCalculatedRoute(markedPoints);
         }
@@ -340,11 +341,11 @@ public class MapManager implements LocationObserver {
         while (distanceToWaypoint < DISTANCE_METER_VISITED) {
             Log.d("TAG", "Distance to next point is: " + distanceToWaypoint + "m");
 
-            // Removing the first item from not visited list
-            notVisitedPoints.remove(0);
-
             // Adding the next first (second) item from the not visited list
             visitedPoints.add(notVisitedPoints.get(0));
+
+            // Removing the first item from not visited list
+            notVisitedPoints.remove(0);
 
             i++;
             distanceToWaypoint = notVisitedPoints.get(i).toGeoPoint().distanceToAsDouble(currentLocation.toGeoPoint());

@@ -153,6 +153,7 @@ public class MapActivity extends AppCompatActivity {
 
     private Polyline visitedLine;
     private Polyline notVisitedLine;
+    private Polyline nextLine;
 
     private void drawRouteList(HashMap<Boolean, List<Point>> pointsMap) {
         // Checking if the lists exist
@@ -161,6 +162,9 @@ public class MapActivity extends AppCompatActivity {
         // Getting the two lists from the map
         List<GeoPoint> visitedPoints = convertPointToGeoPoint(Objects.requireNonNull(pointsMap.get(true)));
         List<GeoPoint> notVisitedPoints = convertPointToGeoPoint(Objects.requireNonNull(pointsMap.get(false)));
+        List<GeoPoint> nextPoints = new ArrayList<>();
+        nextPoints.add(notVisitedPoints.get(0));
+        nextPoints.add(visitedPoints.get(visitedPoints.size()-1));
 
         // Checking if the lines have been made
         if(visitedLine == null || notVisitedLine == null) {
@@ -173,14 +177,19 @@ public class MapActivity extends AppCompatActivity {
             this.notVisitedLine.getOutlinePaint().setColor(getColor(R.color.not_visited_line_color));
             this.notVisitedLine.getOutlinePaint().setStrokeCap(Paint.Cap.ROUND);
             mMap.getOverlayManager().add(this.notVisitedLine);
+
+            this.nextLine = new Polyline();
+            this.nextLine.getOutlinePaint().setColor(getColor(R.color.next_segment_line_color));
+            this.nextLine.getOutlinePaint().setStrokeCap(Paint.Cap.ROUND);
+            mMap.getOverlayManager().add(this.nextLine);
         }
 
         //Drawing the two lines
         notVisitedLine.setPoints(notVisitedPoints);
         visitedLine.setPoints(visitedPoints);
+        nextLine.setPoints(nextPoints);
 
         mMap.invalidate();
-        Log.d("MapActivity", notVisitedPoints.toString());
         Log.d("MapActivity", "Points of the route have been drawn");
     }
 
