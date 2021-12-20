@@ -15,7 +15,7 @@ import nl.ags.picum.dataStorage.linkingTables.RouteWithCurrentLocations;
 public interface CalculatedWaypointDAO {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertCalculatedWaypoint(Waypoint waypoint);
+    void insertCalculatedWaypoint(CalculatedWaypoint waypoint);
 
     @Transaction
     @Query("SELECT * FROM Route WHERE routeName =:routeName")
