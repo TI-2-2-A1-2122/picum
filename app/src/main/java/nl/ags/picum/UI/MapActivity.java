@@ -46,14 +46,11 @@ import nl.ags.picum.dataStorage.roomData.Waypoint;
 public class MapActivity extends AppCompatActivity {
 
     private MapViewModel mapViewModel;
-    private SightViewModel sightViewModel;
 
 
     private MapView mMap;
     private IMapController mMapController;
     private List<Sight> sights;
-
-    private MyLocationNewOverlay mLocationOverlay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,12 +60,12 @@ public class MapActivity extends AppCompatActivity {
         // this.items = new ArrayList<OverlayItem>();
         Configuration.getInstance().setUserAgentValue("AGSPicum/1.0");
         this.mapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
-        this.sightViewModel = new ViewModelProvider(this).get(SightViewModel.class);
+        SightViewModel sightViewModel = new ViewModelProvider(this).get(SightViewModel.class);
 
-        this.mapViewModel.getMapManager().setSightViewModel(this.sightViewModel);
+        this.mapViewModel.getMapManager().setSightViewModel(sightViewModel);
 
-        this.sightViewModel.getCurrentSight().observe(this, this::onSightChanged);
-        this.sightViewModel.getSights().observe(this, this::onSightsChanged);
+        sightViewModel.getCurrentSight().observe(this, this::onSightChanged);
+        sightViewModel.getSights().observe(this, this::onSightsChanged);
 
         // Observe CalculatedRoute points
         this.mapViewModel.getCalculatedRoute().observe(this, (pointsMap) -> {
@@ -245,7 +242,7 @@ public class MapActivity extends AppCompatActivity {
     public void initializeMap() {
         mMap.setTileSource(TileSourceFactory.MAPNIK);
         mMapController.setZoom(20.1);
-        mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(getApplicationContext()), mMap);
+        MyLocationNewOverlay mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(getApplicationContext()), mMap);
         mLocationOverlay.enableMyLocation();
         RotationGestureOverlay mRotationGestureOverlay = new RotationGestureOverlay(mMap);
         mRotationGestureOverlay.setEnabled(true);
