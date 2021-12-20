@@ -11,13 +11,12 @@ import nl.ags.picum.dataStorage.roomData.Route;
 
 public class RouteWithCurrentLocations {
     @Embedded
-    private Route route;
+    public Route route;
 
     @Relation(
             parentColumn = "routeName",
-            entityColumn = "CurrentLocationID",
-            associateBy = @Junction(RouteWaypointCrossRef.class)
+            entityColumn = "routeName"
     )
 
-    private List<CurrentLocation> locations;
+    public List<CurrentLocation> locations;
 }

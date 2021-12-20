@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey;
 @Entity
 public class CurrentLocation {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @NonNull
     private int CurrentLocationID;
 
@@ -20,15 +20,13 @@ public class CurrentLocation {
     @NonNull
     private float longitude;
 
-    @NonNull
     private String routeName;
 
     public CurrentLocation() {
 
     }
 
-    public CurrentLocation(int currentLocationID, float latitude, float longitude, @NonNull String routeName) {
-        this.CurrentLocationID = currentLocationID;
+    public CurrentLocation(float latitude, float longitude, String routeName) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.routeName = routeName;
@@ -58,12 +56,11 @@ public class CurrentLocation {
         this.longitude = longitude;
     }
 
-    @NonNull
     public String getRouteName() {
         return routeName;
     }
 
-    public void setRouteName(@NonNull String routeName) {
+    public void setRouteName(String routeName) {
         this.routeName = routeName;
     }
 }
