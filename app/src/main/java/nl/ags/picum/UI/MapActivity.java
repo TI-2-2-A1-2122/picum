@@ -26,6 +26,8 @@ import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.CustomZoomButtonsController;
 
+import org.osmdroid.views.overlay.compass.CompassOverlay;
+import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
 import org.osmdroid.views.overlay.gestures.RotationGestureOverlay;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
@@ -59,12 +61,13 @@ public class MapActivity extends AppCompatActivity {
     private List<Sight> sights;
 
     private MyLocationNewOverlay mLocationOverlay;
+    private CompassOverlay mCompassOverlay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-        
+        findViewById(R.id.floatingFollowButton).setVisibility(View.INVISIBLE);
         // this.items = new ArrayList<OverlayItem>();
         Configuration.getInstance().setUserAgentValue("AGSPicum/1.0");
         this.mapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
@@ -154,13 +157,18 @@ public class MapActivity extends AppCompatActivity {
 
     public void onStartRouteButtonClick(View view) {
         ((Button) view).setVisibility(View.INVISIBLE);
+        findViewById(R.id.floatingFollowButton).setVisibility(View.VISIBLE);
         mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(getApplicationContext()), mMap);
         mLocationOverlay.enableMyLocation();
         mLocationOverlay.enableFollowLocation();
         mMap.getOverlays().add(this.mLocationOverlay);
+        mCompassOverlay = new CompassOverlay(getApplicationContext(), new InternalCompassOrientationProvider(getApplicationContext()), mMap);
+        mCompassOverlay.enableCompass();
+        mMap.getOverlays().add(this.mCompassOverlay);
         mMapController.setZoom(20.1);
         mMap.invalidate();
     }
+
 
 
     public void setPointsInMap(List<RoadNode> points) {
@@ -308,6 +316,11 @@ public class MapActivity extends AppCompatActivity {
 
         new SightsListFragment(sights, this).show(getSupportFragmentManager(), "list");
     }
+
+    public void onFFBClicked (View view){
+        mLocationOverlay.enableFollowLocation();
+    }
+
 
 
     public GeoPoint convertPointToGeoPoint(Point point) {
