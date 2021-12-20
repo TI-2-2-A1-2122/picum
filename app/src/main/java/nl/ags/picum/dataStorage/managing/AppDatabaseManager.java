@@ -61,6 +61,11 @@ public class AppDatabaseManager implements DataStorage {
     }
 
     @Override
+    public void stopRoute(Route route) {
+        this.database.routeDAO().stopRoute(route.getRouteName());
+    }
+
+    @Override
     public List<Waypoint> getHistory(Route route) {
         List<Waypoint> waypoints = new ArrayList<>();
         List<RouteWithWaypoints> routeAndWaypoints = this.database.waypointDAO().getWaypointsPerRoute(route.getRouteName());
@@ -85,6 +90,8 @@ public class AppDatabaseManager implements DataStorage {
     public void setRoute(Route route) {
         this.database.routeDAO().insertRoute(route);
     }
+
+
 
     public void setWaypoint(Waypoint waypoint) {
         this.database.waypointDAO().addWaypoint(waypoint);

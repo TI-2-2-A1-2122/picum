@@ -12,6 +12,8 @@ public interface DataStorage {
     Route getCurrentRoute();
     void setCurrentRoute(Route route);
 
+    void stopRoute(Route route);
+
     List<Waypoint> getHistory(Route route);
     void clearHistory(Route route);
 
