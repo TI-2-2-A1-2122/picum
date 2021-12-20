@@ -37,8 +37,7 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
     public void onBindViewHolder(@NonNull RouteViewHolder holder, int position) {
         Route selectedRoute = routes.get(position);
         holder.title.setText(selectedRoute.getRouteName());
-        //TODO undo when description is right again
-        //holder.description.setText(mainActivity.getApplicationContext().getResources().getString(mainActivity.getApplicationContext().getResources().getIdentifier("@string/" + selectedRoute.getDescription(), null, mainActivity.getPackageName())));
+        holder.description.setText(mainActivity.getApplicationContext().getResources().getString(mainActivity.getApplicationContext().getResources().getIdentifier("@string/" + selectedRoute.getDescription(), null, mainActivity.getPackageName())));
         
 
         holder.layout.setOnClickListener(view -> mainActivity.showDetailsFragment(selectedRoute));
