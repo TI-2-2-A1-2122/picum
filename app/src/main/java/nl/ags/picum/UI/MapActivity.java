@@ -60,7 +60,6 @@ public class MapActivity extends AppCompatActivity {
 
     private MapView mMap;
     private IMapController mMapController;
-    private List<Sight> sights;
 
     private MyLocationNewOverlay mLocationOverlay;
     private CompassOverlay mCompassOverlay;
@@ -72,7 +71,7 @@ public class MapActivity extends AppCompatActivity {
         // this.items = new ArrayList<OverlayItem>();
         Configuration.getInstance().setUserAgentValue("AGSPicum/1.0");
         this.mapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
-        SightViewModel sightViewModel = new ViewModelProvider(this).get(SightViewModel.class);
+        this.sightViewModel = new ViewModelProvider(this).get(SightViewModel.class);
 
         this.mapViewModel.getMapManager().setSightViewModel(sightViewModel);
 
@@ -102,7 +101,6 @@ public class MapActivity extends AppCompatActivity {
 
         Route selectedRoute = (Route) getIntent().getSerializableExtra("SelectedRoute");
         mapViewModel.setCurrentRoute(selectedRoute);
-        new Thread(this::getSights).start();
 
         int progress = getIntent().getIntExtra("CurrentProgress", 0);
         checkProgress(progress);
@@ -184,11 +182,6 @@ public class MapActivity extends AppCompatActivity {
         mMap.invalidate();
         Log.d("MapActivity", notVisitedPoints.toString());
         Log.d("MapActivity", "Points of the route have been drawn");
-    }
-
-    public void getSights() {
-        AppDatabaseManager dbManager = new AppDatabaseManager(this);
-        sights = dbManager.getSightsPerRoute(mapViewModel.getCurrentRoute());
     }
 
     private void onSightsChanged(Map<Sight, Waypoint> sights) {
@@ -372,8 +365,7 @@ public class MapActivity extends AppCompatActivity {
 
 
     public void onFABClicked (View view){
-
-        new SightsListFragment(sights, this).show(getSupportFragmentManager(), "list");
+        new SightsListFragment(this.sightViewModel.getSights().getValue(),  this).show(getSupportFragmentManager(), "list");
     }
 
     public void onFFBClicked (View view){
