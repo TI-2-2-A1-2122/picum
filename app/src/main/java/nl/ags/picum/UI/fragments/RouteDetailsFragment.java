@@ -63,6 +63,7 @@ public class RouteDetailsFragment extends DialogFragment {
         AppDatabaseManager manager = new AppDatabaseManager(getContext());
 
         ((TextView)view.findViewById(R.id.route_details_fragment_details_name)).setText(selectedRoute.getRouteName());
+        ((TextView)view.findViewById(R.id.route_details_fragment_details_descriptionText)).setText(getContext().getResources().getString(getContext().getResources().getIdentifier("@string/"+selectedRoute.getDescription(), null, getContext().getPackageName())));
         ((Button)view.findViewById(R.id.route_details_fragment_details_backButton)).setOnClickListener(v -> dismiss());
 
         ((Button)view.findViewById(R.id.route_details_fragment_details_showButton)).setOnClickListener(new View.OnClickListener() {

@@ -56,7 +56,7 @@ public class SightDetailsPopupFragment extends DialogFragment {
             }
         });
         ((TextView)getView().findViewById(R.id.sight_details_title)).setText(sight.getSightName());
-        ((TextView)getView().findViewById(R.id.sight_details_detailsText)).setText(sight.getSightDescription());
+        ((TextView)getView().findViewById(R.id.sight_details_detailsText)).setText(getContext().getResources().getString(getContext().getResources().getIdentifier("@string/" + sight.getSightDescription(), null, getContext().getPackageName())));
         ((TextView)getView().findViewById(R.id.sight_details_detailsText)).setMovementMethod(new ScrollingMovementMethod());
         if(sight.getWebsiteURL().equals("") || sight.getWebsiteURL() == null){
             ((TextView)getView().findViewById(R.id.sight_details_siteRef)).setText("");
