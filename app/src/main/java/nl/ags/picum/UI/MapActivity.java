@@ -39,6 +39,7 @@ import java.util.stream.Stream;
 
 import nl.ags.picum.R;
 import nl.ags.picum.UI.fragments.CompleteRouteFragment;
+import nl.ags.picum.UI.Util.InstructionConverter;
 import nl.ags.picum.UI.fragments.SightsListFragment;
 import nl.ags.picum.UI.viewmodels.MapViewModel;
 import nl.ags.picum.UI.viewmodels.SightViewModel;
@@ -231,9 +232,9 @@ public class MapActivity extends AppCompatActivity {
                     Marker nodeMarker = new Marker(mMap);
                     nodeMarker.setPosition(node.toGeoPoint());
                     nodeMarker.setIcon(nodeIcon);
-                    nodeMarker.setSnippet(node.getInstructions());
+                    nodeMarker.setSnippet(InstructionConverter.getInstruction(this, node.getManeuverType(), node.getStreetName(), node.getInstructions()));
                     //nodeMarker.setSubDescription(Road.getLengthDurationText(this, node.mLength, node.mDuration));
-                    nodeMarker.setTitle("Step " + actualSteps);
+                    nodeMarker.setTitle(getApplicationContext().getString(R.string.step) + " " + actualSteps);
                     Drawable icon =  AppCompatResources.getDrawable(this,getDirectionIcon(node.getManeuverType()));
                     nodeMarker.setImage(icon);
                     actualSteps++;
