@@ -101,10 +101,8 @@ public class RouteDetailsFragment extends DialogFragment {
             Activity activity = getActivity();
             if(activity != null) {
                 activity.runOnUiThread(() -> {
-
                     text.setText(Sights.size() + "");
                     progressBar.setProgress(progress);
-
                 });
             }
 

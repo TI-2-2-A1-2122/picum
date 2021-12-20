@@ -85,7 +85,7 @@ public class MapActivity extends AppCompatActivity {
         sightViewModel.getSights().observe(this, this::onSightsChanged);
 
 
-        /*
+
         // Observe CalculatedRoute points
         this.mapViewModel.getCalculatedRoute().observe(this, (pointsMap) -> {
             // TODO: 17-12-2021 setPointsInMap method not called, visited points line are other method
@@ -95,12 +95,7 @@ public class MapActivity extends AppCompatActivity {
         });
 
         // observer the raw-route
-
-        this.mapViewModel.getOSMRoute().observe(this, (nodes) ->{
-            setPointsInMap(nodes);
-        });
-        */
-
+        this.mapViewModel.getOSMRoute().observe(this, this::setPointsInMap);
 
         this.mMap = findViewById(R.id.MainMap);
         Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));

@@ -139,6 +139,7 @@ public class AppDatabaseManager implements DataStorage {
         return sights;
     }
 
+    @Override
     public List<Waypoint> getWaypointsWithSight(Route route) {
         List<Waypoint> waypointsWithSight = new ArrayList<>();
         List<RouteWithWaypoints> waypointsPerRoute = database.waypointDAO().getWaypointsPerRoute(route.getRouteName());
@@ -156,6 +157,7 @@ public class AppDatabaseManager implements DataStorage {
         return waypointsWithSight;
     }
 
+    @Override
     public Point getPointFromWaypoint(Waypoint waypoint) {
         List<WaypointWithSight> waypointAndSight = this.database.sightDAO().getSightWithWaypoint(waypoint.getWaypointID());
         Point p = new Point();
@@ -168,6 +170,7 @@ public class AppDatabaseManager implements DataStorage {
         return p;
     }
 
+    @Override
     public Waypoint getWaypointFromSight(Sight s) {
         Waypoint w = this.database.waypointDAO().getWaypoint(s.getWaypointID());
 

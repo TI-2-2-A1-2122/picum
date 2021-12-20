@@ -22,6 +22,13 @@ public interface DataStorage {
     List<Waypoint> getWaypointsPerRoute(Route r);
 
     List<Sight> getSightsPerRoute(Route route);
+
+    List<Waypoint> getWaypointsWithSight(Route route);
+
+    Point getPointFromWaypoint(Waypoint waypoint);
+
+    Waypoint getWaypointFromSight(Sight s);
+
     Point getPointFromSight(String sightName);
 
 }

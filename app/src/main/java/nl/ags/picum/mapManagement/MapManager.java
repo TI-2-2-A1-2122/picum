@@ -2,6 +2,9 @@ package nl.ags.picum.mapManagement;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
+
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.location.Geofence;
 
@@ -11,9 +14,11 @@ import org.osmdroid.config.Configuration;
 import org.osmdroid.util.GeoPoint;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import nl.ags.picum.UI.viewmodels.MapViewModel;
 import nl.ags.picum.UI.viewmodels.SightViewModel;
@@ -34,7 +39,7 @@ import nl.ags.picum.mapManagement.routeCalculation.RouteCalculator;
  */
 public class MapManager implements LocationObserver {
     public static final String LOGTAG = MapManager.class.getName();
-    private static final double DISTANCE_METER_VISITED = 30;
+    private static final double DISTANCE_METER_VISITED = 25;
     private static final double DISTANCE_METER_GEOFENCE = 50;
 
     // Object //
@@ -240,7 +245,7 @@ public class MapManager implements LocationObserver {
 
             // Getting all the sights
             Map<Sight, Point> sightsMap = this.sightViewModel.getSights().getValue();
-            List<Sight> sights = new ArrayList<>(sightsMap.keySet());
+            List<Sight> sights = new ArrayList<>(sightsMap.keySet()).stream().sorted(Comparator.comparingInt(Sight::getWaypointID)).collect(Collectors.toList());
 
             // Default nextSight to the last value
             Sight nextSight = sights.get(sights.size() - 1);
@@ -253,13 +258,15 @@ public class MapManager implements LocationObserver {
                 }
             }
 
+            Log.d(LOGTAG, "Now set the geofence to: " + nextSight + " name: " + nextSight.getSightDescription() + " locatie: " + sightsMap.get(nextSight).toGeoPoint().toDoubleString());
+
+            ContextCompat.getMainExecutor(context).execute(()  -> {
+                        Toast.makeText(this.context, "Sight ", Toast.LENGTH_LONG).show();
+            });
+
+
             // Getting the Waypoint of the nextSight
-            List<Waypoint> waypointsInRoute = dataStorage.getWaypointsPerRoute(this.mapViewModel.getCurrentRoute());
-            Waypoint sightWaypoint = waypointsInRoute
-                    .stream()
-                    .filter((waypoint -> waypoint.getWaypointID() == sights.get(0).getWaypointID()))
-                    .findFirst()
-                    .orElse(waypointsInRoute.get(0));
+            Waypoint sightWaypoint = dataStorage.getWaypointFromSight(nextSight);
 
             dataStorage.setWaypointProgress(sightWaypoint.getWaypointID(), true);
             this.locationService.nearLocationManager.setNextNearLocation(new Point(sightWaypoint.getLongitude(), sightWaypoint.getLatitude()), DISTANCE_METER_VISITED);
@@ -338,16 +345,19 @@ public class MapManager implements LocationObserver {
         // get closest point to the waypoint
         for (int i = 0; i < nvPoints.size(); i++) {
             Point point = nvPoints.get(i);
-            double distanceTo = point.toGeoPoint().distanceToAsDouble(waypoint.toGeoPoint());
-            if (distanceTo < closedDistance)
-                closedDistance = distanceTo;
+            double distanceTo = point.toGeoPoint().distanceToAsDouble(new GeoPoint(waypoint.getLatitude(), waypoint.getLongitude()));
+            if (distanceTo >= closedDistance) continue;
+
+            closedDistance = distanceTo;
             closestPoint = i;
         }
 
         // Move all other points
-        for (int i = closestPoint; i >= 0; i--) {
+        for (int i = closestPoint; i > 0; i--) {
             Point point = nvPoints.remove(0);
             vPoints.add(point);
         }
+
+        this.mapViewModel.setCalculatedRoute(pointsMap);
     }
 }
