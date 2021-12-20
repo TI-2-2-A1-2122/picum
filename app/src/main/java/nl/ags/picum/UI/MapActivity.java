@@ -1,21 +1,18 @@
 package nl.ags.picum.UI;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
-
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.overlay.gestures.RotationGestureOverlay;
 
 import java.util.List;
@@ -123,7 +120,9 @@ public class MapActivity extends AppCompatActivity {
         mMap.onPause();  //needed for compass, my location overlays, v6.0.0 and up
     }
 
-    public void onFABClicked(View view){
+
+
+    public void onFABClicked (View view){
         new SightsListFragment(sights, this).show(getSupportFragmentManager(), "list");
     }
 }
