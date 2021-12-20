@@ -240,7 +240,7 @@ public class MapActivity extends AppCompatActivity {
                     nodeMarker.setImage(icon);
                     actualSteps++;
                     lastInstruction = node.getInstructions();
-                    mMap.getOverlays().add(nodeMarker);
+                    mMap.getOverlays().add(0, nodeMarker);
                 }
             }
 
@@ -316,7 +316,7 @@ public class MapActivity extends AppCompatActivity {
             m.setIcon(dr);
             m.setTitle(k.getSightName());
             m.setSnippet(k.getSightDescription());
-            mMap.getOverlays().add(m);
+            mMap.getOverlays().add(1, m);
             mMap.invalidate();
 
         });
