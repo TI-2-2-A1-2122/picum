@@ -49,6 +49,7 @@ public class SightAdapter extends RecyclerView.Adapter<SightAdapter.SightViewHol
         String url = "@" + sight.getPhotoURL().substring(0, sight.getPhotoURL().lastIndexOf("."));
         holder.image.setImageDrawable(context.getDrawable(context.getResources().getIdentifier(url, null, context.getPackageName())));
         String description = context.getString(context.getResources().getIdentifier("@string/" + sight.getSightDescription(), null, context.getPackageName()));
+        System.out.println(sight.getSightName());
         holder.description.setText(description.substring(0, description.indexOf(".", 100)));
         holder.layout.setOnClickListener(new View.OnClickListener(){
             @Override
