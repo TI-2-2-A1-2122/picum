@@ -21,11 +21,9 @@ public class CalculatedWaypoint {
     private float longitude;
 
     @ColumnInfo(name = "Instructions")
-    @NonNull
     private String instructions ;
 
     @ColumnInfo(name = "ManeuverType")
-    @NonNull
     private int maneuverType;
 
     @ColumnInfo(name = "StreetName")
@@ -37,7 +35,7 @@ public class CalculatedWaypoint {
 
     }
     @Ignore
-    public CalculatedWaypoint(float latitude, float longitude, String routeName, @NonNull String instructions, int maneuverType, String name) {
+    public CalculatedWaypoint(float latitude, float longitude, String routeName, String instructions, int maneuverType, String name) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.routeName = routeName;
@@ -78,7 +76,6 @@ public class CalculatedWaypoint {
         this.routeName = routeName;
     }
 
-    @NonNull
     public String getInstructions() {
         return instructions;
     }
@@ -88,7 +85,7 @@ public class CalculatedWaypoint {
     }
 
 
-    public void setInstructions(@NonNull String instructions) {
+    public void setInstructions(String instructions) {
         this.instructions = instructions;
     }
 
@@ -100,7 +97,7 @@ public class CalculatedWaypoint {
         return streetName;
     }
 
-    public void setStreetName(@NonNull String steetName) {
+    public void setStreetName(String steetName) {
         this.streetName = steetName;
     }
 }

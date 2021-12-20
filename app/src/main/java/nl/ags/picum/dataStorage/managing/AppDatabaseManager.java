@@ -170,12 +170,14 @@ public class AppDatabaseManager implements DataStorage {
         return currentLocations.get(0).locations;
     }
 
+    @Override
     public void setCalculatedWaypoints(List<PointWithInstructions> points, Route route) {
         for (PointWithInstructions p : points) {
             this.database.calculatedWaypointDAO().insertCalculatedWaypoint(new CalculatedWaypoint(p.getLatitude(), p.getLongitude(), route.getRouteName(),p.getInstructions(),p.getManeuverType(),p.getStreetName()));
         }
     }
 
+    @Override
     public List<CalculatedWaypoint> getCalculatedWaypointsFromRoute(Route route) {
         List<RouteWithCalculatedWaypoints> waypoints = this.database.calculatedWaypointDAO().getCalculatedWaypointsPerRoute(route.getRouteName());
 

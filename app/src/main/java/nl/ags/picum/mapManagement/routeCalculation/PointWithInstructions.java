@@ -8,12 +8,6 @@ public class PointWithInstructions extends Point {
     private int maneuverType;
     private String streetName;
 
-    public PointWithInstructions(float longitude, float latitude, String id, String instructions, int maneuverType) {
-        super(longitude, latitude, id);
-        this.instructions = instructions;
-        this.maneuverType = maneuverType;
-    }
-
     public PointWithInstructions(float longitude, float latitude) {
         super(longitude, latitude);
     }
@@ -39,6 +33,13 @@ public class PointWithInstructions extends Point {
     }
 
     public void setStreetName(String streetName) {
+        this.streetName = streetName;
+    }
+
+    public PointWithInstructions(float longitude, float latitude, String instructions, int maneuverType, String streetName) {
+        super(longitude, latitude);
+        this.instructions = instructions;
+        this.maneuverType = maneuverType;
         this.streetName = streetName;
     }
 }

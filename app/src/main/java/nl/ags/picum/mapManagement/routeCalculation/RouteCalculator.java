@@ -82,6 +82,7 @@ public class RouteCalculator {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 // Log the error and inform the listener
+                listener.onRouteCalculationError();
             }
 
             @Override
@@ -179,8 +180,6 @@ public class RouteCalculator {
                     pointWithInstructions.setManeuverType(step.getInt("type"));
                 }
             }
-
-
 
 
             // Returning the value's to the listener

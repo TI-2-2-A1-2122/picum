@@ -15,4 +15,6 @@ public interface RouteCalculatorListener {
      */
     void onRoutePointsCalculated(List<PointWithInstructions> points);
 
+    void onRouteCalculationError();
+
 }
