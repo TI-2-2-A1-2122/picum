@@ -39,6 +39,7 @@ import java.util.stream.Stream;
 
 import nl.ags.picum.R;
 import nl.ags.picum.UI.fragments.CompleteRouteFragment;
+import nl.ags.picum.UI.fragments.SightDetailsPopupFragment;
 import nl.ags.picum.UI.fragments.SightsListFragment;
 import nl.ags.picum.UI.viewmodels.MapViewModel;
 import nl.ags.picum.UI.viewmodels.SightViewModel;
@@ -70,25 +71,20 @@ public class MapActivity extends AppCompatActivity {
         // this.items = new ArrayList<OverlayItem>();
         Configuration.getInstance().setUserAgentValue("AGSPicum/1.0");
         this.mapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
-        SightViewModel sightViewModel = new ViewModelProvider(this).get(SightViewModel.class);
+        this.sightViewModel = new ViewModelProvider(this).get(SightViewModel.class);
 
         this.mapViewModel.getMapManager().setSightViewModel(sightViewModel);
 
-        sightViewModel.getCurrentSight().observe(this, this::onSightChanged);
-        sightViewModel.getSights().observe(this, this::onSightsChanged);
+        this.sightViewModel.getCurrentSight().observe(this, this::onSightChanged);
+        this.sightViewModel.getSights().observe(this, this::onSightsChanged);
 
+        this.sightViewModel.getCurrentSight().observe(this, (sight) -> {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            SightDetailsPopupFragment dialog = new SightDetailsPopupFragment(sight, this);
+            dialog.show(fragmentManager, "JOE");
 
-
-        // Observe CalculatedRoute points
-        this.mapViewModel.getCalculatedRoute().observe(this, (pointsMap) -> {
-            // TODO: 17-12-2021 setPointsInMap method not called, visited points line are other method
-            //setPointsInMap(points);
-            drawRouteList(pointsMap);
-            mMapController.setCenter(getCenterOfRoute(pointsMap));
+            Log.d("ENTERLOCATION", sight.getSightName());
         });
-
-        // observer the raw-route
-        this.mapViewModel.getOSMRoute().observe(this, this::setPointsInMap);
 
         this.mMap = findViewById(R.id.MainMap);
         Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
@@ -111,10 +107,15 @@ public class MapActivity extends AppCompatActivity {
     private void checkProgress(int progress) {
         if (progress == 100) {
             drawWalkedRoute();
+
+            new Thread(() -> {
+                if (this.mapViewModel == null) return;
+                mapViewModel.getMapManager().stopRoute(mapViewModel.getCurrentRoute());
+            }).start();
+
         } else {
             drawYetToWalkRoute();
         }
-
     }
 
     private void drawYetToWalkRoute() {
@@ -128,27 +129,33 @@ public class MapActivity extends AppCompatActivity {
         });
 
         // observer the raw-route
-        this.mapViewModel.getOSMRoute().observe(this, (nodes) ->{
+        this.mapViewModel.getOSMRoute().observe(this, (nodes) -> {
             setPointsInMap(nodes);
         });
     }
 
     private void drawWalkedRoute() {
-        List<CurrentLocation> visitedLocations = AppDatabaseManager.getInstance(getApplicationContext()).getCurrentLocationsFromRoute(this.mapViewModel.getCurrentRoute());
-        List<GeoPoint> visitedPoints = new ArrayList<>();
+        new Thread(() -> {
+            List<CurrentLocation> visitedLocations = AppDatabaseManager.getInstance(getApplicationContext()).getCurrentLocationsFromRoute(this.mapViewModel.getCurrentRoute());
+            List<GeoPoint> visitedPoints = new ArrayList<>();
 
-        for (CurrentLocation c :visitedLocations) {
-            visitedPoints.add(new GeoPoint(c.getLatitude(), c.getLongitude()));
-        }
+            for (CurrentLocation c : visitedLocations) {
+                visitedPoints.add(new GeoPoint(c.getLatitude(), c.getLongitude()));
+            }
 
-        Polyline visitedLine = new Polyline();
-        visitedLine.getOutlinePaint().setColor(getColor(R.color.visited_line_color));
-        visitedLine.getOutlinePaint().setStrokeCap(Paint.Cap.ROUND);
-        mMap.getOverlayManager().add(visitedLine);
+            Polyline visitedLine = new Polyline();
+            visitedLine.getOutlinePaint().setColor(getColor(R.color.visited_line_color));
+            visitedLine.getOutlinePaint().setStrokeCap(Paint.Cap.ROUND);
+            mMap.getOverlayManager().add(visitedLine);
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        CompleteRouteFragment dialog = CompleteRouteFragment.newInstance();
-        dialog.show(fragmentManager, "JOE");
+            visitedLine.setPoints(visitedPoints);
+
+            mMapController.setCenter(visitedPoints.get(0));
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            CompleteRouteFragment dialog = CompleteRouteFragment.newInstance();
+            dialog.show(fragmentManager, "JOE");
+        }).start();
     }
 
     private Polyline visitedLine;
@@ -163,7 +170,7 @@ public class MapActivity extends AppCompatActivity {
         List<GeoPoint> notVisitedPoints = convertPointToGeoPoint(Objects.requireNonNull(pointsMap.get(false)));
 
         // Checking if the lines have been made
-        if(visitedLine == null || notVisitedLine == null) {
+        if (visitedLine == null || notVisitedLine == null) {
             this.visitedLine = new Polyline();
             this.visitedLine.getOutlinePaint().setColor(getColor(R.color.visited_line_color));
             this.visitedLine.getOutlinePaint().setStrokeCap(Paint.Cap.ROUND);
@@ -218,7 +225,7 @@ public class MapActivity extends AppCompatActivity {
 
     public void setPointsInMap(List<PointWithInstructions> points) {
 
-        Drawable nodeIcon = AppCompatResources.getDrawable(this,R.drawable.osm_ic_follow_me);
+        Drawable nodeIcon = AppCompatResources.getDrawable(this, R.drawable.osm_ic_follow_me);
 //            nodeIcon.setHotspot(0.5f, 0.5f);spo
         int actualSteps = 1;
         String lastInstruction = "";
@@ -234,7 +241,7 @@ public class MapActivity extends AppCompatActivity {
                     nodeMarker.setSnippet(node.getInstructions());
                     //nodeMarker.setSubDescription(Road.getLengthDurationText(this, node.mLength, node.mDuration));
                     nodeMarker.setTitle("Step " + actualSteps);
-                    Drawable icon =  AppCompatResources.getDrawable(this,getDirectionIcon(node.getManeuverType()));
+                    Drawable icon = AppCompatResources.getDrawable(this, getDirectionIcon(node.getManeuverType()));
                     nodeMarker.setImage(icon);
                     actualSteps++;
                     lastInstruction = node.getInstructions();
@@ -291,13 +298,13 @@ public class MapActivity extends AppCompatActivity {
         }
     }
 
-    public GeoPoint getCenterOfRoute(HashMap<Boolean, List<Point>> pointsMap){
+    public GeoPoint getCenterOfRoute(HashMap<Boolean, List<Point>> pointsMap) {
         float longPoints = 0.0f;
         float latPoints = 0.0f;
         List<Point> points = Stream.concat(pointsMap.get(false).stream(), pointsMap.get(true).stream())
                 .collect(Collectors.toList());
 
-        for (Point point: points) {
+        for (Point point : points) {
             longPoints += point.getLongitude();
             latPoints += point.getLatitude();
         }
@@ -309,7 +316,7 @@ public class MapActivity extends AppCompatActivity {
             Marker m = new Marker(mMap);
             m.setPosition(convertPointToGeoPoint(v));
             m.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-            m.setIcon(AppCompatResources.getDrawable(this,R.drawable.marker_default));
+            m.setIcon(AppCompatResources.getDrawable(this, R.drawable.marker_default));
             m.setTitle(k.getSightName());
             m.setSnippet(k.getSightDescription());
             mMap.getOverlays().add(m);
@@ -352,15 +359,14 @@ public class MapActivity extends AppCompatActivity {
     }
 
 
-    public void onFABClicked (View view){
+    public void onFABClicked(View view) {
 
         new SightsListFragment(sights, this).show(getSupportFragmentManager(), "list");
     }
 
-    public void onFFBClicked (View view){
+    public void onFFBClicked(View view) {
         mLocationOverlay.enableFollowLocation();
     }
-
 
 
     public GeoPoint convertPointToGeoPoint(Point point) {
@@ -383,6 +389,6 @@ public class MapActivity extends AppCompatActivity {
 
     public void onFSBClicked(View view) {
         if (this.mapViewModel == null) return;
-            mapViewModel.getMapManager().stopRoute(mapViewModel.getCurrentRoute());
+        mapViewModel.getMapManager().stopRoute(mapViewModel.getCurrentRoute());
     }
 }

@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
             AppDatabaseManager manager = AppDatabaseManager.getInstance(getApplicationContext());
             this.routes.clear();
 
+
             List<Route> tempList = manager.getRoutes();
 
             this.routes.addAll(tempList);

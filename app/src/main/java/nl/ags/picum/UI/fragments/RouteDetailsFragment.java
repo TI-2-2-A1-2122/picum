@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -93,6 +94,7 @@ public class RouteDetailsFragment extends DialogFragment {
             List<Waypoint> waypoints = AppDatabaseManager.getInstance(getContext()).getWaypointsPerRoute(selectedRoute);
 
             for (Waypoint w : waypoints) {
+                w.setVisited(true);
                 if (w.isVisited())
                     amountOfVisitedSights++;
             }
