@@ -13,6 +13,7 @@ import java.util.List;
 import nl.ags.picum.dataStorage.dataUtil.Point;
 import nl.ags.picum.dataStorage.linkingTables.RouteWaypointCrossRef;
 import nl.ags.picum.dataStorage.linkingTables.RouteWithCalculatedWaypoints;
+import nl.ags.picum.dataStorage.linkingTables.RouteWithCurrentLocations;
 import nl.ags.picum.dataStorage.linkingTables.RouteWithWaypoints;
 import nl.ags.picum.dataStorage.linkingTables.WaypointWithSight;
 import nl.ags.picum.dataStorage.roomData.AppDatabase;
@@ -145,6 +146,12 @@ public class AppDatabaseManager implements DataStorage {
 
     public void setCurrentLocation(Point point, Route route) {
         this.database.currentLocationDAO().insertLocation(new CurrentLocation(point.getLatitude(), point.getLongitude(), route.getRouteName()));
+    }
+
+    public List<CurrentLocation> getCurrentLocationsFromRoute(Route route) {
+        List<RouteWithCurrentLocations> currentLocations = this.database.currentLocationDAO().getCurrentLocationsPerRoute(route.getRouteName());
+
+        return currentLocations.get(0).locations;
     }
 
     public void setCalculatedWaypoints(List<Point> points, Route route) {
