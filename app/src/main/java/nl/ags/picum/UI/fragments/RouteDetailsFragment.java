@@ -94,7 +94,6 @@ public class RouteDetailsFragment extends DialogFragment {
             List<Waypoint> waypoints = AppDatabaseManager.getInstance(getContext()).getWaypointsPerRoute(selectedRoute);
 
             for (Waypoint w : waypoints) {
-                w.setVisited(true);
                 if (w.isVisited())
                     amountOfVisitedSights++;
             }

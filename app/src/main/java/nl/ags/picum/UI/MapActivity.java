@@ -1,6 +1,7 @@
 package nl.ags.picum.UI;
 
 
+import android.app.Activity;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -83,6 +84,8 @@ public class MapActivity extends AppCompatActivity {
             SightDetailsPopupFragment dialog = new SightDetailsPopupFragment(sight, this);
             dialog.show(fragmentManager, "JOE");
 
+            calcProgress();
+
             Log.d("ENTERLOCATION", sight.getSightName());
         });
 
@@ -102,6 +105,29 @@ public class MapActivity extends AppCompatActivity {
         checkProgress(progress);
 
         Log.d("pizzaparty", "onCreate: " + mapViewModel.getCurrentRoute());
+    }
+
+    private void calcProgress() {
+        new Thread(() -> {
+            double amountOfVisitedSights = 0;
+            List<Waypoint> waypoints = AppDatabaseManager.getInstance(getApplicationContext()).getWaypointsWithSight(mapViewModel.getCurrentRoute());
+
+            for (Waypoint w : waypoints) {
+
+                if (w.isVisited())
+                    amountOfVisitedSights++;
+            }
+
+            double divide = amountOfVisitedSights / waypoints.size();
+            int progress = (int) (divide * 100);
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    checkProgress(progress);
+                }
+            });
+        }).start();
     }
 
     private void checkProgress(int progress) {
@@ -150,7 +176,16 @@ public class MapActivity extends AppCompatActivity {
 
             visitedLine.setPoints(visitedPoints);
 
-            mMapController.setCenter(visitedPoints.get(0));
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mMapController.setCenter(visitedPoints.get(0));
+                }
+            });
+
+            findViewById(R.id.floatingStopButton).setVisibility(View.INVISIBLE);
+            findViewById(R.id.floatingFollowButton).setVisibility(View.INVISIBLE);
+            findViewById(R.id.floatingActionButton).setVisibility(View.INVISIBLE);
 
             FragmentManager fragmentManager = getSupportFragmentManager();
             CompleteRouteFragment dialog = CompleteRouteFragment.newInstance();
