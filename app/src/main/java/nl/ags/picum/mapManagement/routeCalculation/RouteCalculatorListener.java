@@ -2,8 +2,6 @@ package nl.ags.picum.mapManagement.routeCalculation;
 
 import java.util.List;
 
-import nl.ags.picum.dataStorage.dataUtil.Point;
-
 /**
  * Interface used to callback the response of calculating a route by the
  * RouteCalculator
@@ -15,6 +13,8 @@ public interface RouteCalculatorListener {
      * open route service.
      * @param points  The points calculated in the route
      */
-    void onRoutePointsCalculated(List<Point> points);
+    void onRoutePointsCalculated(List<PointWithInstructions> points);
+
+    void onRouteCalculationError();
 
 }

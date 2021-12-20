@@ -22,6 +22,7 @@ import nl.ags.picum.dataStorage.roomData.CurrentLocation;
 import nl.ags.picum.dataStorage.roomData.Route;
 import nl.ags.picum.dataStorage.roomData.Sight;
 import nl.ags.picum.dataStorage.roomData.Waypoint;
+import nl.ags.picum.mapManagement.routeCalculation.PointWithInstructions;
 
 public class AppDatabaseManager implements DataStorage {
     private static AppDatabaseManager databaseManager;
@@ -139,6 +140,7 @@ public class AppDatabaseManager implements DataStorage {
         return sights;
     }
 
+    @Override
     public List<Waypoint> getWaypointsWithSight(Route route) {
         List<Waypoint> waypointsWithSight = new ArrayList<>();
         List<RouteWithWaypoints> waypointsPerRoute = database.waypointDAO().getWaypointsPerRoute(route.getRouteName());
@@ -156,6 +158,7 @@ public class AppDatabaseManager implements DataStorage {
         return waypointsWithSight;
     }
 
+    @Override
     public Point getPointFromWaypoint(Waypoint waypoint) {
         List<WaypointWithSight> waypointAndSight = this.database.sightDAO().getSightWithWaypoint(waypoint.getWaypointID());
         Point p = new Point();
@@ -168,6 +171,7 @@ public class AppDatabaseManager implements DataStorage {
         return p;
     }
 
+    @Override
     public Waypoint getWaypointFromSight(Sight s) {
         Waypoint w = this.database.waypointDAO().getWaypoint(s.getWaypointID());
 
@@ -197,12 +201,14 @@ public class AppDatabaseManager implements DataStorage {
         return currentLocations.get(0).locations;
     }
 
-    public void setCalculatedWaypoints(List<Point> points, Route route) {
-        for (Point p : points) {
-            this.database.calculatedWaypointDAO().insertCalculatedWaypoint(new CalculatedWaypoint(p.getLatitude(), p.getLongitude(), route.getRouteName()));
+    @Override
+    public void setCalculatedWaypoints(List<PointWithInstructions> points, Route route) {
+        for (PointWithInstructions p : points) {
+            this.database.calculatedWaypointDAO().insertCalculatedWaypoint(new CalculatedWaypoint(p.getLatitude(), p.getLongitude(), route.getRouteName(),p.getInstructions(),p.getManeuverType(),p.getStreetName()));
         }
     }
 
+    @Override
     public List<CalculatedWaypoint> getCalculatedWaypointsFromRoute(Route route) {
         List<RouteWithCalculatedWaypoints> waypoints = this.database.calculatedWaypointDAO().getCalculatedWaypointsPerRoute(route.getRouteName());
 

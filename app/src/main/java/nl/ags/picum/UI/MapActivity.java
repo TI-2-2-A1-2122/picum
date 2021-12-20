@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -18,19 +17,14 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import org.osmdroid.api.IMapController;
-import org.osmdroid.bonuspack.routing.Road;
-import org.osmdroid.bonuspack.routing.RoadNode;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.library.BuildConfig;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.MapView;
-
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Polyline;
-import org.osmdroid.views.CustomZoomButtonsController;
-
 import org.osmdroid.views.overlay.compass.CompassOverlay;
 import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
 import org.osmdroid.views.overlay.gestures.RotationGestureOverlay;
@@ -41,11 +35,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.util.Objects;
-
 
 import nl.ags.picum.R;
 import nl.ags.picum.UI.fragments.CompleteRouteFragment;
@@ -58,6 +50,7 @@ import nl.ags.picum.dataStorage.roomData.CurrentLocation;
 import nl.ags.picum.dataStorage.roomData.Route;
 import nl.ags.picum.dataStorage.roomData.Sight;
 import nl.ags.picum.dataStorage.roomData.Waypoint;
+import nl.ags.picum.mapManagement.routeCalculation.PointWithInstructions;
 
 public class MapActivity extends AppCompatActivity {
 
@@ -87,7 +80,7 @@ public class MapActivity extends AppCompatActivity {
         sightViewModel.getSights().observe(this, this::onSightsChanged);
 
 
-        /*
+
         // Observe CalculatedRoute points
         this.mapViewModel.getCalculatedRoute().observe(this, (pointsMap) -> {
             // TODO: 17-12-2021 setPointsInMap method not called, visited points line are other method
@@ -97,12 +90,7 @@ public class MapActivity extends AppCompatActivity {
         });
 
         // observer the raw-route
-
-        this.mapViewModel.getOSMRoute().observe(this, (nodes) ->{
-            setPointsInMap(nodes);
-        });
-        */
-
+        this.mapViewModel.getOSMRoute().observe(this, this::setPointsInMap);
 
         this.mMap = findViewById(R.id.MainMap);
         Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
@@ -230,28 +218,28 @@ public class MapActivity extends AppCompatActivity {
     }
 
 
-    public void setPointsInMap(List<RoadNode> points) {
+    public void setPointsInMap(List<PointWithInstructions> points) {
 
         Drawable nodeIcon = AppCompatResources.getDrawable(this,R.drawable.osm_ic_follow_me);
 //            nodeIcon.setHotspot(0.5f, 0.5f);spo
         int actualSteps = 1;
         String lastInstruction = "";
         for (int i = 0; i < points.size(); i++) {
-            RoadNode node = points.get(i);
-            Log.d("MarkerNodes", "NODE: " + node.mInstructions);
+            PointWithInstructions node = points.get(i);
+            Log.d("MarkerNodes", "NODE: " + node.getInstructions());
             //
-            if (node.mManeuverType != 24 && node.mInstructions != null) {
-                if (!(node.mInstructions.equals(lastInstruction) && node.mLength < 0.01)) {
+            if (node.getManeuverType() != 24 && node.getInstructions() != null) {
+                if (!(node.getInstructions().equals(lastInstruction) /*&& node.mLength < 0.01*/)) {
                     Marker nodeMarker = new Marker(mMap);
-                    nodeMarker.setPosition(node.mLocation);
+                    nodeMarker.setPosition(node.toGeoPoint());
                     nodeMarker.setIcon(nodeIcon);
-                    nodeMarker.setSnippet(node.mInstructions);
-                    nodeMarker.setSubDescription(Road.getLengthDurationText(this, node.mLength, node.mDuration));
+                    nodeMarker.setSnippet(node.getInstructions());
+                    //nodeMarker.setSubDescription(Road.getLengthDurationText(this, node.mLength, node.mDuration));
                     nodeMarker.setTitle("Step " + actualSteps);
-                    Drawable icon =  AppCompatResources.getDrawable(this,getDirectionIcon(node.mManeuverType));
+                    Drawable icon =  AppCompatResources.getDrawable(this,getDirectionIcon(node.getManeuverType()));
                     nodeMarker.setImage(icon);
                     actualSteps++;
-                    lastInstruction = node.mInstructions;
+                    lastInstruction = node.getInstructions();
                     mMap.getOverlays().add(nodeMarker);
                 }
             }
