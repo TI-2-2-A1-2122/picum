@@ -5,9 +5,6 @@ import android.util.Log;
 
 import com.google.android.gms.location.Geofence;
 
-import org.osmdroid.bonuspack.routing.OSRMRoadManager;
-import org.osmdroid.bonuspack.routing.Road;
-import org.osmdroid.config.Configuration;
 import org.osmdroid.util.GeoPoint;
 
 import java.util.ArrayList;
@@ -80,14 +77,16 @@ public class MapManager implements LocationObserver {
 
             this.sights = dataStorage.getHistory(route);
 
-            CalculateOSMRoute();
+            //CalculateOSMRoute();
 
             if (this.mapViewModel == null) return;
             //this.mapViewModel.setOSMRoute(this.sights);
 
             // Creating a RouteCalculator to calculate a route, implementing the callback function
             // to update the view model
-            RouteCalculator calculator = new RouteCalculator((points) -> {
+            RouteCalculator calculator = new RouteCalculator((pointsWithInfo) -> {
+                this.mapViewModel.setOSMRoute(pointsWithInfo);
+                List<Point> points = new ArrayList<>(pointsWithInfo);
                 if (this.mapViewModel != null) {
                     HashMap<Boolean, List<Point>> markedPoints = new HashMap<>();
                     markedPoints.put(false, points);
@@ -103,18 +102,19 @@ public class MapManager implements LocationObserver {
         }).start();
     }
 
-    public void CalculateOSMRoute() {
-        new Thread(() ->{
-            List<Waypoint> points = this.sights;
-            if (this.mapViewModel == null) return;
-            OSRMRoadManager roadManager = new OSRMRoadManager(context.getApplicationContext(), Configuration.getInstance().getUserAgentValue());
-            roadManager.setMean(OSRMRoadManager.MEAN_BY_FOOT);
-
-            ArrayList<GeoPoint> waypoints = new ArrayList<>(convertWayPointToGeoPoint(points));
-            Road road = roadManager.getRoad(waypoints);
-            this.mapViewModel.setOSMRoute(road.mNodes);
-        }).start();
-    }
+//    public void CalculateOSMRoute() {
+////        new Thread(() ->{
+////            List<Waypoint> points = this.sights;
+////            if (this.mapViewModel == null) return;
+////            OSRMRoadManager roadManager = new OSRMRoadManager(context.getApplicationContext(), Configuration.getInstance().getUserAgentValue());
+////            roadManager.setMean(OSRMRoadManager.MEAN_BY_FOOT);
+////
+////            ArrayList<GeoPoint> waypoints = new ArrayList<>(convertWayPointToGeoPoint(points));
+////            Road road = roadManager.getRoad(waypoints);
+////            this.mapViewModel.setOSMRoute(road.mNodes);
+////        }).start();
+//        //this.mapViewModel.setOSMRoute();
+//    }
 
     public List<GeoPoint> convertWayPointToGeoPoint(List<Waypoint> points) {
         List<GeoPoint> geoPoints = new ArrayList<>();

@@ -5,16 +5,23 @@ import android.util.Log;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.json.*;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import nl.ags.picum.dataStorage.dataUtil.Point;
 import nl.ags.picum.dataStorage.roomData.Waypoint;
-import okhttp3.*;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 /**
  * Class handles the calculation of a route using the Open Route Service.
@@ -32,7 +39,8 @@ public class RouteCalculator {
 
     /**
      * Constructor for RouteCalculator.
-     * @param listener  The listener to call the calculated route back to
+     *
+     * @param listener The listener to call the calculated route back to
      */
     public RouteCalculator(RouteCalculatorListener listener) {
         this.listener = listener;
@@ -41,7 +49,8 @@ public class RouteCalculator {
     /**
      * Given a set of waypoints this method uses the Open Route Service to get a route between these
      * points. A list of Points is returned
-     * @param waypointList  The list of waypoints to get a route in between
+     *
+     * @param waypointList The list of waypoints to get a route in between
      */
     public void calculate(List<Waypoint> waypointList) {
 
@@ -52,7 +61,7 @@ public class RouteCalculator {
         RequestBody requestBody = buildMultiPointBody(waypointList);
 
         // Checking if the body is not null
-        if(requestBody == null) {
+        if (requestBody == null) {
             Log.e(LOG_TAG, "Returned request-body is null");
             return;
         }
@@ -64,7 +73,7 @@ public class RouteCalculator {
                 .build();
 
         // Logging that a request will be send to the API
-        Log.d(LOG_TAG, "Multi point request will be sent to ORS API: "+
+        Log.d(LOG_TAG, "Multi point request will be sent to ORS API: " +
                 request.url().toString() +
                 "\nwith body: " + requestBody.toString());
 
@@ -86,8 +95,9 @@ public class RouteCalculator {
 
     /**
      * Given a list of waypoints this method build the body to sent in the POST request
-     * @param waypointList  The list that needs to be in the post request
-     * @return  The body for the POST request
+     *
+     * @param waypointList The list that needs to be in the post request
+     * @return The body for the POST request
      */
     @Nullable
     private RequestBody buildMultiPointBody(List<Waypoint> waypointList) {
@@ -99,7 +109,7 @@ public class RouteCalculator {
             JSONArray waypointsArray = new JSONArray();
 
             // Going over the waypoints and adding them to the body
-            for(Waypoint waypoint : waypointList) {
+            for (Waypoint waypoint : waypointList) {
                 JSONArray waypointArray = new JSONArray();
 
                 waypointArray.put(waypoint.getLongitude());
@@ -126,8 +136,9 @@ public class RouteCalculator {
     /**
      * This method wil read the response from the Two point request and transform it to the correct
      * value's needed, either inform the listener of an error or return a list with all the route points
-     * @param response  The response from the API
-     * @throws IOException  Exception that can be thrown while reading the API response
+     *
+     * @param response The response from the API
+     * @throws IOException Exception that can be thrown while reading the API response
      */
     private void handleMultiPointResponse(Response response) throws IOException {
         // Check if the response is successful, callback error if not
@@ -149,13 +160,35 @@ public class RouteCalculator {
                     .getJSONArray("coordinates");
 
             // Creating the list of GeoPoints from the JSON array given
-            List<Point> routePoints = JSONtoPointList(coordinatesObject);
+            List<PointWithInstructions> routePoints = JSONtoPointList(coordinatesObject);
+
+
+            JSONArray segments = jsonResponse.getJSONArray("features")
+                    .getJSONObject(0).getJSONObject("properties")
+                    .getJSONArray("segments");
+
+            for (int i = 0; i <segments.length(); i++) {
+                JSONArray steps = segments.getJSONObject(i).getJSONArray("steps");
+                for (int j = 0; j <steps.length(); j++) {
+                    JSONObject step = steps.optJSONObject(j);
+                    if (step == null) return;
+                    int way_point = step.getJSONArray("way_points").getInt(0);
+                    PointWithInstructions pointWithInstructions = routePoints.get(way_point);
+                    pointWithInstructions.setInstructions(step.getString("instruction"));
+                    pointWithInstructions.setStreetName(step.getString("name"));
+                    pointWithInstructions.setManeuverType(step.getInt("type"));
+                }
+            }
+
+
+
 
             // Returning the value's to the listener
             listener.onRoutePointsCalculated(routePoints);
 
         } catch (JSONException e) {
             // Informing the listener of the error
+            Log.e("RouteCalculator",e.getMessage());
         }
 
     }
@@ -163,11 +196,12 @@ public class RouteCalculator {
     /**
      * Given a JSONArray of coordinates this method will read that list and
      * return a list of GeoPoints.
-     * @param coordinates  The JSONArray that contains the coordinates
-     * @return  A list of GeoPoints holding the given coordinates from the JSONArray
+     *
+     * @param coordinates The JSONArray that contains the coordinates
+     * @return A list of GeoPoints holding the given coordinates from the JSONArray
      */
-    private List<Point> JSONtoPointList(JSONArray coordinates) {
-        List<Point> points = new ArrayList<>();
+    private List<PointWithInstructions> JSONtoPointList(JSONArray coordinates) {
+        List<PointWithInstructions> points = new ArrayList<>();
 
         for (int i = 0; i < coordinates.length(); i++) {
             JSONArray coordinateArray = coordinates.optJSONArray(i);
@@ -183,7 +217,7 @@ public class RouteCalculator {
             if (longitude == 91 || latitude == 91) continue;
 
             // Creating a GeoPoint based on the latitude and longitude and adding it to the list
-            points.add(new Point(longitude,latitude));
+            points.add(new PointWithInstructions(longitude, latitude));
         }
 
         // Returning the new list

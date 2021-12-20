@@ -13,8 +13,6 @@ import androidx.appcompat.content.res.AppCompatResources;
 import androidx.lifecycle.ViewModelProvider;
 
 import org.osmdroid.api.IMapController;
-import org.osmdroid.bonuspack.routing.Road;
-import org.osmdroid.bonuspack.routing.RoadNode;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.library.BuildConfig;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
@@ -42,6 +40,7 @@ import nl.ags.picum.dataStorage.managing.AppDatabaseManager;
 import nl.ags.picum.dataStorage.roomData.Route;
 import nl.ags.picum.dataStorage.roomData.Sight;
 import nl.ags.picum.dataStorage.roomData.Waypoint;
+import nl.ags.picum.mapManagement.routeCalculation.PointWithInstructions;
 
 public class MapActivity extends AppCompatActivity {
 
@@ -93,8 +92,6 @@ public class MapActivity extends AppCompatActivity {
         mapViewModel.setCurrentRoute(selectedRoute);
         new Thread(this::getSights).start();
 
-
-        Log.d("pizzaparty", "onCreate: " + mapViewModel.getCurrentRoute());
     }
 
     private Polyline visitedLine;
@@ -150,28 +147,28 @@ public class MapActivity extends AppCompatActivity {
     }
 
 
-    public void setPointsInMap(List<RoadNode> points) {
+    public void setPointsInMap(List<PointWithInstructions> points) {
 
         Drawable nodeIcon = AppCompatResources.getDrawable(this,R.drawable.osm_ic_follow_me);
 //            nodeIcon.setHotspot(0.5f, 0.5f);spo
         int actualSteps = 1;
         String lastInstruction = "";
         for (int i = 0; i < points.size(); i++) {
-            RoadNode node = points.get(i);
-            Log.d("MarkerNodes", "NODE: " + node.mInstructions);
+            PointWithInstructions node = points.get(i);
+            Log.d("MarkerNodes", "NODE: " + node.getInstructions());
             //
-            if (node.mManeuverType != 24 && node.mInstructions != null) {
-                if (!(node.mInstructions.equals(lastInstruction) && node.mLength < 0.01)) {
+            if (node.getManeuverType() != 24 && node.getInstructions() != null) {
+                if (!(node.getInstructions().equals(lastInstruction) /*&& node.mLength < 0.01*/)) {
                     Marker nodeMarker = new Marker(mMap);
-                    nodeMarker.setPosition(node.mLocation);
+                    nodeMarker.setPosition(node.toGeoPoint());
                     nodeMarker.setIcon(nodeIcon);
-                    nodeMarker.setSnippet(node.mInstructions);
-                    nodeMarker.setSubDescription(Road.getLengthDurationText(this, node.mLength, node.mDuration));
+                    nodeMarker.setSnippet(node.getInstructions());
+                    //nodeMarker.setSubDescription(Road.getLengthDurationText(this, node.mLength, node.mDuration));
                     nodeMarker.setTitle("Step " + actualSteps);
-                    Drawable icon =  AppCompatResources.getDrawable(this,getDirectionIcon(node.mManeuverType));
+                    Drawable icon =  AppCompatResources.getDrawable(this,getDirectionIcon(node.getManeuverType()));
                     nodeMarker.setImage(icon);
                     actualSteps++;
-                    lastInstruction = node.mInstructions;
+                    lastInstruction = node.getInstructions();
                     mMap.getOverlays().add(nodeMarker);
                 }
             }

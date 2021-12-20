@@ -22,6 +22,7 @@ import nl.ags.picum.dataStorage.roomData.CurrentLocation;
 import nl.ags.picum.dataStorage.roomData.Route;
 import nl.ags.picum.dataStorage.roomData.Sight;
 import nl.ags.picum.dataStorage.roomData.Waypoint;
+import nl.ags.picum.mapManagement.routeCalculation.PointWithInstructions;
 
 public class AppDatabaseManager implements DataStorage {
     private static AppDatabaseManager databaseManager;
@@ -169,9 +170,9 @@ public class AppDatabaseManager implements DataStorage {
         return currentLocations.get(0).locations;
     }
 
-    public void setCalculatedWaypoints(List<Point> points, Route route) {
-        for (Point p : points) {
-            this.database.calculatedWaypointDAO().insertCalculatedWaypoint(new CalculatedWaypoint(p.getLatitude(), p.getLongitude(), route.getRouteName()));
+    public void setCalculatedWaypoints(List<PointWithInstructions> points, Route route) {
+        for (PointWithInstructions p : points) {
+            this.database.calculatedWaypointDAO().insertCalculatedWaypoint(new CalculatedWaypoint(p.getLatitude(), p.getLongitude(), route.getRouteName(),p.getInstructions(),p.getManeuverType(),p.getStreetName()));
         }
     }
 

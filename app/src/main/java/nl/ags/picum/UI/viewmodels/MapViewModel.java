@@ -7,14 +7,13 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
-import org.osmdroid.bonuspack.routing.RoadNode;
-
 import java.util.HashMap;
 import java.util.List;
 
 import nl.ags.picum.dataStorage.dataUtil.Point;
 import nl.ags.picum.dataStorage.roomData.Route;
 import nl.ags.picum.mapManagement.MapManager;
+import nl.ags.picum.mapManagement.routeCalculation.PointWithInstructions;
 
 public class MapViewModel extends AndroidViewModel {
 
@@ -89,14 +88,14 @@ public class MapViewModel extends AndroidViewModel {
         calculatedRoute.postValue(points);
     }
 
-    private final MutableLiveData<List<RoadNode>> OSMRoute = new MutableLiveData<>();
+    private final MutableLiveData<List<PointWithInstructions>> OSMRoute = new MutableLiveData<>();
 
-    public MutableLiveData<List<RoadNode>> getOSMRoute()
+    public MutableLiveData<List<PointWithInstructions>> getOSMRoute()
     {
         return OSMRoute;
     }
 
-    public void setOSMRoute(List<RoadNode> points)
+    public void setOSMRoute(List<PointWithInstructions> points)
     {
         OSMRoute.postValue(points);
     }
