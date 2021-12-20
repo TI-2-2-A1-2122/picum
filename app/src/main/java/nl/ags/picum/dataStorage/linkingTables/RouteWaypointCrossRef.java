@@ -6,8 +6,8 @@ import androidx.room.Entity;
 @Entity(primaryKeys = {"routeName", "waypointID"})
 public class RouteWaypointCrossRef {
     @NonNull
-    public String routeName;
-    public int waypointID;
+    public final String routeName;
+    public final int waypointID;
 
     public RouteWaypointCrossRef(@NonNull String routeName, int waypointID) {
         this.routeName = routeName;

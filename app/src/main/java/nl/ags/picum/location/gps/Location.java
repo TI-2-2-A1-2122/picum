@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Looper;
 import android.util.Log;
@@ -33,7 +32,7 @@ public class Location {
 
     private boolean isRunning = false;
 
-    public NearLocationManager nearLocationManager;
+    public final NearLocationManager nearLocationManager;
 
     public Location(Context context) {
         this.context = context;

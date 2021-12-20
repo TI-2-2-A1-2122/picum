@@ -3,6 +3,7 @@ package nl.ags.picum.dataStorage.roomData;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
@@ -28,7 +29,7 @@ public class Route implements Serializable {
     public Route() {
 
     }
-
+    @Ignore
     public Route(String routeName, String description, int photoURL, boolean inProgress) {
         this.routeName = routeName;
         this.description = description;

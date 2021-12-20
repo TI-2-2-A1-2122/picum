@@ -7,19 +7,18 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
+import org.osmdroid.bonuspack.routing.RoadNode;
+
 import java.util.HashMap;
 import java.util.List;
 
-import org.osmdroid.bonuspack.routing.RoadNode;
-
 import nl.ags.picum.dataStorage.dataUtil.Point;
 import nl.ags.picum.dataStorage.roomData.Route;
-import nl.ags.picum.dataStorage.roomData.Waypoint;
 import nl.ags.picum.mapManagement.MapManager;
 
 public class MapViewModel extends AndroidViewModel {
 
-    private MapManager mapManager;
+    private final MapManager mapManager;
 
     public MapViewModel(@NonNull Application application) {
         super(application);
