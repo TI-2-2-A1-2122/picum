@@ -1,7 +1,9 @@
 package nl.ags.picum.UI;
 
 
+import android.graphics.Bitmap;
 import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
 import android.os.Bundle;
@@ -320,8 +322,10 @@ public class MapActivity extends AppCompatActivity {
         sights.forEach((k, v) -> {
             Marker m = new Marker(mMap);
             m.setPosition(convertPointToGeoPoint(v));
-            m.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-            m.setIcon(AppCompatResources.getDrawable(this,R.drawable.marker_default));
+            m.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
+            Drawable drawable = AppCompatResources.getDrawable(this, R.mipmap.sight_image);
+            Drawable dr = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(((BitmapDrawable) drawable).getBitmap(), (int) (36.0f * getResources().getDisplayMetrics().density), (int) (36.0f * getResources().getDisplayMetrics().density), true));
+            m.setIcon(dr);
             m.setTitle(k.getSightName());
             m.setSnippet(k.getSightDescription());
             mMap.getOverlays().add(m);
