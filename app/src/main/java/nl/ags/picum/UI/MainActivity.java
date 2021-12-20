@@ -62,9 +62,11 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
         dialogPermission = new PermissionDeniedDialog();
-        requestPermission(new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-        } );
+        requestPermission(new String[]{
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_BACKGROUND_LOCATION
+        });
 
         RecyclerView recyclerView = findViewById(R.id.main_routes_recyclerview);
         recyclerView.setAdapter(new RouteAdapter(routes, this));

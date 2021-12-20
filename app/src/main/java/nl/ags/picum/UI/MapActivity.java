@@ -61,6 +61,7 @@ public class MapActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+        
         // this.items = new ArrayList<OverlayItem>();
         Configuration.getInstance().setUserAgentValue("AGSPicum/1.0");
         this.mapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
