@@ -9,7 +9,6 @@ import androidx.room.Transaction;
 import java.util.List;
 
 import nl.ags.picum.dataStorage.linkingTables.RouteWithCurrentLocations;
-import nl.ags.picum.dataStorage.linkingTables.RouteWithWaypoints;
 
 @Dao
 public interface CurrentLocationDAO {

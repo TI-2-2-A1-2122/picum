@@ -3,6 +3,7 @@ package nl.ags.picum.dataStorage.roomData;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity
@@ -24,7 +25,7 @@ public class CalculatedWaypoint {
     public CalculatedWaypoint() {
 
     }
-
+    @Ignore
     public CalculatedWaypoint(float latitude, float longitude, String routeName) {
         this.latitude = latitude;
         this.longitude = longitude;
