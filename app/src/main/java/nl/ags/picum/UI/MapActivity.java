@@ -306,20 +306,35 @@ public class MapActivity extends AppCompatActivity {
         return new GeoPoint((latPoints / points.size()), (longPoints / points.size()));
     }
 
-    public void setMarkersInMap(Map<Sight, Waypoint> sights) {
-        sights.forEach((k, v) -> {
-            Marker m = new Marker(mMap);
-            m.setPosition(convertPointToGeoPoint(v));
-            m.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
-            Drawable drawable = AppCompatResources.getDrawable(this, R.mipmap.sight_image);
-            Drawable dr = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(((BitmapDrawable) drawable).getBitmap(), (int) (48.0f * getResources().getDisplayMetrics().density), (int) (48.0f * getResources().getDisplayMetrics().density), true));
-            m.setIcon(dr);
-            m.setTitle(k.getSightName());
-            m.setSnippet(k.getSightDescription());
-            mMap.getOverlays().add(1, m);
-            mMap.invalidate();
+    private HashMap<Sight, Marker> sightMarkers;
 
+    public void setMarkersInMap(Map<Sight, Waypoint> sights) {
+        if (this.sightMarkers == null) {
+            sightMarkers = new HashMap<>();
+            sights.forEach((k, v) -> {
+                Marker m = new Marker(mMap);
+                m.setPosition(convertPointToGeoPoint(v));
+                m.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
+                m.setTitle(k.getSightName());
+                m.setSnippet(k.getSightDescription());
+
+                mMap.getOverlays().add(1, m);
+                mMap.invalidate();
+
+                sightMarkers.put(k, m);
+            });
+        }
+
+        sights.forEach((k,v) ->{
+            // Depending on the state of the sight, choose the correct icon
+            Drawable drawable = AppCompatResources.getDrawable(this, getCorrectSightImage(v.isVisited()));
+            Drawable dr = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(((BitmapDrawable) drawable).getBitmap(), (int) (48.0f * getResources().getDisplayMetrics().density), (int) (48.0f * getResources().getDisplayMetrics().density), true));
+            sightMarkers.get(k).setIcon(dr);
         });
+    }
+
+    private int getCorrectSightImage(boolean visited) {
+        return visited ? R.mipmap.sight_image : R.mipmap.sight_image_empty;
     }
 
     public void initializeMap() {

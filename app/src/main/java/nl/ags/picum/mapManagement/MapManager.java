@@ -288,12 +288,16 @@ public class MapManager implements LocationObserver {
 
             // Getting the Waypoint of the nextSight
             Waypoint sightWaypoint = sightsMap.get(nextSight);
+            sightWaypoint.setVisited(true);
 
             dataStorage.setWaypointProgress(sightWaypoint.getWaypointID(), true);
             this.locationService.nearLocationManager.setNextNearLocation(new Point(sightWaypoint.getLongitude(), sightWaypoint.getLatitude()), DISTANCE_METER_VISITED);
 
             // Updating setSight
             this.setSight = nextSight;
+
+            // Updating the sights in the ViewModel from the database
+            this.sightViewModel.setSights(sightsMap);
 
             // Calculating to show visited sight to the user.
             markRouteOfSight(sightWaypoint);
