@@ -54,6 +54,7 @@ import nl.ags.picum.mapManagement.routeCalculation.PointWithInstructions;
 
 public class MapActivity extends AppCompatActivity {
 
+    private static final float STROKE_WIDTH = 15;
     private MapViewModel mapViewModel;
     private SightViewModel sightViewModel;
 
@@ -171,15 +172,18 @@ public class MapActivity extends AppCompatActivity {
             this.visitedLine = new Polyline();
             this.visitedLine.getOutlinePaint().setColor(getColor(R.color.visited_line_color));
             this.visitedLine.getOutlinePaint().setStrokeCap(Paint.Cap.ROUND);
+            this.visitedLine.getOutlinePaint().setStrokeWidth(STROKE_WIDTH);
             mMap.getOverlayManager().add(this.visitedLine);
 
             this.notVisitedLine = new Polyline();
             this.notVisitedLine.getOutlinePaint().setColor(getColor(R.color.not_visited_line_color));
+            this.notVisitedLine.getOutlinePaint().setStrokeWidth(STROKE_WIDTH);
             this.notVisitedLine.getOutlinePaint().setStrokeCap(Paint.Cap.ROUND);
             mMap.getOverlayManager().add(this.notVisitedLine);
 
             this.nextLine = new Polyline();
             this.nextLine.getOutlinePaint().setColor(getColor(R.color.next_segment_line_color));
+            this.nextLine.getOutlinePaint().setStrokeWidth(STROKE_WIDTH);
             this.nextLine.getOutlinePaint().setStrokeCap(Paint.Cap.ROUND);
             mMap.getOverlayManager().add(this.nextLine);
         }
