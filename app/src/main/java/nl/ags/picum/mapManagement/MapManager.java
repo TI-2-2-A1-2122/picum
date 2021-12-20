@@ -4,6 +4,14 @@ import android.content.Context;
 import android.util.Log;
 
 import com.google.android.gms.location.Geofence;
+
+import org.osmdroid.bonuspack.routing.OSRMRoadManager;
+import org.osmdroid.bonuspack.routing.Road;
+import org.osmdroid.bonuspack.routing.RoadManager;
+import org.osmdroid.bonuspack.routing.RoadNode;
+import org.osmdroid.config.Configuration;
+import org.osmdroid.util.GeoPoint;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +36,7 @@ import nl.ags.picum.mapManagement.routeCalculation.RouteCalculator;
  */
 public class MapManager implements LocationObserver {
     public static String LOGTAG = MapManager.class.getName();
-    private static final double DISTANCE_METER_VISITED = 25;
+    private static final double DISTANCE_METER_VISITED = 30;
     private static final double DISTANCE_METER_GEOFENCE = 50;
 
     // Object //
@@ -73,7 +81,11 @@ public class MapManager implements LocationObserver {
             DataStorage dataStorage = AppDatabaseManager.getInstance(context);
 
             this.sights = dataStorage.getHistory(route);
-            Log.d("test", this.sights.toString());
+
+            CalculateOSMRoute();
+
+            if (this.mapViewModel == null) return;
+            //this.mapViewModel.setOSMRoute(this.sights);
 
             // Creating a RouteCalculator to calculate a route, implementing the callback function
             // to update the view model
@@ -93,6 +105,27 @@ public class MapManager implements LocationObserver {
         }).start();
     }
 
+    public void CalculateOSMRoute() {
+        new Thread(() ->{
+            List<Waypoint> points = this.sights;
+            if (this.mapViewModel == null) return;
+            RoadManager roadManager = new OSRMRoadManager(context.getApplicationContext(), Configuration.getInstance().getUserAgentValue());
+            ((OSRMRoadManager) roadManager).setMean(OSRMRoadManager.MEAN_BY_FOOT);
+            //add new point so that the navigation does not ignore the start because this is not in the api.
+            //  points.add(1, new Waypoint(0, false, points.get(0).getLongitude(), (float) (points.get(0).getLatitude()+0.000005)));
+            ArrayList<GeoPoint> waypoints = new ArrayList<>(convertWayPointToGeoPoint(points));
+            Road road = roadManager.getRoad(waypoints);
+            this.mapViewModel.setOSMRoute(road.mNodes);
+        }).start();
+    }
+
+    public List<GeoPoint> convertWayPointToGeoPoint(List<Waypoint> points) {
+        List<GeoPoint> geoPoints = new ArrayList<>();
+        for (Waypoint point : points)
+            geoPoints.add(new GeoPoint(point.getLatitude(), point.getLongitude()));
+        return geoPoints;
+   }
+
     /**
      * Given a route the method with load all the routes from that route.
      * The sights are put in the ViewModel.
@@ -109,7 +142,7 @@ public class MapManager implements LocationObserver {
             List<Sight> sights = dataStorage.getSightsPerRoute(route);
             Map<Sight, Point> sightsMap = new HashMap<>();
 
-            for (Sight sight:sights) {
+            for (Sight sight : sights) {
                 sightsMap.put(sight, dataStorage.getPointFromSight(sight.getSightName()));
             }
 
@@ -211,7 +244,7 @@ public class MapManager implements LocationObserver {
             List<Sight> sights = new ArrayList<>(sightsMap.keySet());
 
             // Default nextSight to the last value
-            Sight nextSight = sights.get(sights.size()-1);
+            Sight nextSight = sights.get(sights.size() - 1);
 
             // Go over each value of sights to find the next one up
             for (int i = 0; i < sights.size() - 1; i++) {
@@ -238,7 +271,7 @@ public class MapManager implements LocationObserver {
             // Calculating to show visited sight to the user.
             markRouteOfSight(sightWaypoint);
         }).start();
-        
+
     }
 
     /**
@@ -264,11 +297,12 @@ public class MapManager implements LocationObserver {
         List<Point> notVisitedPoints = routeList.get(false);
         List<Point> visitedPoints = routeList.get(true);
 
-        if(notVisitedPoints == null || visitedPoints == null || notVisitedPoints.size() == 0) return;
+        if (notVisitedPoints == null || visitedPoints == null || notVisitedPoints.size() == 0)
+            return;
 
         // Get distance to next next point
         int i = 0;
-        double distanceToWaypoint = notVisitedPoints.get(i).toGeoPoint().distanceToAsDouble(currentLocation.toGeoPoint());;
+        double distanceToWaypoint = notVisitedPoints.get(i).toGeoPoint().distanceToAsDouble(currentLocation.toGeoPoint());
         Log.d("TAG", "Distance to next point is: " + distanceToWaypoint + "m");
 
         while (distanceToWaypoint < DISTANCE_METER_VISITED) {
@@ -290,7 +324,7 @@ public class MapManager implements LocationObserver {
 
     private void markRouteOfSight(Waypoint waypoint) {
         HashMap<Boolean, List<Point>> pointsMap = this.mapViewModel.getCalculatedRoute().getValue();
-        if(pointsMap == null) return;
+        if (pointsMap == null) return;
 
         List<Point> vPoints = pointsMap.get(true);
         List<Point> nvPoints = pointsMap.get(false);
@@ -304,7 +338,7 @@ public class MapManager implements LocationObserver {
             double distanceTo = point.toGeoPoint().distanceToAsDouble(waypoint.toGeoPoint());
             if (distanceTo < closedDistance)
                 closedDistance = distanceTo;
-                closestPoint = i;
+            closestPoint = i;
         }
 
         // Move all other points

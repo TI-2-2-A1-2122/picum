@@ -10,8 +10,11 @@ import androidx.lifecycle.MutableLiveData;
 import java.util.HashMap;
 import java.util.List;
 
+import org.osmdroid.bonuspack.routing.RoadNode;
+
 import nl.ags.picum.dataStorage.dataUtil.Point;
 import nl.ags.picum.dataStorage.roomData.Route;
+import nl.ags.picum.dataStorage.roomData.Waypoint;
 import nl.ags.picum.mapManagement.MapManager;
 
 public class MapViewModel extends AndroidViewModel {
@@ -30,6 +33,7 @@ public class MapViewModel extends AndroidViewModel {
 
         // Tell the manager to start updates
         this.mapManager.startGPSUpdates();
+       
     }
 
     public MapManager getMapManager()
@@ -86,5 +90,15 @@ public class MapViewModel extends AndroidViewModel {
         calculatedRoute.postValue(points);
     }
 
+    private final MutableLiveData<List<RoadNode>> OSMRoute = new MutableLiveData<>();
 
+    public MutableLiveData<List<RoadNode>> getOSMRoute()
+    {
+        return OSMRoute;
+    }
+
+    public void setOSMRoute(List<RoadNode> points)
+    {
+        OSMRoute.postValue(points);
+    }
 }
