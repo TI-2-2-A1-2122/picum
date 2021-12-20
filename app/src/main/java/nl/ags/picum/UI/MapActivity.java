@@ -5,7 +5,6 @@ import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
@@ -15,9 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import org.osmdroid.api.IMapController;
-import org.osmdroid.bonuspack.routing.OSRMRoadManager;
 import org.osmdroid.bonuspack.routing.Road;
-import org.osmdroid.bonuspack.routing.RoadManager;
 import org.osmdroid.bonuspack.routing.RoadNode;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.library.BuildConfig;
@@ -37,6 +34,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import nl.ags.picum.R;
 import nl.ags.picum.UI.fragments.SightsListFragment;
@@ -77,11 +77,11 @@ public class MapActivity extends AppCompatActivity {
 
         // Observe CalculatedRoute points
         this.mapViewModel.getCalculatedRoute().observe(this, (pointsMap) -> {
-            List<Point> points = pointsMap.get(false);
-            mMapController.setCenter(convertPointToGeoPoint(points.get(0)));
+
             // TODO: 17-12-2021 setPointsInMap method not called, visited points line are other method
             //setPointsInMap(points);
             drawRouteList(pointsMap);
+            mMapController.setCenter(getCenterOfRoute(pointsMap));
         });
 
         // observer the raw-route
@@ -94,7 +94,7 @@ public class MapActivity extends AppCompatActivity {
         Configuration.getInstance().setUserAgentValue(BuildConfig.APPLICATION_ID);
         mMapController = mMap.getController();
         initializeMap();
-        mMapController.setZoom(20.1);
+        mMapController.setZoom(17.0);
 
 
         Route selectedRoute = (Route) getIntent().getSerializableExtra("SelectedRoute");
@@ -154,7 +154,12 @@ public class MapActivity extends AppCompatActivity {
 
     public void onStartRouteButtonClick(View view) {
         ((Button) view).setVisibility(View.INVISIBLE);
-        //TODO add function to start route
+        mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(getApplicationContext()), mMap);
+        mLocationOverlay.enableMyLocation();
+        mLocationOverlay.enableFollowLocation();
+        mMap.getOverlays().add(this.mLocationOverlay);
+        mMapController.setZoom(20.1);
+        mMap.invalidate();
     }
 
 
@@ -236,6 +241,19 @@ public class MapActivity extends AppCompatActivity {
         }
     }
 
+    public GeoPoint getCenterOfRoute(HashMap<Boolean, List<Point>> pointsMap){
+        float longPoints = 0.0f;
+        float latPoints = 0.0f;
+        List<Point> points = Stream.concat(pointsMap.get(false).stream(), pointsMap.get(true).stream())
+                .collect(Collectors.toList());
+
+        for (Point point: points) {
+            longPoints += point.getLongitude();
+            latPoints += point.getLatitude();
+        }
+        return new GeoPoint((latPoints / points.size()), (longPoints / points.size()));
+    }
+
     public void setMarkersInMap(Map<Sight, Point> sights) {
         sights.forEach((k, v) -> {
             Marker m = new Marker(mMap);
@@ -253,8 +271,7 @@ public class MapActivity extends AppCompatActivity {
     public void initializeMap() {
         mMap.setTileSource(TileSourceFactory.MAPNIK);
         mMapController.setZoom(20.1);
-        mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(getApplicationContext()), mMap);
-        mLocationOverlay.enableMyLocation();
+
         RotationGestureOverlay mRotationGestureOverlay = new RotationGestureOverlay(mMap);
         mRotationGestureOverlay.setEnabled(true);
         mMap.setMultiTouchControls(true);
