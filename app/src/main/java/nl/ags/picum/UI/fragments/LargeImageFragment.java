@@ -1,24 +1,21 @@
 package nl.ags.picum.UI.fragments;
 
 import android.app.Dialog;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+
 import nl.ags.picum.R;
 
 public class LargeImageFragment extends DialogFragment {
 
-    private int resource;
+    private final int resource;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,12 +35,7 @@ public class LargeImageFragment extends DialogFragment {
             dialog.getWindow().setLayout(width, height);
         }
         ((ImageView)view.findViewById(R.id.large_image_image)).setImageResource(resource);
-        view.findViewById(R.id.large_image_image).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-            }
-        });
+        view.findViewById(R.id.large_image_image).setOnClickListener(view1 -> dismiss());
     }
 
     @Override

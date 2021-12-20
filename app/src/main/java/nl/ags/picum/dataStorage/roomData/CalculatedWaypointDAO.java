@@ -9,7 +9,6 @@ import androidx.room.Transaction;
 import java.util.List;
 
 import nl.ags.picum.dataStorage.linkingTables.RouteWithCalculatedWaypoints;
-import nl.ags.picum.dataStorage.linkingTables.RouteWithCurrentLocations;
 
 @Dao
 public interface CalculatedWaypointDAO {
