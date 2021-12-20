@@ -65,7 +65,8 @@ public class MainActivity extends AppCompatActivity {
         requestPermission(new String[]{
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_BACKGROUND_LOCATION
+                Manifest.permission.ACCESS_BACKGROUND_LOCATION,
+                Manifest.permission.INTERNET
         });
 
         RecyclerView recyclerView = findViewById(R.id.main_routes_recyclerview);
