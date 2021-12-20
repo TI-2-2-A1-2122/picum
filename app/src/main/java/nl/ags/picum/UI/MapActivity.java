@@ -54,7 +54,7 @@ import nl.ags.picum.mapManagement.routeCalculation.PointWithInstructions;
 
 public class MapActivity extends AppCompatActivity {
 
-    private static final float STROKE_WIDTH = 15;
+    private static final float STROKE_WIDTH = 10;
     private MapViewModel mapViewModel;
     private SightViewModel sightViewModel;
 
