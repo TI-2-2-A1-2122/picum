@@ -1,6 +1,10 @@
 package nl.ags.picum.UI;
 
 import android.content.Context;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
@@ -138,7 +142,10 @@ public class MapActivity extends AppCompatActivity {
             //deprecated in API 26
             v.vibrate(500);
         }
-    public void onFABClicked(View view){
+
+    }
+
+    public void onFABClicked (View view){
         new SightsListFragment(sights, this).show(getSupportFragmentManager(), "list");
     }
 }
