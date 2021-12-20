@@ -1,11 +1,9 @@
 package nl.ags.picum.UI.Util;
 
-import android.app.Activity;
 import android.content.Context;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.view.LayoutInflater;
@@ -15,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,11 +23,10 @@ import nl.ags.picum.R;
 import nl.ags.picum.UI.MapActivity;
 import nl.ags.picum.UI.fragments.SightDetailsPopupFragment;
 import nl.ags.picum.dataStorage.roomData.Sight;
-import nl.ags.picum.mapManagement.MapManager;
 
 public class SightAdapter extends RecyclerView.Adapter<SightAdapter.SightViewHolder> {
-    private List<Sight> sights;
-    private MapActivity context;
+    private final List<Sight> sights;
+    private final MapActivity context;
     public SightAdapter(List<Sight> sights, MapActivity context){
         this.sights = sights;
         this.context = context;
@@ -38,8 +36,7 @@ public class SightAdapter extends RecyclerView.Adapter<SightAdapter.SightViewHol
     @Override
     public SightAdapter.SightViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View viewItem = LayoutInflater.from(parent.getContext()).inflate(R.layout.sight_list_item, parent, false);
-        SightAdapter.SightViewHolder viewHolder = new SightAdapter.SightViewHolder(viewItem);
-        return viewHolder;
+        return new SightViewHolder(viewItem);
     }
 
     @Override
@@ -70,11 +67,11 @@ public class SightAdapter extends RecyclerView.Adapter<SightAdapter.SightViewHol
         return sights.size();
     }
 
-    class SightViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        TextView title;
-        TextView description;
-        ImageView image;
-        ConstraintLayout layout;
+    static class SightViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        final TextView title;
+        final TextView description;
+        final ImageView image;
+        final ConstraintLayout layout;
         public SightViewHolder(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.sight_list_item_name);
@@ -96,12 +93,7 @@ public class SightAdapter extends RecyclerView.Adapter<SightAdapter.SightViewHol
 
         Vibrator v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
 // Vibrate for 500 milliseconds
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            v.vibrate(VibrationEffect.createOneShot(500, 255));
-        } else {
-            //deprecated in API 26
-            v.vibrate(500);
-        }
+        v.vibrate(VibrationEffect.createOneShot(500, 255));
 
     }
 }

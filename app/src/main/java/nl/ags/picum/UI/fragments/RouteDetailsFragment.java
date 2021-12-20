@@ -7,20 +7,17 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import java.util.List;
 
 import nl.ags.picum.R;
 import nl.ags.picum.UI.MapActivity;
-import nl.ags.picum.UI.viewmodels.MapViewModel;
 import nl.ags.picum.dataStorage.managing.AppDatabaseManager;
 import nl.ags.picum.dataStorage.roomData.Route;
 import nl.ags.picum.dataStorage.roomData.Sight;
@@ -28,7 +25,10 @@ import nl.ags.picum.dataStorage.roomData.Waypoint;
 
 public class RouteDetailsFragment extends DialogFragment {
 
+
     private Route selectedRoute;
+    private ProgressBar progressBar;
+
 
     public RouteDetailsFragment(Route route) {
         this.selectedRoute = route;
@@ -66,23 +66,24 @@ public class RouteDetailsFragment extends DialogFragment {
         ((TextView)view.findViewById(R.id.route_details_fragment_details_descriptionText)).setText(getContext().getResources().getString(getContext().getResources().getIdentifier("@string/"+selectedRoute.getDescription(), null, getContext().getPackageName())));
         ((Button)view.findViewById(R.id.route_details_fragment_details_backButton)).setOnClickListener(v -> dismiss());
 
-        ((Button)view.findViewById(R.id.route_details_fragment_details_showButton)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        view.findViewById(R.id.route_details_fragment_details_showButton).setOnClickListener(view1 -> {
 
-                new  Thread(() -> {
-                    AppDatabaseManager.getInstance(getContext()).setCurrentRoute(selectedRoute);
-                }).start();
+            new  Thread(() -> AppDatabaseManager.getInstance(getContext()).setCurrentRoute(selectedRoute)).start();
 
-                openSelectedRoute();
-            }
+            openSelectedRoute();
         });
 
         //TODO image
 
         //TODO amount of sights
+
+        calculateProgress(view);
+
+    }
+
+    private void calculateProgress(View view) {
         TextView text = view.findViewById(R.id.route_details_fragment_details_amountOfSightsNumber);
-        ProgressBar p = view.findViewById(R.id.progressBar2);
+        progressBar = view.findViewById(R.id.progressBar2);
 
         new Thread(() -> {
             List<Sight> Sights = AppDatabaseManager.getInstance(getContext()).getSightsPerRoute(selectedRoute);
@@ -102,17 +103,17 @@ public class RouteDetailsFragment extends DialogFragment {
             if(activity != null) {
                 activity.runOnUiThread(() -> {
                     text.setText(Sights.size() + "");
-                    p.setProgress(progress);
+                    progressBar.setProgress(progress);
                 });
             }
 
         }).start();
-
     }
 
     private void openSelectedRoute(){
         Intent intent = new Intent(getContext(), MapActivity.class);
         intent.putExtra("SelectedRoute",selectedRoute);
+        intent.putExtra("CurrentProgress", progressBar.getProgress());
 
         startActivity(intent);
 

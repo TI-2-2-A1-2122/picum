@@ -2,18 +2,16 @@ package nl.ags.picum.UI.fragments;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import java.util.List;
 
@@ -25,8 +23,8 @@ import nl.ags.picum.dataStorage.roomData.Sight;
 public class SightsListFragment extends DialogFragment {
 
 
-    public List<Sight> sightList;
-    private MapActivity mapActivity;
+    public final List<Sight> sightList;
+    private final MapActivity mapActivity;
 
     public SightsListFragment(List<Sight> sightList, MapActivity activity){
         this.sightList = sightList;

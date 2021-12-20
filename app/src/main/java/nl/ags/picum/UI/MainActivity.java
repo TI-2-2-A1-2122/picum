@@ -1,34 +1,24 @@
 package nl.ags.picum.UI;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
+import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.Manifest;
+import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.location.Geofence;
+import org.osmdroid.util.GeoPoint;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -38,15 +28,8 @@ import nl.ags.picum.UI.Util.RouteAdapter;
 import nl.ags.picum.UI.dialog.PermissionDeniedDialog;
 import nl.ags.picum.UI.fragments.RouteDetailsFragment;
 import nl.ags.picum.UI.fragments.SettingsFragment;
-import nl.ags.picum.dataStorage.dataUtil.Point;
 import nl.ags.picum.dataStorage.managing.AppDatabaseManager;
 import nl.ags.picum.dataStorage.roomData.Route;
-import nl.ags.picum.dataStorage.roomData.Waypoint;
-import nl.ags.picum.location.gps.Location;
-import nl.ags.picum.location.gps.LocationObserver;
-import nl.ags.picum.mapManagement.MapManager;
-import nl.ags.picum.mapManagement.routeCalculation.RouteCalculator;
-import nl.ags.picum.mapManagement.routeCalculation.RouteCalculatorListener;
 import nl.ags.picum.permission.PermissionManager;
 
 public class MainActivity extends AppCompatActivity {
@@ -56,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private RouteAdapter adapter;
     private RecyclerView recyclerView;
 
-    FragmentManager fragmentManager = getSupportFragmentManager();
+    final FragmentManager fragmentManager = getSupportFragmentManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,12 +49,21 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
         dialogPermission = new PermissionDeniedDialog();
-        requestPermission(new String[]{
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_BACKGROUND_LOCATION,
-                Manifest.permission.INTERNET
-        });
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            requestPermission(new String[]{
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACCESS_BACKGROUND_LOCATION,
+                    Manifest.permission.INTERNET
+            });
+        }else
+        {
+            requestPermission(new String[]{
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.INTERNET
+            });
+        }
 
         recyclerView = findViewById(R.id.main_routes_recyclerview);
         recyclerView.setAdapter(adapter);
@@ -202,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * close setting fragment
-     * @param view
+     * @param view view from which its called
      */
     public void backButton (View view){
         fragmentManager.beginTransaction().remove(fragmentManager.getFragments().get(0)).commit();

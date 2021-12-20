@@ -1,23 +1,16 @@
 package nl.ags.picum.location.geofence;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.util.Log;
-
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +23,7 @@ public class NearLocationManager implements NextNearLocation {
 
     //Make sure you have your permissions!
 
-    private GeofencingClient geofencingClient;
+    private final GeofencingClient geofencingClient;
     private final Context context;
     private Geofence activeGeofence;
     private PendingIntent geofencePendingIntent;
@@ -93,18 +86,8 @@ public class NearLocationManager implements NextNearLocation {
     @SuppressLint("MissingPermission")
     private void addGeofence() {
         geofencingClient.addGeofences(getGeofencingRequest(), getGeofencePendingIntent())
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d("Geo", "Geofence added sucessfully!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d("Geo", "Adding geofence failed, " + e.getLocalizedMessage());
-                    }
-                });
+                .addOnSuccessListener(aVoid -> Log.d("Geo", "Geofence added sucessfully!"))
+                .addOnFailureListener(e -> Log.d("Geo", "Adding geofence failed, " + e.getLocalizedMessage()));
     }
 
 }
