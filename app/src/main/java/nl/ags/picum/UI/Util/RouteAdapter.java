@@ -58,7 +58,7 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
         return routes.size();
     }
 
-    class RouteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class RouteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView title;
         TextView description;
         ImageView image;

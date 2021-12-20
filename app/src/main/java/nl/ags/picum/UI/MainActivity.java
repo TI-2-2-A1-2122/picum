@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     private int timeRequested = 0;
     private PermissionDeniedDialog dialogPermission;
     private RouteAdapter adapter;
+    private RecyclerView recyclerView;
 
     FragmentManager fragmentManager = getSupportFragmentManager();
 
@@ -72,10 +73,11 @@ public class MainActivity extends AppCompatActivity {
                 Manifest.permission.INTERNET
         });
 
-        RecyclerView recyclerView = findViewById(R.id.main_routes_recyclerview);
+        recyclerView = findViewById(R.id.main_routes_recyclerview);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
+
 
         new Thread(() -> {
             AppDatabaseManager manager = AppDatabaseManager.getInstance(getApplicationContext());
@@ -163,10 +165,16 @@ public class MainActivity extends AppCompatActivity {
         getBaseContext().getResources().updateConfiguration(configuration, getBaseContext().getResources().getDisplayMetrics());
         Intent intent = getIntent();
         finish();
+
+        recyclerView = findViewById(R.id.main_routes_recyclerview);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+        recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
+        adapter.notifyItemChanged(0);
         overridePendingTransition(0, 0);
         startActivity(intent);
         overridePendingTransition(0, 0);
-        adapter.notifyDataSetChanged();
+
     }
 
     /**
@@ -181,10 +189,15 @@ public class MainActivity extends AppCompatActivity {
         getBaseContext().getResources().updateConfiguration(configuration, getBaseContext().getResources().getDisplayMetrics());
         Intent intent = getIntent();
         finish();
+
+        recyclerView = findViewById(R.id.main_routes_recyclerview);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+        recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
+        adapter.notifyItemChanged(0);
         overridePendingTransition(0, 0);
         startActivity(intent);
         overridePendingTransition(0, 0);
-        adapter.notifyDataSetChanged();
     }
 
     /**

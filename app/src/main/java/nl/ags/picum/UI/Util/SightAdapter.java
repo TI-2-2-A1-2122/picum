@@ -50,7 +50,11 @@ public class SightAdapter extends RecyclerView.Adapter<SightAdapter.SightViewHol
         holder.image.setImageDrawable(context.getDrawable(context.getResources().getIdentifier(url, null, context.getPackageName())));
         String description = context.getString(context.getResources().getIdentifier("@string/" + sight.getSightDescription(), null, context.getPackageName()));
         System.out.println(sight.getSightName());
-//        holder.description.setText(description.substring(0, description.indexOf(".", 100)));
+        if (description.length() >160){
+        holder.description.setText(description.substring(0, 160) + "...");}
+        else    {
+            holder.description.setText(description.substring(0, description.length() - 1) + "...");
+        }
         holder.layout.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
