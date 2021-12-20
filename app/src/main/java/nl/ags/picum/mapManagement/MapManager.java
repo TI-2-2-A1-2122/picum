@@ -97,7 +97,7 @@ public class MapManager implements LocationObserver {
                 public void onRoutePointsCalculated(List<PointWithInstructions> pointsWithInfo) {
                     onRouteCalculated(pointsWithInfo);
                     DataStorage instance = AppDatabaseManager.getInstance(context);
-                    instance.setCalculatedWaypoints(pointsWithInfo,route);
+                    instance.setCalculatedWaypoints(pointsWithInfo, route);
                 }
 
                 @Override
@@ -126,6 +126,7 @@ public class MapManager implements LocationObserver {
             markedPoints.put(false, points);
             ArrayList<Point> visitedPoints = new ArrayList<>();
             visitedPoints.add(points.get(0));
+            points.remove(0);
             markedPoints.put(true, visitedPoints);
             MapManager.this.mapViewModel.setCalculatedRoute(markedPoints);
         }
@@ -167,10 +168,10 @@ public class MapManager implements LocationObserver {
             DataStorage dataStorage = AppDatabaseManager.getInstance(context);
 
             List<Sight> sights = dataStorage.getSightsPerRoute(route);
-            Map<Sight, Point> sightsMap = new HashMap<>();
+            Map<Sight, Waypoint> sightsMap = new HashMap<>();
 
             for (Sight sight : sights) {
-                sightsMap.put(sight, dataStorage.getPointFromSight(sight.getSightName()));
+                sightsMap.put(sight, dataStorage.getWaypointFromSight(sight));
             }
 
             // Setting the sights in the viewModel
@@ -269,7 +270,7 @@ public class MapManager implements LocationObserver {
             DataStorage dataStorage = AppDatabaseManager.getInstance(context);
 
             // Getting all the sights
-            Map<Sight, Point> sightsMap = this.sightViewModel.getSights().getValue();
+            Map<Sight, Waypoint> sightsMap = this.sightViewModel.getSights().getValue();
             List<Sight> sights = new ArrayList<>(sightsMap.keySet()).stream().sorted(Comparator.comparingInt(Sight::getWaypointID)).collect(Collectors.toList());
 
             // Default nextSight to the last value
@@ -285,24 +286,25 @@ public class MapManager implements LocationObserver {
 
             Log.d(LOGTAG, "Now set the geofence to: " + nextSight + " name: " + nextSight.getSightDescription() + " locatie: " + sightsMap.get(nextSight).toGeoPoint().toDoubleString());
 
-            ContextCompat.getMainExecutor(context).execute(()  -> {
-                        Toast.makeText(this.context, "Sight ", Toast.LENGTH_LONG).show();
-            });
+
+            // Updating the sights in the ViewModel from the database
+            dataStorage.setWaypointProgress(this.setSight.getWaypointID(), true);
+
+            //Marking the site as visited
+            sightsMap.get(this.setSight).setVisited(true);
+            this.sightViewModel.setSights(sightsMap);
+            // Calculating to show visited sight to the user.
+            markRouteOfSight(sightsMap.get(this.setSight));
 
 
             // Getting the Waypoint of the nextSight
-            Waypoint sightWaypoint = dataStorage.getWaypointFromSight(nextSight);
+            Waypoint sightWaypoint = sightsMap.get(nextSight);
 
-            dataStorage.setWaypointProgress(sightWaypoint.getWaypointID(), true);
             this.locationService.nearLocationManager.setNextNearLocation(new Point(sightWaypoint.getLongitude(), sightWaypoint.getLatitude()), DISTANCE_METER_VISITED);
 
             // Updating setSight
             this.setSight = nextSight;
-
-            // Calculating to show visited sight to the user.
-            markRouteOfSight(sightWaypoint);
         }).start();
-
     }
 
     /**
@@ -339,11 +341,11 @@ public class MapManager implements LocationObserver {
         while (distanceToWaypoint < DISTANCE_METER_VISITED) {
             Log.d("TAG", "Distance to next point is: " + distanceToWaypoint + "m");
 
-            // Removing the first item from not visited list
-            notVisitedPoints.remove(0);
-
             // Adding the next first (second) item from the not visited list
             visitedPoints.add(notVisitedPoints.get(0));
+
+            // Removing the first item from not visited list
+            notVisitedPoints.remove(0);
 
             i++;
             distanceToWaypoint = notVisitedPoints.get(i).toGeoPoint().distanceToAsDouble(currentLocation.toGeoPoint());
@@ -352,7 +354,7 @@ public class MapManager implements LocationObserver {
         if (i != 0) this.mapViewModel.setCalculatedRoute(routeList);
     }
 
-    public void stopRoute(Route route){
+    public void stopRoute(Route route) {
         DataStorage dataStorage = AppDatabaseManager.getInstance(context);
         dataStorage.stopRoute(route);
     }
