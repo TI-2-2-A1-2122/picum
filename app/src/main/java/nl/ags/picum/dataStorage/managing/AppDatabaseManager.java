@@ -132,6 +132,23 @@ public class AppDatabaseManager implements DataStorage {
             return sights;
         }
 
+        public List<Waypoint> getWaypointsWithSight(Route route) {
+            List<Waypoint> waypointsWithSight = new ArrayList<>();
+            List<RouteWithWaypoints> waypointsPerRoute = database.waypointDAO().getWaypointsPerRoute(route.getRouteName());
+
+            for (RouteWithWaypoints r : waypointsPerRoute) {
+                List<Waypoint> waypoints = r.waypoints;
+
+                for (Waypoint w : waypoints) {
+                    if (database.sightDAO().getSightWithWaypoint(w.getWaypointID()) != null) {
+                        waypointsWithSight.add(w);
+                    }
+                }
+            }
+
+            return waypointsWithSight;
+        }
+
         public Point getPointFromWaypoint (Waypoint waypoint){
             List<WaypointWithSight> waypointAndSight = this.database.sightDAO().getSightWithWaypoint(waypoint.getWaypointID());
             Point p = new Point();

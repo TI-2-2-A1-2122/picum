@@ -43,6 +43,7 @@ import nl.ags.picum.UI.fragments.SightsListFragment;
 import nl.ags.picum.UI.viewmodels.MapViewModel;
 import nl.ags.picum.dataStorage.dataUtil.Point;
 import nl.ags.picum.dataStorage.managing.AppDatabaseManager;
+import nl.ags.picum.dataStorage.roomData.CurrentLocation;
 import nl.ags.picum.dataStorage.roomData.Route;
 import nl.ags.picum.dataStorage.roomData.Sight;
 import nl.ags.picum.UI.viewmodels.SightViewModel;
@@ -75,6 +76,8 @@ public class MapActivity extends AppCompatActivity {
         this.sightViewModel.getCurrentSight().observe(this, this::onSightChanged);
         this.sightViewModel.getSights().observe(this, this::onSightsChanged);
 
+
+        /*
         // Observe CalculatedRoute points
         this.mapViewModel.getCalculatedRoute().observe(this, (pointsMap) -> {
             List<Point> points = pointsMap.get(false);
@@ -88,6 +91,7 @@ public class MapActivity extends AppCompatActivity {
         this.mapViewModel.getOSMRoute().observe(this, (nodes) ->{
             setPointsInMap(nodes);
         });
+        */
 
         this.mMap = findViewById(R.id.MainMap);
         Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
@@ -101,8 +105,49 @@ public class MapActivity extends AppCompatActivity {
         mapViewModel.setCurrentRoute(selectedRoute);
         new Thread(this::getSights).start();
 
+        int progress = getIntent().getIntExtra("CurrentProgress", 0);
+        checkProgress(progress);
 
         Log.d("pizzaparty", "onCreate: " + mapViewModel.getCurrentRoute());
+    }
+
+    private void checkProgress(int progress) {
+        if (progress == 100) {
+            drawWalkedRoute();
+        } else {
+            drawYetToWalkRoute();
+        }
+
+    }
+
+    private void drawYetToWalkRoute() {
+        // Observe CalculatedRoute points
+        this.mapViewModel.getCalculatedRoute().observe(this, (pointsMap) -> {
+            List<Point> points = pointsMap.get(false);
+            mMapController.setCenter(convertPointToGeoPoint(points.get(0)));
+            // TODO: 17-12-2021 setPointsInMap method not called, visited points line are other method
+            //setPointsInMap(points);
+            drawRouteList(pointsMap);
+        });
+
+        // observer the raw-route
+        this.mapViewModel.getOSMRoute().observe(this, (nodes) ->{
+            setPointsInMap(nodes);
+        });
+    }
+
+    private void drawWalkedRoute() {
+        List<CurrentLocation> visitedLocations = AppDatabaseManager.getInstance(getApplicationContext()).getCurrentLocationsFromRoute(this.mapViewModel.getCurrentRoute());
+        List<GeoPoint> visitedPoints = new ArrayList<>();
+
+        for (CurrentLocation c :visitedLocations) {
+            visitedPoints.add(new GeoPoint(c.getLatitude(), c.getLongitude()));
+        }
+
+        Polyline visitedLine = new Polyline();
+        visitedLine.getOutlinePaint().setColor(getColor(R.color.visited_line_color));
+        visitedLine.getOutlinePaint().setStrokeCap(Paint.Cap.ROUND);
+        mMap.getOverlayManager().add(visitedLine);
     }
 
     private Polyline visitedLine;
