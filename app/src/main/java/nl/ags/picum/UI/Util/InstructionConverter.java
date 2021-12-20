@@ -25,10 +25,10 @@ public class InstructionConverter {
         String formattedInstruction = "";
         formattedInstruction += context.getResources().getString(context.getResources().getIdentifier(instructions[id], null, context.getPackageName()));
         if(id == 11){
-            formattedInstruction += context.getResources().getString(context.getResources().getIdentifier(instruction.split(" ")[1], null, context.getPackageName()));
+            formattedInstruction += " " + context.getResources().getString(context.getResources().getIdentifier("@string/" + instruction.split(" ")[1], null, context.getPackageName()));
         }
-        if(name != "-"){
-            formattedInstruction += context.getResources().getString(R.string.instruction_on) + name;
+        if(!name.equals("-")){
+            formattedInstruction += " "+ context.getResources().getString(R.string.instruction_on) + " " + name;
         }
         return formattedInstruction;
     }

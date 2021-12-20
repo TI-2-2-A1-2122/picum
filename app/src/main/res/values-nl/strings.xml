@@ -60,4 +60,5 @@
     <string name="northwest">noordwest</string>
     <string name="west">west</string>
     <string name="east">oost</string>
+    <string name="step">stap</string>
 </resources>
