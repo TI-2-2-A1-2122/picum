@@ -162,9 +162,9 @@ public class AppDatabaseManager implements DataStorage {
     }
 
     public Waypoint getWaypointFromSight(Sight s) {
-        List<WaypointWithSight> waypointWithSight = this.database.waypointDAO().getWaypointPerSight(s.getSightName());
+        Waypoint w = this.database.waypointDAO().getWaypoint(s.getWaypointID());
 
-        return waypointWithSight.get(0).waypoint;
+        return w;
     }
 
     @Override
