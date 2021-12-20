@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import org.osmdroid.api.IMapController;
@@ -39,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 
 import nl.ags.picum.R;
+import nl.ags.picum.UI.fragments.CompleteRouteFragment;
 import nl.ags.picum.UI.fragments.SightsListFragment;
 import nl.ags.picum.UI.viewmodels.MapViewModel;
 import nl.ags.picum.dataStorage.dataUtil.Point;
@@ -148,6 +150,10 @@ public class MapActivity extends AppCompatActivity {
         visitedLine.getOutlinePaint().setColor(getColor(R.color.visited_line_color));
         visitedLine.getOutlinePaint().setStrokeCap(Paint.Cap.ROUND);
         mMap.getOverlayManager().add(visitedLine);
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        CompleteRouteFragment dialog = CompleteRouteFragment.newInstance();
+        dialog.show(fragmentManager, "JOE");
     }
 
     private Polyline visitedLine;
