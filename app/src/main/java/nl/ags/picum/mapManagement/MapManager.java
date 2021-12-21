@@ -238,15 +238,23 @@ public class MapManager implements LocationObserver {
         List<Point> notVisitedPoints = routeList.get(false);
         List<Point> visitedPoints = routeList.get(true);
 
+        //Null check
         if (notVisitedPoints == null || visitedPoints == null || notVisitedPoints.size() == 0)
             return false;
 
-        Point nextWayPoint = notVisitedPoints.get(0);
-        double distanceBetweenWaypoints = visitedPoints.get(visitedPoints.size() - 1).toGeoPoint().distanceToAsDouble(nextWayPoint.toGeoPoint());
-        double distanceToNextWayPoint= currentLocation.toGeoPoint().distanceToAsDouble(nextWayPoint.toGeoPoint());
-
-        boolean deviated = distanceBetweenWaypoints > distanceToNextWayPoint;
-        if(deviated) Log.d(LOGTAG, "Deviated with a distance of" + (distanceBetweenWaypoints - distanceToNextWayPoint));
+        //Getting points and distances we're interested in
+        Point nextWayPoint = notVisitedPoints.get(1);
+        Point lastWayPoint = visitedPoints.get(visitedPoints.size() - 1);
+        double distanceBetweenFirstAndLast = lastWayPoint.toGeoPoint().distanceToAsDouble(nextWayPoint.toGeoPoint());
+        double distanceToNextWayPoint = currentLocation.toGeoPoint().distanceToAsDouble(nextWayPoint.toGeoPoint());
+        double distanceToLastWayPoint = currentLocation.toGeoPoint().distanceToAsDouble(lastWayPoint.toGeoPoint());
+        Log.d(LOGTAG, "Distance to next waypoint : " + distanceToNextWayPoint);
+        Log.d(LOGTAG, "Distance to last waypoint : " + distanceToLastWayPoint);
+        Log.d(LOGTAG, "Distance between waypoints: " + distanceBetweenFirstAndLast);
+        //Deviation is detected when currLocation is further away from both last and next waypoint.
+        boolean deviated = distanceBetweenFirstAndLast < distanceToNextWayPoint && distanceBetweenFirstAndLast < distanceToLastWayPoint;
+        //Prints deviation distance
+        if(deviated) Log.d(LOGTAG, "Deviated with a distance of" + (distanceBetweenFirstAndLast - (distanceToNextWayPoint + distanceToLastWayPoint / 2)));
         return deviated;
     }
 
