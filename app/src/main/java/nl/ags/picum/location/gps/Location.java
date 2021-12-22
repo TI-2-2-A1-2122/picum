@@ -52,6 +52,13 @@ public class Location {
         };
     }
 
+    public void stop() {
+
+        fusedLocationClient.removeLocationUpdates(getLocationCallback());
+        this.isRunning = false;
+
+    }
+
     @SuppressLint("MissingPermission")
     //you must listen to LocationObserver.onLocationUpdate() for the returnvalue of this method
     private void getLastLocation() {

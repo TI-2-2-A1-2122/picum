@@ -24,6 +24,17 @@
         app:layout_constraintTop_toTopOf="@id/sight_list_item_image"
         android:id="@+id/sight_list_item_name"
         />
+
+    <ImageView
+        android:id="@+id/sight_list_item_visited"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:src="@mipmap/sight_image"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@id/sight_list_item_image"
+        app:layout_constraintLeft_toLeftOf="@id/sight_list_item_image"
+        />
+
     <TextView
         android:layout_width="0dp"
         android:layout_height="130dp"

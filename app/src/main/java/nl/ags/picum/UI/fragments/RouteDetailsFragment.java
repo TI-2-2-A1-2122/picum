@@ -7,8 +7,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -63,7 +65,8 @@ public class RouteDetailsFragment extends DialogFragment {
         AppDatabaseManager manager = new AppDatabaseManager(getContext());
 
         ((TextView)view.findViewById(R.id.route_details_fragment_details_name)).setText(selectedRoute.getRouteName());
-        view.findViewById(R.id.route_details_fragment_details_backButton).setOnClickListener(v -> dismiss());
+        ((TextView)view.findViewById(R.id.route_details_fragment_details_descriptionText)).setText(getContext().getResources().getString(getContext().getResources().getIdentifier("@string/"+selectedRoute.getDescription(), null, getContext().getPackageName())));
+        ((Button)view.findViewById(R.id.route_details_fragment_details_backButton)).setOnClickListener(v -> dismiss());
 
         view.findViewById(R.id.route_details_fragment_details_showButton).setOnClickListener(view1 -> {
 

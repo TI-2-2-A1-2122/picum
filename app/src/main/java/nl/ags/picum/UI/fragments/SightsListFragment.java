@@ -14,19 +14,21 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
+import java.util.Map;
 
 import nl.ags.picum.R;
 import nl.ags.picum.UI.MapActivity;
 import nl.ags.picum.UI.Util.SightAdapter;
 import nl.ags.picum.dataStorage.roomData.Sight;
+import nl.ags.picum.dataStorage.roomData.Waypoint;
 
 public class SightsListFragment extends DialogFragment {
 
 
-    public final List<Sight> sightList;
+    public final Map<Sight, Waypoint> sightList;
     private final MapActivity mapActivity;
 
-    public SightsListFragment(List<Sight> sightList, MapActivity activity){
+    public SightsListFragment(Map<Sight, Waypoint> sightList, MapActivity activity){
         this.sightList = sightList;
         this.mapActivity = activity;
     }
