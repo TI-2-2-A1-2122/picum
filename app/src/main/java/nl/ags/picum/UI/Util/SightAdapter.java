@@ -1,6 +1,7 @@
 package nl.ags.picum.UI.Util;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.media.Image;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -64,7 +65,6 @@ public class SightAdapter extends RecyclerView.Adapter<SightAdapter.SightViewHol
                 new SightDetailsPopupFragment(sight, context).show(context.getSupportFragmentManager(), null);
             }
         });
-        //TODO add visual indication that sight has been visited
     }
 
     @Override

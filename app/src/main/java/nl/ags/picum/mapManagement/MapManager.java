@@ -132,28 +132,6 @@ public class MapManager implements LocationObserver {
         }
     }
 
-
-//    public void CalculateOSMRoute() {
-////        new Thread(() ->{
-////            List<Waypoint> points = this.sights;
-////            if (this.mapViewModel == null) return;
-////            OSRMRoadManager roadManager = new OSRMRoadManager(context.getApplicationContext(), Configuration.getInstance().getUserAgentValue());
-////            roadManager.setMean(OSRMRoadManager.MEAN_BY_FOOT);
-////
-////            ArrayList<GeoPoint> waypoints = new ArrayList<>(convertWayPointToGeoPoint(points));
-////            Road road = roadManager.getRoad(waypoints);
-////            this.mapViewModel.setOSMRoute(road.mNodes);
-////        }).start();
-//        //this.mapViewModel.setOSMRoute();
-//    }
-
-    public List<GeoPoint> convertWayPointToGeoPoint(List<Waypoint> points) {
-        List<GeoPoint> geoPoints = new ArrayList<>();
-        for (Waypoint point : points)
-            geoPoints.add(new GeoPoint(point.getLatitude(), point.getLongitude()));
-        return geoPoints;
-    }
-
     /**
      * Given a route the method with load all the routes from that route.
      * The sights are put in the ViewModel.
@@ -181,19 +159,30 @@ public class MapManager implements LocationObserver {
             // Setting up Location manager
             setupLocationService();
 
+            // Find the first sight that has not been visited
+            Sight firstSight = findFirstSight(sightsMap, sights.get(0));
+
             // Lastly setting next GeoFence to the first Sight
             // Getting the location of the first sight
-            List<Waypoint> waypointsInRoute = dataStorage.getWaypointsPerRoute(route);
-            Waypoint sightWaypoint = waypointsInRoute
-                    .stream()
-                    .filter((waypoint -> waypoint.getWaypointID() == sights.get(0).getWaypointID()))
-                    .findFirst()
-                    .orElse(waypointsInRoute.get(0));
+            Waypoint sightWaypoint = sightsMap.get(firstSight);
 
             // Calling the Geofence service to set the next location
             this.locationService.nearLocationManager.setNextNearLocation(new Point(sightWaypoint.getLongitude(), sightWaypoint.getLatitude()), DISTANCE_METER_GEOFENCE);
-            this.setSight = sights.get(0);
+            this.setSight = firstSight;
         }).start();
+    }
+
+    private Sight findFirstSight(Map<Sight, Waypoint> sightsMap, Sight defaultSight) {
+        List<Sight> sights = new ArrayList<>(sightsMap.keySet());
+        sights.sort(Comparator.comparingInt(Sight::getWaypointID));
+
+        Sight firstSight = defaultSight;
+        for(int i = sightsMap.size() - 1; i >= 0; i--) {
+            Sight sight = sights.get(i);
+            if(sightsMap.get(sight).isVisited()) firstSight = sight;
+        }
+
+        return firstSight;
     }
 
     private void setupLocationService() {
