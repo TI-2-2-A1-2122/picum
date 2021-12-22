@@ -8,6 +8,7 @@ import java.util.Map;
 
 import nl.ags.picum.dataStorage.dataUtil.Point;
 import nl.ags.picum.dataStorage.roomData.Sight;
+import nl.ags.picum.dataStorage.roomData.Waypoint;
 
 public class SightViewModel extends ViewModel {
 
@@ -23,14 +24,14 @@ public class SightViewModel extends ViewModel {
         this.currentSight.postValue(sight);
     }
 
-    private final MutableLiveData<Map<Sight, Point>> sightsLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Map<Sight, Waypoint>> sightsLiveData = new MutableLiveData<>();
 
 
-    public LiveData<Map<Sight, Point>> getSights() {
+    public LiveData<Map<Sight, Waypoint>> getSights() {
         return sightsLiveData;
     }
 
-    public void setSights(Map<Sight, Point> sights)
+    public void setSights(Map<Sight, Waypoint> sights)
     {
         this.sightsLiveData.postValue(sights);
     }

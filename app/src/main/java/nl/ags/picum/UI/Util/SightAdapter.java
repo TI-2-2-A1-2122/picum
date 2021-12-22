@@ -1,6 +1,8 @@
 package nl.ags.picum.UI.Util;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.media.Image;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -17,17 +19,20 @@ import androidx.appcompat.content.res.AppCompatResources;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import nl.ags.picum.R;
 import nl.ags.picum.UI.MapActivity;
 import nl.ags.picum.UI.fragments.SightDetailsPopupFragment;
 import nl.ags.picum.dataStorage.roomData.Sight;
+import nl.ags.picum.dataStorage.roomData.Waypoint;
 
 public class SightAdapter extends RecyclerView.Adapter<SightAdapter.SightViewHolder> {
-    private final List<Sight> sights;
+    private final Map<Sight, Waypoint> sights;
     private final MapActivity context;
-    public SightAdapter(List<Sight> sights, MapActivity context){
+    public SightAdapter(Map<Sight, Waypoint> sights, MapActivity context){
         this.sights = sights;
         this.context = context;
     }
@@ -41,8 +46,9 @@ public class SightAdapter extends RecyclerView.Adapter<SightAdapter.SightViewHol
 
     @Override
     public void onBindViewHolder(@NonNull SightViewHolder holder, int position) {
-        Sight sight = sights.get(position);
+        Sight sight = new ArrayList<>(this.sights.keySet()).get(position);
         holder.title.setText(sight.getSightName());
+        holder.visited.setVisibility(sights.get(sight).isVisited() ? View.VISIBLE : View.INVISIBLE);
         String url = "@" + sight.getPhotoURL().substring(0, sight.getPhotoURL().lastIndexOf("."));
         holder.image.setImageDrawable(context.getDrawable(context.getResources().getIdentifier(url, null, context.getPackageName())));
         String description = context.getString(context.getResources().getIdentifier("@string/" + sight.getSightDescription(), null, context.getPackageName()));
@@ -59,7 +65,6 @@ public class SightAdapter extends RecyclerView.Adapter<SightAdapter.SightViewHol
                 new SightDetailsPopupFragment(sight, context).show(context.getSupportFragmentManager(), null);
             }
         });
-        //TODO add visual indication that sight has been visited
     }
 
     @Override
@@ -72,12 +77,14 @@ public class SightAdapter extends RecyclerView.Adapter<SightAdapter.SightViewHol
         final TextView description;
         final ImageView image;
         final ConstraintLayout layout;
+        final ImageView visited;
         public SightViewHolder(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.sight_list_item_name);
             description = itemView.findViewById(R.id.sight_list_item_description);
             image = itemView.findViewById(R.id.sight_list_item_image);
             layout = itemView.findViewById(R.id.sight_list_item_layout);
+            visited = itemView.findViewById(R.id.sight_list_item_visited);
         }
 
         @Override

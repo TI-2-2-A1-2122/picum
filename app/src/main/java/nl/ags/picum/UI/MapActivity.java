@@ -1,8 +1,11 @@
 package nl.ags.picum.UI;
 
 
+
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -41,6 +44,7 @@ import java.util.stream.Stream;
 import nl.ags.picum.R;
 import nl.ags.picum.UI.fragments.CompleteRouteFragment;
 import nl.ags.picum.UI.fragments.SightDetailsPopupFragment;
+import nl.ags.picum.UI.Util.InstructionConverter;
 import nl.ags.picum.UI.fragments.SightsListFragment;
 import nl.ags.picum.UI.viewmodels.MapViewModel;
 import nl.ags.picum.UI.viewmodels.SightViewModel;
@@ -54,13 +58,13 @@ import nl.ags.picum.mapManagement.routeCalculation.PointWithInstructions;
 
 public class MapActivity extends AppCompatActivity {
 
+    private static final float STROKE_WIDTH = 10;
     private MapViewModel mapViewModel;
     private SightViewModel sightViewModel;
 
 
     private MapView mMap;
     private IMapController mMapController;
-    private List<Sight> sights;
 
     private MyLocationNewOverlay mLocationOverlay;
     private CompassOverlay mCompassOverlay;
@@ -99,7 +103,6 @@ public class MapActivity extends AppCompatActivity {
 
         Route selectedRoute = (Route) getIntent().getSerializableExtra("SelectedRoute");
         mapViewModel.setCurrentRoute(selectedRoute);
-        new Thread(this::getSights).start();
 
         int progress = getIntent().getIntExtra("CurrentProgress", 0);
         checkProgress(progress);
@@ -148,7 +151,7 @@ public class MapActivity extends AppCompatActivity {
         // Observe CalculatedRoute points
         this.mapViewModel.getCalculatedRoute().observe(this, (pointsMap) -> {
             List<Point> points = pointsMap.get(false);
-            mMapController.setCenter(convertPointToGeoPoint(points.get(0)));
+            mMapController.setCenter(points.get(0).toGeoPoint());
             // TODO: 17-12-2021 setPointsInMap method not called, visited points line are other method
             //setPointsInMap(points);
             drawRouteList(pointsMap);
@@ -195,6 +198,7 @@ public class MapActivity extends AppCompatActivity {
 
     private Polyline visitedLine;
     private Polyline notVisitedLine;
+    private Polyline nextLine;
 
     private void drawRouteList(HashMap<Boolean, List<Point>> pointsMap) {
         // Checking if the lists exist
@@ -203,35 +207,41 @@ public class MapActivity extends AppCompatActivity {
         // Getting the two lists from the map
         List<GeoPoint> visitedPoints = convertPointToGeoPoint(Objects.requireNonNull(pointsMap.get(true)));
         List<GeoPoint> notVisitedPoints = convertPointToGeoPoint(Objects.requireNonNull(pointsMap.get(false)));
+        List<GeoPoint> nextPoints = new ArrayList<>();
+        nextPoints.add(notVisitedPoints.get(0));
+        nextPoints.add(visitedPoints.get(visitedPoints.size()-1));
 
         // Checking if the lines have been made
         if (visitedLine == null || notVisitedLine == null) {
             this.visitedLine = new Polyline();
             this.visitedLine.getOutlinePaint().setColor(getColor(R.color.visited_line_color));
             this.visitedLine.getOutlinePaint().setStrokeCap(Paint.Cap.ROUND);
+            this.visitedLine.getOutlinePaint().setStrokeWidth(STROKE_WIDTH);
             mMap.getOverlayManager().add(this.visitedLine);
 
             this.notVisitedLine = new Polyline();
             this.notVisitedLine.getOutlinePaint().setColor(getColor(R.color.not_visited_line_color));
+            this.notVisitedLine.getOutlinePaint().setStrokeWidth(STROKE_WIDTH);
             this.notVisitedLine.getOutlinePaint().setStrokeCap(Paint.Cap.ROUND);
             mMap.getOverlayManager().add(this.notVisitedLine);
+
+            this.nextLine = new Polyline();
+            this.nextLine.getOutlinePaint().setColor(getColor(R.color.next_segment_line_color));
+            this.nextLine.getOutlinePaint().setStrokeWidth(STROKE_WIDTH);
+            this.nextLine.getOutlinePaint().setStrokeCap(Paint.Cap.ROUND);
+            mMap.getOverlayManager().add(this.nextLine);
         }
 
         //Drawing the two lines
         notVisitedLine.setPoints(notVisitedPoints);
         visitedLine.setPoints(visitedPoints);
+        nextLine.setPoints(nextPoints);
 
         mMap.invalidate();
-        Log.d("MapActivity", notVisitedPoints.toString());
         Log.d("MapActivity", "Points of the route have been drawn");
     }
 
-    public void getSights() {
-        AppDatabaseManager dbManager = new AppDatabaseManager(this);
-        sights = dbManager.getSightsPerRoute(mapViewModel.getCurrentRoute());
-    }
-
-    private void onSightsChanged(Map<Sight, Point> sights) {
+    private void onSightsChanged(Map<Sight, Waypoint> sights) {
         setMarkersInMap(sights);
         Log.d("TAG", "Sights updated: " + sights.toString());
     }
@@ -259,8 +269,8 @@ public class MapActivity extends AppCompatActivity {
 
 
     public void setPointsInMap(List<PointWithInstructions> points) {
-
-        Drawable nodeIcon = AppCompatResources.getDrawable(this, R.drawable.osm_ic_follow_me);
+        Drawable drawable = AppCompatResources.getDrawable(this, R.drawable.osm_ic_follow_me);
+        Drawable nodeIcon = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(((BitmapDrawable) drawable).getBitmap(), (int) (36.0f * getResources().getDisplayMetrics().density), (int) (36.0f * getResources().getDisplayMetrics().density), true));
 //            nodeIcon.setHotspot(0.5f, 0.5f);spo
         int actualSteps = 1;
         String lastInstruction = "";
@@ -273,14 +283,14 @@ public class MapActivity extends AppCompatActivity {
                     Marker nodeMarker = new Marker(mMap);
                     nodeMarker.setPosition(node.toGeoPoint());
                     nodeMarker.setIcon(nodeIcon);
-                    nodeMarker.setSnippet(node.getInstructions());
+                    nodeMarker.setSnippet(InstructionConverter.getInstruction(this, node.getManeuverType(), node.getStreetName(), node.getInstructions()));
                     //nodeMarker.setSubDescription(Road.getLengthDurationText(this, node.mLength, node.mDuration));
-                    nodeMarker.setTitle("Step " + actualSteps);
-                    Drawable icon = AppCompatResources.getDrawable(this, getDirectionIcon(node.getManeuverType()));
+                    nodeMarker.setTitle(getApplicationContext().getString(R.string.step) + " " + actualSteps);
+                    Drawable icon =  AppCompatResources.getDrawable(this,getDirectionIcon(node.getManeuverType()));
                     nodeMarker.setImage(icon);
                     actualSteps++;
                     lastInstruction = node.getInstructions();
-                    mMap.getOverlays().add(nodeMarker);
+                    mMap.getOverlays().add(0, nodeMarker);
                 }
             }
 
@@ -346,18 +356,36 @@ public class MapActivity extends AppCompatActivity {
         return new GeoPoint((latPoints / points.size()), (longPoints / points.size()));
     }
 
-    public void setMarkersInMap(Map<Sight, Point> sights) {
-        sights.forEach((k, v) -> {
-            Marker m = new Marker(mMap);
-            m.setPosition(convertPointToGeoPoint(v));
-            m.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-            m.setIcon(AppCompatResources.getDrawable(this, R.drawable.marker_default));
-            m.setTitle(k.getSightName());
-            m.setSnippet(k.getSightDescription());
-            mMap.getOverlays().add(m);
-            mMap.invalidate();
+            
+    private HashMap<Sight, Marker> sightMarkers;
 
+    public void setMarkersInMap(Map<Sight, Waypoint> sights) {
+        if (this.sightMarkers == null) {
+            sightMarkers = new HashMap<>();
+            sights.forEach((k, v) -> {
+                Marker m = new Marker(mMap);
+                m.setPosition(convertPointToGeoPoint(v));
+                m.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
+                m.setTitle(k.getSightName());
+                m.setSnippet(k.getSightDescription());
+
+                mMap.getOverlays().add(1, m);
+                mMap.invalidate();
+
+                sightMarkers.put(k, m);
+            });
+        }
+
+        sights.forEach((k,v) ->{
+            // Depending on the state of the sight, choose the correct icon
+            Drawable drawable = AppCompatResources.getDrawable(this, getCorrectSightImage(v.isVisited()));
+            Drawable dr = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(((BitmapDrawable) drawable).getBitmap(), (int) (48.0f * getResources().getDisplayMetrics().density), (int) (48.0f * getResources().getDisplayMetrics().density), true));
+            sightMarkers.get(k).setIcon(dr);
         });
+    }
+
+    private int getCorrectSightImage(boolean visited) {
+        return visited ? R.mipmap.sight_image : R.mipmap.sight_image_empty;
     }
 
     public void initializeMap() {
@@ -394,9 +422,8 @@ public class MapActivity extends AppCompatActivity {
     }
 
 
-    public void onFABClicked(View view) {
-
-        new SightsListFragment(sights, this).show(getSupportFragmentManager(), "list");
+    public void onFABClicked (View view){
+        new SightsListFragment(this.sightViewModel.getSights().getValue(),  this).show(getSupportFragmentManager(), "list");
     }
 
     public void onFFBClicked(View view) {
@@ -404,7 +431,8 @@ public class MapActivity extends AppCompatActivity {
     }
 
 
-    public GeoPoint convertPointToGeoPoint(Point point) {
+
+    public GeoPoint convertPointToGeoPoint(Waypoint point) {
         return new GeoPoint(point.getLatitude(), point.getLongitude());
     }
 
@@ -424,6 +452,8 @@ public class MapActivity extends AppCompatActivity {
 
     public void onFSBClicked(View view) {
         if (this.mapViewModel == null) return;
-        mapViewModel.getMapManager().stopRoute(mapViewModel.getCurrentRoute());
+          new Thread(() ->{ mapViewModel.getMapManager().stopRoute(mapViewModel.getCurrentRoute());}).start();
+        finish();
+
     }
 }
