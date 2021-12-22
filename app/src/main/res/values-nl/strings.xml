@@ -62,4 +62,6 @@
     <string name="east">oost</string>
     <string name="step">stap</string>
     <string name="HistorischeBeschrijving">Route van een kilometer waarbij u de meest bezienswaardige en belangrijkste monumenten van Breda ziet.</string>
+    <string name="walked_route">U heeft de route voltooid.   U heeft de bovenstaande route gelopen</string>
+    <string name="close_window">Sluit venster</string>
 </resources>
