@@ -176,7 +176,7 @@ public class MapManager implements LocationObserver {
         Sight firstSight = defaultSight;
         for(int i = sightsMap.size() - 1; i >= 0; i--) {
             Sight sight = sights.get(i);
-            if(sightsMap.get(sight).isVisited()) firstSight = sight;
+            if(!sightsMap.get(sight).isVisited()) firstSight = sight;
         }
 
         return firstSight;
