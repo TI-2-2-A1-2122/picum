@@ -66,9 +66,9 @@
     <string name="explanation">Help:</string>
     <string name="unvisited_sight_description">Image which displays a not visited sight</string>
     <string name="visited_sight_description">Image which displays a visited sight</string>
-    <string name="direction_description">Image which shows the direction whihc you are supposed to walk, direction depends on intersection</string>
+    <string name="direction_description">Image which shows the direction which you are supposed to walk, direction depends on intersection</string>
     <string name="completed_segment_description">Color which indicates a segment of the route which has been walked</string>
-    <string name="to_follow_segment_description">Color whihc indicates the next segment whihch needs to be followed</string>
+    <string name="to_follow_segment_description">Color which indicates the next segment which needs to be followed</string>
     <string name="followed_segment_description">Color which indicates the segments which have been followed</string>
 
 </resources>
