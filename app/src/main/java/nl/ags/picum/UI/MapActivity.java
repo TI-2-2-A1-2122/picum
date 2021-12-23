@@ -4,6 +4,7 @@ package nl.ags.picum.UI;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -12,6 +13,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
@@ -25,6 +27,8 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.Projection;
+import org.osmdroid.views.overlay.IconOverlay;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.compass.CompassOverlay;
@@ -68,6 +72,9 @@ public class MapActivity extends AppCompatActivity {
 
     private MyLocationNewOverlay mLocationOverlay;
     private CompassOverlay mCompassOverlay;
+    private RotationGestureOverlay mRotationGestureOverlay;
+    private ImageView devArrow;
+    private float devArrowRotation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +89,8 @@ public class MapActivity extends AppCompatActivity {
 
         this.sightViewModel.getCurrentSight().observe(this, this::onSightChanged);
         this.sightViewModel.getSights().observe(this, this::onSightsChanged);
+
+        this.mapViewModel.getArrowBearing().observe(this, this::drawArrow);
 
         this.sightViewModel.getCurrentSight().observe(this, (sight) -> {
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -390,7 +399,7 @@ public class MapActivity extends AppCompatActivity {
 
     public void initializeMap() {
         mMap.setTileSource(TileSourceFactory.MAPNIK);
-        RotationGestureOverlay mRotationGestureOverlay = new RotationGestureOverlay(mMap);
+        this.mRotationGestureOverlay = new RotationGestureOverlay(mMap);
         mRotationGestureOverlay.setEnabled(true);
         mMap.setMultiTouchControls(true);
         mMap.getOverlays().add(mRotationGestureOverlay);
@@ -399,6 +408,7 @@ public class MapActivity extends AppCompatActivity {
         mMap.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.NEVER);
         mMap.setScrollableAreaLimitLatitude(51.637524, 51.525810, 5);
         mMap.setScrollableAreaLimitLongitude(4.680891, 4.844670, 5);
+        this.devArrow = findViewById(R.id.devArrow);
     }
 
     @Override
@@ -456,4 +466,38 @@ public class MapActivity extends AppCompatActivity {
         finish();
 
     }
+
+
+    public void drawArrow(Double bearing) {
+        float convertedBearing = bearing.floatValue();
+        Log.d("arrow", "Bearing is: " + bearing);
+        if(bearing == -1) {
+            runOnUiThread(() -> {
+                if(this.devArrow.getVisibility() != View.INVISIBLE) this.devArrow.setVisibility(View.INVISIBLE);
+            });
+            return;
+        }
+
+        Log.d("arrow", "Converted bearing is: " + convertedBearing);
+        runOnUiThread(() -> {
+            if(this.devArrow.getVisibility() != View.VISIBLE) this.devArrow.setVisibility(View.VISIBLE);
+            this.devArrow.setRotation(convertedBearing);
+        });
+    }
+
+//    private void draw() {
+//        Projection mProjection= mMap.getProjection();
+//        Bitmap mBitmap = Bitmap.createBitmap(mProjection.getWidth(), mProjection.getHeight(), Bitmap.Config.ARGB_8888);
+//        final Canvas canvas = new Canvas(mBitmap);
+//        mProjection.save(canvas, true, false);
+//        mTilesOverlay.drawTiles(canvas, mProjection, mProjection.getZoomLevel(), mViewPort);
+//        if (mOverlays != null) {
+//            for (final Overlay overlay : mOverlays) {
+//                if (overlay != null && overlay.isEnabled()) {
+//                    overlay.draw(canvas, mProjection);
+//                }
+//            }
+//        }
+//        mProjection.restore(canvas, false);
+//    }
 }
