@@ -2,9 +2,6 @@ package nl.ags.picum.mapManagement;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
-
-import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.location.Geofence;
 
@@ -179,7 +176,7 @@ public class MapManager implements LocationObserver {
         Sight firstSight = defaultSight;
         for(int i = sightsMap.size() - 1; i >= 0; i--) {
             Sight sight = sights.get(i);
-            if(sightsMap.get(sight).isVisited()) firstSight = sight;
+            if(!sightsMap.get(sight).isVisited()) firstSight = sight;
         }
 
         return firstSight;
@@ -241,7 +238,44 @@ public class MapManager implements LocationObserver {
 
             // Loop over the list of waypoints
             sortPointByVisited(point);
+            mapViewModel.setArrowBearing(checkForDeviation(point));
         }).start();
+    }
+
+    private Double checkForDeviation(Point currentLocation) {
+        // Checking if MapViewModel is set and the calculated route is not null
+        if (this.mapViewModel == null ||
+                this.mapViewModel.getCalculatedRoute() == null ||
+                this.mapViewModel.getCalculatedRoute().getValue() == null
+        ) return -1.0;
+
+        // Getting the list of not yet visited points
+        HashMap<Boolean, List<Point>> routeList = this.mapViewModel.getCalculatedRoute().getValue();
+        List<Point> notVisitedPoints = routeList.get(false);
+        List<Point> visitedPoints = routeList.get(true);
+
+        //Null check
+        if (notVisitedPoints == null || visitedPoints == null || notVisitedPoints.size() == 0)
+            return -1.0;
+
+        //Getting points and distances we're interested in
+        Point nextWayPoint = notVisitedPoints.get(1);
+        Point lastWayPoint = visitedPoints.get(visitedPoints.size() - 1);
+        double distanceBetweenFirstAndLast = lastWayPoint.toGeoPoint().distanceToAsDouble(nextWayPoint.toGeoPoint());
+        double distanceToNextWayPoint = currentLocation.toGeoPoint().distanceToAsDouble(nextWayPoint.toGeoPoint());
+        double distanceToLastWayPoint = currentLocation.toGeoPoint().distanceToAsDouble(lastWayPoint.toGeoPoint());
+        Log.d(LOGTAG, "Distance to next waypoint : " + distanceToNextWayPoint);
+        Log.d(LOGTAG, "Distance to last waypoint : " + distanceToLastWayPoint);
+        Log.d(LOGTAG, "Distance between waypoints: " + distanceBetweenFirstAndLast);
+        //Deviation is detected when currLocation is further away from both last and next waypoint.
+        boolean deviated = distanceBetweenFirstAndLast < distanceToNextWayPoint && distanceBetweenFirstAndLast < distanceToLastWayPoint;
+        //Prints deviation distance
+        if(deviated) Log.d(LOGTAG, "Deviated with a distance of" + (distanceBetweenFirstAndLast - (distanceToNextWayPoint + distanceToLastWayPoint / 2)));
+
+
+        if(deviated) return currentLocation.toGeoPoint().bearingTo(nextWayPoint.toGeoPoint());
+
+        return -1.0;
     }
 
     @Override
