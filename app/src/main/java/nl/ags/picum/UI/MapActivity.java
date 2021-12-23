@@ -2,6 +2,7 @@ package nl.ags.picum.UI;
 
 
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
@@ -12,7 +13,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
@@ -43,9 +43,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import nl.ags.picum.R;
-import nl.ags.picum.UI.Util.InstructionConverter;
 import nl.ags.picum.UI.fragments.CompleteRouteFragment;
 import nl.ags.picum.UI.fragments.SightDetailsPopupFragment;
+import nl.ags.picum.UI.Util.InstructionConverter;
 import nl.ags.picum.UI.fragments.SightsListFragment;
 import nl.ags.picum.UI.viewmodels.MapViewModel;
 import nl.ags.picum.UI.viewmodels.SightViewModel;
@@ -88,8 +88,6 @@ public class MapActivity extends AppCompatActivity {
 
         this.sightViewModel.getCurrentSight().observe(this, this::onSightChanged);
         this.sightViewModel.getSights().observe(this, this::onSightsChanged);
-
-        this.mapViewModel.getArrowBearing().observe(this, this::drawArrow);
 
         this.sightViewModel.getCurrentSight().observe(this, (sight) -> {
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -294,8 +292,11 @@ public class MapActivity extends AppCompatActivity {
                     nodeMarker.setSnippet(InstructionConverter.getInstruction(this, node.getManeuverType(), node.getStreetName(), node.getInstructions()));
                     //nodeMarker.setSubDescription(Road.getLengthDurationText(this, node.mLength, node.mDuration));
                     nodeMarker.setTitle(getApplicationContext().getString(R.string.step) + " " + actualSteps);
-                    Drawable icon =  AppCompatResources.getDrawable(this,getDirectionIcon(node.getManeuverType()));
-                    nodeMarker.setImage(icon);
+                    int resource = getDirectionIcon(node.getManeuverType());
+                    if(resource != 0) {
+                        Drawable icon = AppCompatResources.getDrawable(this, resource);
+                        nodeMarker.setImage(icon);
+                    }
                     actualSteps++;
                     lastInstruction = node.getInstructions();
                     mMap.getOverlays().add(0, nodeMarker);
@@ -310,44 +311,24 @@ public class MapActivity extends AppCompatActivity {
 
     public int getDirectionIcon(int instruction) {
         switch (instruction) {
-            case 1:
-            case 11:
-                return R.drawable.ic_continue;
             case 0:
+                return R.drawable.arrow_left;
+            case 1:
+                return R.drawable.arrow_right;
             case 2:
-            default:
-                return R.drawable.ic_empty;
-            case 27:
-            case 28:
-            case 29:
-            case 30:
-            case 31:
-            case 32:
-            case 33:
-            case 34:
-                return R.drawable.ic_roundabout;
-            case 5:
-                return R.drawable.ic_sharp_left;
-            case 8:
-                return R.drawable.ic_sharp_right;
+                return R.drawable.arrow_left;
             case 3:
-            case 9:
-            case 17:
-            case 20:
-                return R.drawable.ic_slight_left;
-            case 6:
-            case 10:
-            case 18:
-            case 21:
-                return R.drawable.ic_slight_right;
+                return R.drawable.arrow_right;
             case 4:
-                return R.drawable.ic_turn_left;
-            case 7:
-                return R.drawable.ic_turn_right;
-            case 12:
-            case 13:
-            case 14:
-                return R.drawable.ic_u_turn;
+                return R.drawable.arrow_half_left;
+            case 5:
+                return R.drawable.arrow_half_right;
+            case 6:
+                return R.drawable.arrow_top;
+            case 9:
+                return R.drawable.arrow_turnaround;
+            default:
+                return 0;
         }
     }
 
@@ -407,7 +388,6 @@ public class MapActivity extends AppCompatActivity {
         mMap.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.NEVER);
         mMap.setScrollableAreaLimitLatitude(51.637524, 51.525810, 5);
         mMap.setScrollableAreaLimitLongitude(4.680891, 4.844670, 5);
-        this.devArrow = findViewById(R.id.devArrow);
     }
 
     private void startRotatePhoneToCompass() {

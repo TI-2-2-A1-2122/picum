@@ -2,6 +2,9 @@ package nl.ags.picum.mapManagement;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
+
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.location.Geofence;
 
@@ -176,7 +179,7 @@ public class MapManager implements LocationObserver {
         Sight firstSight = defaultSight;
         for(int i = sightsMap.size() - 1; i >= 0; i--) {
             Sight sight = sights.get(i);
-            if(!sightsMap.get(sight).isVisited()) firstSight = sight;
+            if(sightsMap.get(sight).isVisited()) firstSight = sight;
         }
 
         return firstSight;
@@ -238,7 +241,6 @@ public class MapManager implements LocationObserver {
 
             // Loop over the list of waypoints
             sortPointByVisited(point);
-            mapViewModel.setArrowBearing(checkForDeviation(point));
         }).start();
     }
 
