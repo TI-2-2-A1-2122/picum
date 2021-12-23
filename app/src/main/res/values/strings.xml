@@ -63,5 +63,12 @@
     <string name="HistorischeBeschrijving">One-kilometre route where you will see the most interesting and important monuments of Breda</string>
     <string name="walked_route">You have completed the route.  The route shown above was the route you\'ve actually walked</string>
     <string name="close_window">Close window</string>
+    <string name="explanation">Help:</string>
+    <string name="unvisited_sight_description">Image which displays a not visited sight</string>
+    <string name="visited_sight_description">Image which displays a visited sight</string>
+    <string name="direction_description">Image which shows the direction which you are supposed to walk, direction depends on intersection</string>
+    <string name="completed_segment_description">Color which indicates a segment of the route which has been walked</string>
+    <string name="to_follow_segment_description">Color which indicates the next segment which needs to be followed</string>
+    <string name="followed_segment_description">Color which indicates the segments which have been followed</string>
 
 </resources>
