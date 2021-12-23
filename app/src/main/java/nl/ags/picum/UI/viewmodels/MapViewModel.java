@@ -88,7 +88,6 @@ public class MapViewModel extends AndroidViewModel {
         calculatedRoute.postValue(points);
     }
 
-    //OSMRoute LiveData
     private final MutableLiveData<List<PointWithInstructions>> OSMRoute = new MutableLiveData<>();
 
     public MutableLiveData<List<PointWithInstructions>> getOSMRoute()
@@ -100,19 +99,4 @@ public class MapViewModel extends AndroidViewModel {
     {
         OSMRoute.postValue(points);
     }
-
-    //arrowBearing LiveData
-    private final MutableLiveData<Double> arrowBearing = new MutableLiveData<>();
-
-    public MutableLiveData<Double> getArrowBearing()
-    {
-        return arrowBearing;
-    }
-
-    public void setArrowBearing(Double bearing)
-    {
-        arrowBearing.postValue(bearing);
-    }
-
-
 }
