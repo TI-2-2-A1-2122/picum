@@ -64,4 +64,11 @@
     <string name="HistorischeBeschrijving">Route van een kilometer waarbij u de meest bezienswaardige en belangrijkste monumenten van Breda ziet.</string>
     <string name="walked_route">U heeft de route voltooid.   U heeft de bovenstaande route gelopen</string>
     <string name="close_window">Sluit venster</string>
+    <string name="explanation">Uitleg:</string>
+    <string name="unvisited_sight_description">Afbeelding die een niet bezochte bezienswaardigheid aangeeft</string>
+    <string name="visited_sight_description">Afbeelding die een bezochte bezienswardigheid aangeeft</string>
+    <string name="direction_description">De hier links getoonde afbeelding geeft de richting aan waar de gebruiker in moet lopen. Deze wijkt af per kruispunt</string>
+    <string name="completed_segment_description">De hier links getoonde kleur is de kleur dei de route op de map krijgt als deze nog gevolged moet worden</string>
+    <string name="to_follow_segment_description">De hier links getoonde kleur is de kleur die de route krijgt als het segment gevolgd moet worden</string>
+    <string name="followed_segment_description">De hier links getoonde kleur is de kleur dei de route op de map krijgt als deze al gevolgd is</string>
 </resources>
