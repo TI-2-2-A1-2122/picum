@@ -86,7 +86,7 @@ public class Location {
             public void onLocationResult(@NonNull LocationResult locationResult) {
                 for (android.location.Location location : locationResult.getLocations()) {
                     //Update location to interface
-                    observer.onLocationUpdate(new Point((float) location.getLongitude(), (float) location.getLatitude(), location.getBearing()));
+                    observer.onLocationUpdate(new Point((float) location.getLongitude(), (float) location.getLatitude()));
                 }
             }
         };
