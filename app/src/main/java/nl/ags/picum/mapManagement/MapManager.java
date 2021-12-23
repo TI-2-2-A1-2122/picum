@@ -271,7 +271,20 @@ public class MapManager implements LocationObserver {
         boolean deviated = distanceBetweenFirstAndLast < distanceToNextWayPoint && distanceBetweenFirstAndLast < distanceToLastWayPoint;
         //Prints deviation distance
         if(deviated) Log.d(LOGTAG, "Deviated with a distance of" + (distanceBetweenFirstAndLast - (distanceToNextWayPoint + distanceToLastWayPoint / 2)));
-        if(deviated) return currentLocation.toGeoPoint().bearingTo(nextWayPoint.toGeoPoint()) + currentLocation.getBearing();
+
+        android.location.Location test = new android.location.Location("test");
+        test.setBearing(currentLocation.getBearing());
+        test.setLatitude(currentLocation.getLatitude());
+        test.setLongitude(currentLocation.getLongitude());
+
+        android.location.Location test2 = new android.location.Location("test");
+        test2.setLatitude(nextWayPoint.getLatitude());
+        test2.setLongitude(nextWayPoint.getLongitude());
+
+        if (deviated) return (double)test.bearingTo(test2);
+
+
+        //if(deviated) return currentLocation.toGeoPoint().bearingTo(nextWayPoint.toGeoPoint()) - currentLocation.getBearing() % 360;
 
         return -1.0;
     }
