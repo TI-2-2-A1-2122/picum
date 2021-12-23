@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -70,7 +71,9 @@ public class MapActivity extends AppCompatActivity {
     private CompassOverlay mCompassOverlay;
     private RotationGestureOverlay mRotationGestureOverlay;
     private ImageView devArrow;
-    private float devArrowRotation;
+    private float updatedMapRotation;
+    private Double arrowBearing;
+    private boolean isTouched;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -269,7 +272,7 @@ public class MapActivity extends AppCompatActivity {
         mMap.getOverlays().add(this.mCompassOverlay);
         mMapController.setZoom(20.1);
         mMap.invalidate();
-
+        startRotatePhoneToCompass();
     }
 
 
@@ -396,7 +399,7 @@ public class MapActivity extends AppCompatActivity {
     public void initializeMap() {
         mMap.setTileSource(TileSourceFactory.MAPNIK);
         this.mRotationGestureOverlay = new RotationGestureOverlay(mMap);
-        mRotationGestureOverlay.setEnabled(true);
+        mRotationGestureOverlay.setEnabled(false);
         mMap.setMultiTouchControls(true);
         mMap.getOverlays().add(mRotationGestureOverlay);
         mMap.setMinZoomLevel(13.0);
@@ -405,6 +408,22 @@ public class MapActivity extends AppCompatActivity {
         mMap.setScrollableAreaLimitLatitude(51.637524, 51.525810, 5);
         mMap.setScrollableAreaLimitLongitude(4.680891, 4.844670, 5);
         this.devArrow = findViewById(R.id.devArrow);
+    }
+
+    private void startRotatePhoneToCompass() {
+        new Thread(() -> {
+            while(!this.isTouched || !isDestroyed()) {
+                runOnUiThread(() -> {
+                    this.mMap.setMapOrientation(this.mCompassOverlay.getOrientation());
+                    drawArrow(this.arrowBearing);
+                });
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     @Override
@@ -463,10 +482,20 @@ public class MapActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        this.isTouched = event.getAction() != MotionEvent.ACTION_BUTTON_RELEASE;
+        drawArrow(this.arrowBearing);
+        return super.onTouchEvent(event);
+    }
+
+
 
     public void drawArrow(Double bearing) {
+        this.arrowBearing = bearing;
         float convertedBearing = (bearing.floatValue() + this.mMap.getMapOrientation()) % 360;
         Log.d("arrow", "Bearing is: " + bearing);
+
 
 
         if(bearing == -1) {

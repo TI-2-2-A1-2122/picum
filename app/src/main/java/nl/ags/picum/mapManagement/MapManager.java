@@ -270,7 +270,9 @@ public class MapManager implements LocationObserver {
         //Deviation is detected when currLocation is further away from both last and next waypoint.
         boolean deviated = distanceBetweenFirstAndLast < distanceToNextWayPoint && distanceBetweenFirstAndLast < distanceToLastWayPoint;
         //Prints deviation distance
-        if(deviated) Log.d(LOGTAG, "Deviated with a distance of" + (distanceBetweenFirstAndLast - (distanceToNextWayPoint + distanceToLastWayPoint / 2)));
+        //if(deviated) Log.d(LOGTAG, "Deviated with a distance of" + (distanceBetweenFirstAndLast - (distanceToNextWayPoint + distanceToLastWayPoint / 2)));
+        Log.d(LOGTAG, "Current heading: " + currentLocation.getBearing());
+        //if(deviated) return (currentLocation.toGeoPoint().bearingTo(nextWayPoint.toGeoPoint())) % 360;
 
 
         if(deviated) return currentLocation.toGeoPoint().bearingTo(nextWayPoint.toGeoPoint());
