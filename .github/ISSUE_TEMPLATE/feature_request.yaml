@@ -15,11 +15,4 @@ body:
       placeholder: What are the details?
     validations:
       required: true
-  - type: checkboxes
-    id: terms
-    attributes:
-      label: Style Guide
-      description: By submitting this issue, you agree to follow the [Style Guide](https://google.github.io/styleguide/javaguide.html)
-      options:
-        - label: I agree to follow the Style Guide   
-          required: true
+ 

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="10dp"
+    android:id="@+id/sight_list_item_layout"
+    >
+    <ImageView
+        android:layout_width="120dp"
+        android:layout_height="160dp"
+        android:id="@+id/sight_list_item_image"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:scaleType="centerCrop"
+        />
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/sight_list_item_image"
+        android:layout_marginLeft="10dp"
+        android:textSize="20dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/sight_list_item_image"
+        android:id="@+id/sight_list_item_name"
+        />
+
+    <ImageView
+        android:id="@+id/sight_list_item_visited"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:src="@mipmap/sight_image"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@id/sight_list_item_image"
+        app:layout_constraintLeft_toLeftOf="@id/sight_list_item_image"
+        />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="130dp"
+        app:layout_constraintLeft_toLeftOf="@id/sight_list_item_name"
+        app:layout_constraintTop_toBottomOf="@id/sight_list_item_name"
+        android:layout_marginTop="8dp"
+        android:id="@+id/sight_list_item_description"
+        app:layout_constraintRight_toRightOf="parent"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
