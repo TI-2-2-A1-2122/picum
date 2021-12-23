@@ -2,9 +2,7 @@ package nl.ags.picum.UI;
 
 
 
-import android.app.Activity;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -27,8 +25,6 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.MapView;
-import org.osmdroid.views.Projection;
-import org.osmdroid.views.overlay.IconOverlay;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.compass.CompassOverlay;
@@ -46,9 +42,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import nl.ags.picum.R;
+import nl.ags.picum.UI.Util.InstructionConverter;
 import nl.ags.picum.UI.fragments.CompleteRouteFragment;
 import nl.ags.picum.UI.fragments.SightDetailsPopupFragment;
-import nl.ags.picum.UI.Util.InstructionConverter;
 import nl.ags.picum.UI.fragments.SightsListFragment;
 import nl.ags.picum.UI.viewmodels.MapViewModel;
 import nl.ags.picum.UI.viewmodels.SightViewModel;
@@ -469,8 +465,10 @@ public class MapActivity extends AppCompatActivity {
 
 
     public void drawArrow(Double bearing) {
-        float convertedBearing = bearing.floatValue();
+        float convertedBearing = (bearing.floatValue() + this.mMap.getMapOrientation()) % 360;
         Log.d("arrow", "Bearing is: " + bearing);
+
+
         if(bearing == -1) {
             runOnUiThread(() -> {
                 if(this.devArrow.getVisibility() != View.INVISIBLE) this.devArrow.setVisibility(View.INVISIBLE);

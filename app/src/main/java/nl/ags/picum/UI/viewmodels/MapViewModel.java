@@ -113,4 +113,6 @@ public class MapViewModel extends AndroidViewModel {
     {
         arrowBearing.postValue(bearing);
     }
+
+
 }
