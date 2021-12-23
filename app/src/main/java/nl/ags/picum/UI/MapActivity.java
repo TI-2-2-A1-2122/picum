@@ -10,8 +10,10 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
@@ -68,6 +70,11 @@ public class MapActivity extends AppCompatActivity {
 
     private MyLocationNewOverlay mLocationOverlay;
     private CompassOverlay mCompassOverlay;
+    private RotationGestureOverlay mRotationGestureOverlay;
+    private ImageView devArrow;
+    private float updatedMapRotation;
+    private Double arrowBearing;
+    private boolean isTouched;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +89,8 @@ public class MapActivity extends AppCompatActivity {
 
         this.sightViewModel.getCurrentSight().observe(this, this::onSightChanged);
         this.sightViewModel.getSights().observe(this, this::onSightsChanged);
+
+        this.mapViewModel.getArrowBearing().observe(this, this::drawArrow);
 
         this.sightViewModel.getCurrentSight().observe(this, (sight) -> {
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -264,7 +273,7 @@ public class MapActivity extends AppCompatActivity {
         mMap.getOverlays().add(this.mCompassOverlay);
         mMapController.setZoom(20.1);
         mMap.invalidate();
-
+        startRotatePhoneToCompass();
     }
 
 
@@ -373,8 +382,8 @@ public class MapActivity extends AppCompatActivity {
 
     public void initializeMap() {
         mMap.setTileSource(TileSourceFactory.MAPNIK);
-        RotationGestureOverlay mRotationGestureOverlay = new RotationGestureOverlay(mMap);
-        mRotationGestureOverlay.setEnabled(true);
+        this.mRotationGestureOverlay = new RotationGestureOverlay(mMap);
+        mRotationGestureOverlay.setEnabled(false);
         mMap.setMultiTouchControls(true);
         mMap.getOverlays().add(mRotationGestureOverlay);
         mMap.setMinZoomLevel(13.0);
@@ -382,6 +391,23 @@ public class MapActivity extends AppCompatActivity {
         mMap.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.NEVER);
         mMap.setScrollableAreaLimitLatitude(51.637524, 51.525810, 5);
         mMap.setScrollableAreaLimitLongitude(4.680891, 4.844670, 5);
+        this.devArrow = findViewById(R.id.devArrow);
+    }
+
+    private void startRotatePhoneToCompass() {
+        new Thread(() -> {
+            while(!this.isTouched || !isDestroyed()) {
+                runOnUiThread(() -> {
+                    this.mMap.setMapOrientation(this.mCompassOverlay.getOrientation());
+                    drawArrow(this.arrowBearing);
+                });
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     @Override
@@ -439,4 +465,50 @@ public class MapActivity extends AppCompatActivity {
         finish();
 
     }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        this.isTouched = event.getAction() != MotionEvent.ACTION_BUTTON_RELEASE;
+        drawArrow(this.arrowBearing);
+        return super.onTouchEvent(event);
+    }
+
+
+
+    public void drawArrow(Double bearing) {
+        this.arrowBearing = bearing;
+        float convertedBearing = (bearing.floatValue() + this.mMap.getMapOrientation()) % 360;
+        Log.d("arrow", "Bearing is: " + bearing);
+
+
+
+        if(bearing == -1) {
+            runOnUiThread(() -> {
+                if(this.devArrow.getVisibility() != View.INVISIBLE) this.devArrow.setVisibility(View.INVISIBLE);
+            });
+            return;
+        }
+
+        Log.d("arrow", "Converted bearing is: " + convertedBearing);
+        runOnUiThread(() -> {
+            if(this.devArrow.getVisibility() != View.VISIBLE) this.devArrow.setVisibility(View.VISIBLE);
+            this.devArrow.setRotation(convertedBearing);
+        });
+    }
+
+//    private void draw() {
+//        Projection mProjection= mMap.getProjection();
+//        Bitmap mBitmap = Bitmap.createBitmap(mProjection.getWidth(), mProjection.getHeight(), Bitmap.Config.ARGB_8888);
+//        final Canvas canvas = new Canvas(mBitmap);
+//        mProjection.save(canvas, true, false);
+//        mTilesOverlay.drawTiles(canvas, mProjection, mProjection.getZoomLevel(), mViewPort);
+//        if (mOverlays != null) {
+//            for (final Overlay overlay : mOverlays) {
+//                if (overlay != null && overlay.isEnabled()) {
+//                    overlay.draw(canvas, mProjection);
+//                }
+//            }
+//        }
+//        mProjection.restore(canvas, false);
+//    }
 }

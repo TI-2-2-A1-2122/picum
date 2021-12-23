@@ -6,6 +6,7 @@ public class Point {
     private float longitude;
     private float latitude;
     private String id;
+    private float bearing;
 
     public Point() {
     }
@@ -20,6 +21,16 @@ public class Point {
         this.longitude = longitude;
         this.latitude = latitude;
         this.id = id;
+    }
+
+    public Point(float longitude, float latitude, float bearing) {
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.bearing = bearing;
+    }
+
+    public float getBearing() {
+        return bearing;
     }
 
     public float getLongitude() {
