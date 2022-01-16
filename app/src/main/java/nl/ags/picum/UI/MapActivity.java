@@ -2,7 +2,9 @@ package nl.ags.picum.UI;
 
 
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
@@ -17,6 +19,7 @@ import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -409,15 +412,26 @@ public class MapActivity extends AppCompatActivity {
             }
         }).start();
     }
-
     @Override
     public void onResume() {
+
+
         super.onResume();
+
+
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (this.mapViewModel == null) return;
+            new Thread(() ->{ mapViewModel.getMapManager().stopRoute(mapViewModel.getCurrentRoute());}).start();
+            finish();
+        }
+
         //this will refresh the osmdroid configuration on resuming.
         //if you make changes to the configuration, use
         //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         //Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
         mMap.onResume(); //needed for compass, my location overlays, v6.0.0 and up
+
     }
 
     @Override
